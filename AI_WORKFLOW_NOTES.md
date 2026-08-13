@@ -38,3 +38,12 @@ the live theme.
 - 2026-08-14 — Card product image is absolutely positioned inside the shot
   frame with `object-fit: contain` + padding, so square product art scales to
   fit the 242×150 landscape frame instead of overflowing (was zooming).
+- 2026-08-14 — Combo cards use real product images (max 66px in the tray)
+  rather than the prototype's tall inline SVG art, so cards are ~433px vs
+  the prototype's 448px — a 15px delta, not a layout bug.
+- 2026-08-14 — Combos reference products via `product_list` settings (up to
+  3) and resolve the tier product from the picker's count→variant map, so a
+  merchant can point a combo at any products without code.
+- 2026-08-14 — Combo prices are flat bundle prices stored as settings (e.g.
+  ₹499), matching the prototype's "already priced below the sum" framing;
+  they are not computed from the member products.

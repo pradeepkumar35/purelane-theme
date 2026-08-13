@@ -56,10 +56,9 @@ Incremental notes on how the 5-section clone maps the prototype
   (`cmp-<width>.png` = prototype|theme side by side).
 
 ## Remaining
-- Combos section (`.comborail`) on top of the picker.
 - Reviews marquee rail (bonus).
 - Wire `templates/index.json` in prototype order once all sections exist
-  (currently hero + shop + bundles).
+  (currently hero + combos + bundles + shop).
 
 ## Bundles + picker engine (steps 4–5 — done)
 - **Tier products**: three real products created via Admin REST
@@ -86,3 +85,19 @@ Incremental notes on how the 5-section clone maps the prototype
     `prefers-reduced-motion` respected, body scroll locked while open.
   - Combos can open it via the global `purelane:open-picker` event.
 - Wire-in order on the page: hero → shop → bundles.
+
+## Combos section (step 6 — done)
+- `sections/purelane-combos.liquid` renders a horizontal scroll-snap rail
+  (`.purelane-comborail`) of combo cards matching the prototype's #combos:
+  save badge, optional "Most popular" flag, product stack + benefit labels,
+  includes text, price/compare/save row, fine print, "Shop bundle" CTA.
+  Blocks: `product_list` (up to 3), `benefits` (one line per product),
+  `count`, price/compare/save/fine/CTA — all merchant-editable.
+- "Shop bundle" dispatches the global `purelane:open-picker` event with the
+  combo's product ids; the picker opens pre-filled at the combo count. The
+  tier variant is resolved from the picker's `data-tiers` map
+  (`count -> variant id`), so combos don't hardcode products or prices.
+- Layout verified: cards 302px wide @1440, 268px @375 (both match prototype
+  specs), uniform height ~433px vs prototype 448px. The 15px delta is the
+  smaller product images vs the prototype's tall inline SVG art.
+- Wired `index.json` order: hero → combos → bundles → shop.
