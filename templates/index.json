@@ -78,6 +78,65 @@
         "cta_label": "Add to cart"
       }
     },
+    "purelane_reviews": {
+      "type": "purelane-reviews",
+      "settings": {
+        "kicker": "That's what they said",
+        "agg_1_value": "4.8",
+        "agg_1_label": "from 8,000+ reviews",
+        "agg_2_prefix": "Loved by",
+        "agg_2_value": "12 lakh+",
+        "agg_2_label": "homes"
+      },
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "title": "Works like a charm",
+            "body": "Finally an eco option that cleans as well as the chemical detergent I used for years, and it smells better.",
+            "name": "Anita",
+            "product": "Laundry detergent"
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "title": "Best dishwash ever",
+            "body": "Our old dishwash left my help with dry, cracked skin. That stopped completely after we switched.",
+            "name": "Priya",
+            "product": "Dishwash gel"
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "title": "Great product, great packaging",
+            "body": "Very soft on hands with a lovely fragrance, and it feels good to be using far less plastic.",
+            "name": "Sunita",
+            "product": "Liquid handwash"
+          }
+        },
+        "review_4": {
+          "type": "review",
+          "settings": {
+            "title": "Dog friendly",
+            "body": "We switched because chemical floor cleaners were setting off my dog's allergies. No reactions since.",
+            "name": "Rohit S.",
+            "product": "Floor cleaner"
+          }
+        },
+        "review_5": {
+          "type": "review",
+          "settings": {
+            "title": "Sparkling taps again",
+            "body": "Hard water had ruined our bathroom fittings. Two sprays and the scale wipes straight off, no scrubbing.",
+            "name": "Verified buyer",
+            "product": "Tap cleaner"
+          }
+        }
+      },
+      "block_order": ["review_1", "review_2", "review_3", "review_4", "review_5"]
+    },
     "purelane_combos": {
       "type": "purelane-combos",
       "settings": {
@@ -224,5 +283,5 @@
       "block_order": ["tier_1", "tier_2", "tier_3"]
     }
   },
-  "order": ["purelane_hero", "purelane_combos", "purelane_bundles", "purelane_shop"]
+  "order": ["purelane_hero", "purelane_reviews", "purelane_combos", "purelane_bundles", "purelane_shop"]
 }
