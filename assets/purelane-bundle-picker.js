@@ -2,10 +2,19 @@
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const pickers = {}; // sectionId -> instance
 
+  function parseTiers(json) {
+    try {
+      return JSON.parse(json);
+    } catch (e) {
+      return {};
+    }
+  }
+
   class BundlePicker {
     constructor(root) {
       this.root = root;
       this.sectionId = root.dataset.sectionId;
+      this.tiers = parseTiers(root.dataset.tiers || '{}');
       this.count = 0;
       this.variantId = null;
       this.selected = new Set(); // product ids
@@ -28,7 +37,7 @@
 
     open({ count, variantId, preselect = [] } = {}) {
       this.count = count || 0;
-      this.variantId = variantId || null;
+      this.variantId = variantId || this.tiers[String(count)] || null;
       this.selected = new Set(preselect);
       this.items.forEach((item) => {
         if (this.selected.has(item.dataset.productId)) {
@@ -142,14 +151,34 @@
     });
   }
 
+  function wireComboButtons(root) {
+    root.querySelectorAll?.('[data-combo-open]').forEach((btn) => {
+      if (btn.__purelaneComboWired) return;
+      btn.__purelaneComboWired = true;
+      btn.addEventListener('click', () => {
+        let preselect = [];
+        try {
+          preselect = JSON.parse(btn.dataset.preselect || '[]').map(String);
+        } catch (e) {
+          preselect = [];
+        }
+        // Combos live in a different section; open the first picker on the page.
+        const picker = Object.values(pickers)[0];
+        if (picker) picker.open({ count: Number(btn.dataset.count), preselect });
+      });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-purelane-picker]').forEach(init);
     document.querySelectorAll('[data-purelane-bundles]').forEach(wireTierButtons);
+    document.querySelectorAll('[data-purelane-combos]').forEach(wireComboButtons);
   });
 
   document.addEventListener('shopify:section:load', (event) => {
     event.target.querySelectorAll?.('[data-purelane-picker]').forEach(init);
     wireTierButtons(event.target);
+    wireComboButtons(event.target);
   });
 
   // Combos (a different section) open the picker via a global event.

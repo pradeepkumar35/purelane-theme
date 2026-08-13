@@ -78,6 +78,99 @@
         "cta_label": "Add to cart"
       }
     },
+    "purelane_combos": {
+      "type": "purelane-combos",
+      "settings": {
+        "kicker": "Pre-built to save you money",
+        "heading": "Best selling combos",
+        "lede": "Swipe through the boxes people order most. Each one is already priced below buying the same products on their own.",
+        "cue_text": "Swipe for more combos",
+        "note": "Tapping \"Shop bundle\" opens the bundle picker with these products already added. You can still swap anything before you pay."
+      },
+      "blocks": {
+        "combo_1": {
+          "type": "combo",
+          "settings": {
+            "name": "Kitchen essentials",
+            "flag": "Most popular",
+            "save": "You save ₹398",
+            "count": 3,
+            "products": [
+              "kitchen-degreaser-lemon-enzyme",
+              "dishwash-gel-aloe-clean",
+              "tap-limescale-cleaner"
+            ],
+            "benefits": "Cuts grease instantly\nSqueaky clean dishes\nMelts hard water stains",
+            "includes": "Includes: Kitchen Cleaner, Dishwash Gel & Tap Cleaner. Everything for a sparkling kitchen, no need to pick separately.",
+            "price": "₹499",
+            "compare": "₹897",
+            "save_em": "Save ₹398",
+            "fine": "Inclusive of all taxes · COD available",
+            "cta_label": "Shop bundle"
+          }
+        },
+        "combo_2": {
+          "type": "combo",
+          "settings": {
+            "name": "Laundry care bundle",
+            "save": "You save ₹448",
+            "count": 3,
+            "products": [
+              "laundry-detergent-lavender-calm",
+              "plant-based-floor-cleaner-citrus-neem",
+              "ultra-concentrated-plant-based-multi-surface-cleaning-solution-with-lavender-extract-and-sustainable-refill-packaging-system"
+            ],
+            "benefits": "Removes tough stains & odour\nFresh floors, plant powered\nOne refill, less plastic",
+            "includes": "Includes: Laundry Detergent, Floor Cleaner & Multi-Surface Refill. Softer, fresher wash, all in one box.",
+            "price": "₹499",
+            "compare": "₹947",
+            "save_em": "Save ₹448",
+            "fine": "Inclusive of all taxes · COD available",
+            "cta_label": "Shop bundle"
+          }
+        },
+        "combo_3": {
+          "type": "combo",
+          "settings": {
+            "name": "Bathroom deep clean",
+            "save": "You save ₹398",
+            "count": 3,
+            "products": [
+              "toilet-cleaner-deep-clean-herbal",
+              "tap-limescale-cleaner",
+              "multi-surface-disinfectant-herbal-shield"
+            ],
+            "benefits": "Kills grime & odour\nMelts hard water stains\nShields every surface",
+            "includes": "Includes: Toilet Cleaner, Tap Cleaner & Disinfectant. A complete bathroom refresh in one box.",
+            "price": "₹499",
+            "compare": "₹897",
+            "save_em": "Save ₹398",
+            "fine": "Inclusive of all taxes · COD available",
+            "cta_label": "Shop bundle"
+          }
+        },
+        "combo_4": {
+          "type": "combo",
+          "settings": {
+            "name": "Hard water solution kit",
+            "save": "You save ₹249",
+            "count": 2,
+            "products": [
+              "tap-limescale-cleaner",
+              "toilet-cleaner-deep-clean-herbal"
+            ],
+            "benefits": "Melts hard water stains\nKills grime & odour",
+            "includes": "Includes: Tap Cleaner & Toilet Cleaner. A quick, focused fix for hard water stains across the home.",
+            "price": "₹349",
+            "compare": "₹598",
+            "save_em": "Save ₹249",
+            "fine": "Inclusive of all taxes · COD available",
+            "cta_label": "Shop bundle"
+          }
+        }
+      },
+      "block_order": ["combo_1", "combo_2", "combo_3", "combo_4"]
+    },
     "purelane_bundles": {
       "type": "purelane-bundles",
       "settings": {
@@ -131,5 +224,5 @@
       "block_order": ["tier_1", "tier_2", "tier_3"]
     }
   },
-  "order": ["purelane_hero", "purelane_shop", "purelane_bundles"]
+  "order": ["purelane_hero", "purelane_combos", "purelane_bundles", "purelane_shop"]
 }

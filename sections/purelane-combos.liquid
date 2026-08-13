@@ -1,0 +1,244 @@
+{{ 'purelane.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  Purelane Combos
+  Mirrors the prototype's #combos section: a horizontal scroll-snap rail
+  of pre-built combo cards. Each card's "Shop bundle" CTA opens the
+  Purelane bundle picker pre-filled with that combo's products via the
+  global `purelane:open-picker` event; the tier product is resolved from
+  the picker's count -> variant map.
+{% endcomment %}
+
+<section
+  id='PurelaneCombos-{{ section.id }}'
+  class='purelane-combos'
+  data-purelane-combos
+  data-section-id='{{ section.id }}'
+>
+  <div class='purelane-combos__inner'>
+    <div class='purelane-combos__head'>
+      {% if section.settings.kicker != blank %}
+        <span class='purelane-combos__kicker'>{{ section.settings.kicker }}</span>
+      {% endif %}
+      {% if section.settings.heading != blank %}
+        <h2 class='purelane-combos__heading'>{{ section.settings.heading }}</h2>
+      {% endif %}
+      <div class='purelane-shop__rule' aria-hidden='true'>
+        <span></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/><path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/></svg>
+        <span></span>
+      </div>
+      {% if section.settings.lede != blank %}
+        <p class='purelane-combos__lede'>{{ section.settings.lede }}</p>
+      {% endif %}
+    </div>
+
+    <div class='purelane-comborail rv' data-comborail>
+      {% for block in section.blocks %}
+        {% assign combo_products = block.settings.products %}
+        {% assign benefits = block.settings.benefits | newline_to_br | split: '<br />' %}
+        <article class='purelane-combo glass' data-purelane-combo>
+          <div class='purelane-combo__tray'>
+            {% if block.settings.save != blank %}
+              <span class='purelane-combo__save'>{{ block.settings.save }}</span>
+            {% endif %}
+            {% if block.settings.flag != blank %}
+              <span class='purelane-combo__flag'>{{ block.settings.flag }}</span>
+            {% endif %}
+            <div class='purelane-combo__stack'>
+              {% for product in combo_products limit: 3 %}
+                <span class='purelane-combo__item'>
+                  <span class='purelane-combo__pimg'>
+                    {%- if product.featured_image -%}
+                      {{
+                        product.featured_image
+                        | image_url: width: 160
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '80, 160',
+                          sizes: '(min-width: 860px) 80px, 64px',
+                          alt: product.featured_image.alt
+                          | default: product.title
+                      }}
+                    {%- else -%}
+                      <span class='purelane-combo__tile' aria-hidden='true'>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/><path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/></svg>
+                      </span>
+                    {%- endif -%}
+                  </span>
+                  {% assign b = benefits[forloop.index0] %}
+                  <span class='purelane-combo__label'>{{ b | default: product.title | escape }}</span>
+                </span>
+                {% unless forloop.last %}
+                  <span class='purelane-combo__plus' aria-hidden='true'>+</span>
+                {% endunless %}
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class='purelane-combo__body'>
+            {% if block.settings.name != blank %}
+              <h3 class='purelane-combo__name'>{{ block.settings.name }}</h3>
+            {% endif %}
+            {% if block.settings.count > 0 %}
+              <div class='purelane-combo__cnt'>{{ block.settings.count }} products</div>
+            {% endif %}
+            {% if block.settings.includes != blank %}
+              <p class='purelane-combo__inc'>{{ block.settings.includes }}</p>
+            {% endif %}
+            <div class='purelane-combo__prow'>
+              {% if block.settings.price != blank %}<strong>{{ block.settings.price }}</strong>{% endif %}
+              {% if block.settings.compare != blank %}<s>{{ block.settings.compare }}</s>{% endif %}
+              {% if block.settings.save_em != blank %}<em>{{ block.settings.save_em }}</em>{% endif %}
+            </div>
+            {% if block.settings.fine != blank %}
+              <div class='purelane-combo__fine'>{{ block.settings.fine }}</div>
+            {% endif %}
+            <button
+              type='button'
+              class='purelane-combo__cta btn btn-ghost'
+              data-combo-open
+              data-count='{{ block.settings.count }}'
+              data-preselect='{{ combo_products | map: "id" | json | escape }}'
+            >
+              {{ block.settings.cta_label }}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13m-5-6 6 6-6 6"/></svg>
+            </button>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    <div class='purelane-combos__cue' aria-hidden='true'>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13m-5-6 6 6-6 6"/></svg>
+      {{ section.settings.cue_text }}
+    </div>
+    <p class='purelane-combos__note'>{{ section.settings.note }}</p>
+  </div>
+</section>
+<script src='{{ 'purelane-reveal.js' | asset_url }}' defer='defer'></script>
+
+{% schema %}
+{
+  "name": "Purelane Combos",
+  "tag": "section",
+  "class": "purelane-combos-section",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Pre-built to save you money"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Best selling combos"
+    },
+    {
+      "type": "textarea",
+      "id": "lede",
+      "label": "Description",
+      "default": "Swipe through the boxes people order most. Each one is already priced below buying the same products on their own."
+    },
+    {
+      "type": "text",
+      "id": "cue_text",
+      "label": "Swipe cue",
+      "default": "Swipe for more combos"
+    },
+    {
+      "type": "textarea",
+      "id": "note",
+      "label": "Rail note",
+      "default": "Tapping \"Shop bundle\" opens the bundle picker with these products already added. You can still swap anything before you pay."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "combo",
+      "name": "Combo",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Kitchen essentials"
+        },
+        {
+          "type": "text",
+          "id": "flag",
+          "label": "Flag (optional)",
+          "default": "Most popular"
+        },
+        {
+          "type": "text",
+          "id": "save",
+          "label": "Save badge",
+          "default": "You save ₹398"
+        },
+        {
+          "type": "number",
+          "id": "count",
+          "label": "Products in combo",
+          "default": 3
+        },
+        {
+          "type": "product_list",
+          "id": "products",
+          "label": "Products (up to 3)",
+          "limit": 3
+        },
+        {
+          "type": "textarea",
+          "id": "benefits",
+          "label": "Benefit labels (one per product, one per line)",
+          "info": "Shown under each product image. Matches products by position."
+        },
+        {
+          "type": "textarea",
+          "id": "includes",
+          "label": "Includes text",
+          "default": "Includes: Foaming Kitchen Cleaner, Dishwash Gel & Tap Cleaner. Everything for a sparkling kitchen, no need to pick separately."
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "₹499"
+        },
+        {
+          "type": "text",
+          "id": "compare",
+          "label": "Compare-at price",
+          "default": "₹897"
+        },
+        {
+          "type": "text",
+          "id": "save_em",
+          "label": "Save badge in price row",
+          "default": "Save ₹398"
+        },
+        {
+          "type": "text",
+          "id": "fine",
+          "label": "Fine print",
+          "default": "Inclusive of all taxes · COD available"
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "Button label",
+          "default": "Shop bundle"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Combos"
+    }
+  ]
+}
+{% endschema %}

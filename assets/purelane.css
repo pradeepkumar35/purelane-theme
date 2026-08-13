@@ -1273,3 +1273,317 @@
 .btn-ghost:hover {
     background: rgba(255, 255, 255, 0.9);
 }
+
+/* =========================================================
+   PURELANE COMBOS (horizontal scroll rail)
+   ========================================================= */
+
+.purelane-combos-section {
+    position: relative;
+    z-index: 2;
+}
+
+.purelane-combos {
+    width: 100%;
+    background: linear-gradient(178deg, #eafaec 0%, #d6f1dc 34%, #bfe8ca 70%, #a2d9b6 100%);
+}
+
+.purelane-combos__inner {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding: clamp(26px, 3.4vw, 40px) 18px;
+}
+
+.purelane-combos__head {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.purelane-combos__kicker {
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(36, 26, 61, 0.56);
+}
+
+.purelane-combos__heading {
+    margin: 12px 0 0;
+    font-family: "Outfit", system-ui, sans-serif;
+    font-size: clamp(30px, 4.6vw, 54px);
+    line-height: 0.94;
+    font-weight: 800;
+    letter-spacing: -0.018em;
+    text-transform: uppercase;
+    color: #17102b;
+}
+
+.purelane-combos__lede {
+    max-width: 560px;
+    margin: 14px auto 0;
+    color: rgba(36, 26, 61, 0.7);
+    font-size: 14.5px;
+    line-height: 1.5;
+}
+
+.purelane-comborail {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    margin: 0 -18px;
+    padding: 4px 18px 14px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.purelane-comborail::-webkit-scrollbar {
+    display: none;
+}
+
+.purelane-combo {
+    flex: 0 0 302px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 22px;
+    transition: transform 0.4s var(--ease);
+}
+
+.purelane-combo:hover {
+    transform: translateY(-5px);
+}
+
+.purelane-combo__tray {
+    padding: 14px 14px 13px;
+    border-bottom: 1px solid rgba(75, 58, 143, 0.12);
+    position: relative;
+    background: linear-gradient(162deg, rgba(255, 255, 255, 0.56), rgba(236, 230, 247, 0.34));
+}
+
+.purelane-combo__save {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.84);
+    border: 1px solid rgba(201, 118, 29, 0.34);
+    color: #4f7d10;
+    margin-bottom: 13px;
+}
+
+.purelane-combo__flag {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-size: 8.6px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #00706a, #004b46);
+    color: #f4fdf6;
+}
+
+.purelane-combo__stack {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+}
+
+.purelane-combo__item {
+    flex: 1 1 0;
+    min-width: 0;
+    text-align: center;
+}
+
+.purelane-combo__pimg {
+    position: relative;
+    height: 66px;
+    margin: 0 auto 8px;
+    display: grid;
+    place-items: center;
+    filter: drop-shadow(0 5px 8px rgba(0, 74, 66, 0.13));
+}
+
+.purelane-combo__pimg img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 4px;
+}
+
+.purelane-combo__tile {
+    height: 66px;
+    width: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px dashed rgba(75, 58, 143, 0.26);
+    color: #4f7d10;
+}
+
+.purelane-combo__tile svg {
+    width: 17px;
+    height: 17px;
+}
+
+.purelane-combo__label {
+    display: block;
+    font-size: 8.6px;
+    line-height: 1.32;
+    color: rgba(36, 26, 61, 0.78);
+    font-weight: 600;
+}
+
+.purelane-combo__plus {
+    flex: 0 0 9px;
+    color: #b8701c;
+    font-weight: 800;
+    font-size: 12px;
+    padding-bottom: 30px;
+    text-align: center;
+}
+
+.purelane-combo__body {
+    padding: 15px 16px 18px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.purelane-combo__name {
+    margin: 0;
+    font-family: "Outfit", system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
+    line-height: 1.1;
+    color: #17102b;
+}
+
+.purelane-combo__cnt {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(36, 26, 61, 0.56);
+    margin-top: 6px;
+}
+
+.purelane-combo__inc {
+    font-size: 12.4px;
+    color: rgba(36, 26, 61, 0.78);
+    line-height: 1.55;
+    margin: 11px 0 14px;
+    flex: 1;
+}
+
+.purelane-combo__prow {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.purelane-combo__prow strong {
+    font-family: "Outfit", system-ui, sans-serif;
+    font-size: 25px;
+    font-weight: 800;
+    color: #17102b;
+    letter-spacing: -0.02em;
+}
+
+.purelane-combo__prow s {
+    font-size: 13px;
+    color: rgba(36, 26, 61, 0.56);
+}
+
+.purelane-combo__prow em {
+    font-style: normal;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: rgba(201, 118, 29, 0.14);
+    border: 1px solid rgba(201, 118, 29, 0.34);
+    color: #4f7d10;
+}
+
+.purelane-combo__fine {
+    font-size: 10.4px;
+    color: rgba(36, 26, 61, 0.56);
+    margin-bottom: 14px;
+}
+
+.purelane-combo__cta {
+    width: 100%;
+    justify-content: center;
+}
+
+.purelane-combo__cta svg {
+    width: 16px;
+    height: 16px;
+}
+
+.purelane-combos__cue {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(36, 26, 61, 0.56);
+    margin-top: 2px;
+}
+
+.purelane-combos__cue svg {
+    width: 14px;
+    height: 14px;
+    color: #b8701c;
+}
+
+.purelane-combos__note {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(36, 26, 61, 0.56);
+    margin: 14px auto 0;
+    max-width: 62ch;
+}
+
+@media (max-width: 760px) {
+    .purelane-combo {
+        flex: 0 0 268px;
+    }
+
+    .purelane-combo__pimg {
+        height: 56px;
+    }
+
+    .purelane-combo__tile {
+        height: 56px;
+        width: 38px;
+    }
+
+    .purelane-comborail {
+        margin: 0 -14px;
+        padding: 4px 14px 12px;
+    }
+}
