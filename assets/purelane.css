@@ -1532,8 +1532,22 @@
 }
 
 .purelane-combo__cta {
-    width: 100%;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 20px;
+    border-radius: 999px;
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.35s var(--ease), color 0.35s var(--ease);
+    width: 100%;
 }
 
 .purelane-combo__cta svg {
