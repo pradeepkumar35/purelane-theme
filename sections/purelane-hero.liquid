@@ -1,0 +1,212 @@
+{% comment %}
+  Purelane Hero
+  First implementation:
+  - Merchant-editable hero copy and CTAs
+  - Promise blocks
+  - Product-based hero slides
+{% endcomment %}
+
+<section
+  id="PurelaneHero-{{ section.id }}"
+  class="purelane-hero"
+>
+  <div class="purelane-hero__inner">
+    <div class="purelane-hero__copy">
+      <h1>{{ section.settings.heading }}</h1>
+
+      {% if section.settings.description != blank %}
+        <div class="purelane-hero__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+
+      <div class="purelane-hero__actions">
+        {% if section.settings.primary_label != blank and section.settings.primary_link != blank %}
+          <a href="{{ section.settings.primary_link }}">
+            {{ section.settings.primary_label }}
+          </a>
+        {% endif %}
+
+        {% if section.settings.secondary_label != blank and section.settings.secondary_link != blank %}
+          <a href="{{ section.settings.secondary_link }}">
+            {{ section.settings.secondary_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="purelane-hero__promises">
+      {% for block in section.blocks %}
+        {% if block.type == 'promise' %}
+          <div
+            class="purelane-hero__promise"
+            {{ block.shopify_attributes }}
+          >
+            <span>{{ block.settings.text }}</span>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="purelane-hero__slides">
+      {% for block in section.blocks %}
+        {% if block.type == 'slide' %}
+          <article
+            class="purelane-hero__slide"
+            {{ block.shopify_attributes }}
+          >
+            {% if block.settings.label != blank %}
+              <span class="purelane-hero__slide-label">
+                {{ block.settings.label }}
+              </span>
+            {% endif %}
+
+            {% if block.settings.products != blank %}
+              <div class="purelane-hero__products">
+                {% for product in block.settings.products %}
+                  <a href="{{ product.url }}">
+                    {% if product.featured_image %}
+                      {{
+                        product.featured_image
+                        | image_url: width: 800
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '240, 360, 540, 720',
+                          sizes: '(min-width: 990px) 40vw, 90vw',
+                          alt: product.featured_image.alt | default: product.title
+                      }}
+                    {% endif %}
+
+                    <span>{{ product.title }}</span>
+                    <span>{{ product.price | money }}</span>
+                  </a>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Purelane Hero",
+  "tag": "section",
+  "class": "purelane-hero-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Clean That Lasts"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Homecare that works on the toughest grime, made from plants. Kind to your home, your family and the world outside it."
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Primary button label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary button label",
+      "default": "How it works"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "promise",
+      "name": "Promise",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Promise",
+          "default": "Plant powered"
+        }
+      ]
+    },
+    {
+      "type": "slide",
+      "name": "Hero slide",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Offer label",
+          "default": "Single bottle"
+        },
+        {
+          "type": "product_list",
+          "id": "products",
+          "label": "Products",
+          "limit": 3
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Hero",
+      "blocks": [
+        {
+          "type": "promise",
+          "settings": {
+            "text": "Plant powered"
+          }
+        },
+        {
+          "type": "promise",
+          "settings": {
+            "text": "Safe for kids & pets"
+          }
+        },
+        {
+          "type": "promise",
+          "settings": {
+            "text": "Zero harsh chemicals"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "Single bottle"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "Any 2 products"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "Any 3 products"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
