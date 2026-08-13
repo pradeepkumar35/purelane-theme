@@ -11,6 +11,16 @@
 
 {% assign pool_collection = collections[section.settings.collection] %}
 
+{%- capture tiers_pairs -%}
+{%- for block in section.blocks -%}
+{%- assign tp = block.settings.product -%}
+{%- if tp != blank and tp.variants.size > 0 -%}
+{{ block.settings.qty | append: '' | json }}:{{ tp.variants.first.id | json }}{% unless forloop.last %},{% endunless %}
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+{%- assign tiers_json = '{' | append: tiers_pairs | append: '}' -%}
+
 <section
   id='PurelaneBundles-{{ section.id }}'
   class='purelane-bundles'
@@ -103,7 +113,8 @@
 
     {% render 'purelane-bundle-picker',
       picker_section_id: section.id,
-      pool_collection: pool_collection
+      pool_collection: pool_collection,
+      tiers_json: tiers_json
     %}
   </div>
 </section>

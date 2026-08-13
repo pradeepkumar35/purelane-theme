@@ -7,13 +7,15 @@
   Accepts:
   - picker_section_id: {String} the owning section.id
   - pool_collection: {Object} Collection used as the pick pool
-  - tiers_json: {String} JSON map of { "N": "<tier variant id>" }
+  - tiers_json: {String} JSON map of { "<count>": "<tier variant id>" } so
+    combos can resolve the tier product by product count.
 {% endcomment %}
 
 <div
   class="purelane-picker"
   data-purelane-picker
   data-section-id="{{ picker_section_id }}"
+  data-tiers="{{ tiers_json | escape }}"
   role="dialog"
   aria-modal="true"
   aria-label="Build your bundle"
