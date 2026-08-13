@@ -47,3 +47,9 @@ the live theme.
 - 2026-08-14 — Combo prices are flat bundle prices stored as settings (e.g.
   ₹499), matching the prototype's "already priced below the sum" framing;
   they are not computed from the member products.
+- 2026-08-14 — Review cards are merchant-editable schema blocks
+  (title/body/name/product) rather than hardcoded testimonials; the marquee
+  duplicates each card once for a seamless -50% loop.
+- 2026-08-14 — Reviews marquee is CSS-animated (52s, 40s mobile) and pauses
+  on hover/focus; `prefers-reduced-motion` disables it entirely (the
+  prototype left the animation playing for everyone).

@@ -56,9 +56,19 @@ Incremental notes on how the 5-section clone maps the prototype
   (`cmp-<width>.png` = prototype|theme side by side).
 
 ## Remaining
-- Reviews marquee rail (bonus).
 - Wire `templates/index.json` in prototype order once all sections exist
-  (currently hero + combos + bundles + shop).
+  (currently hero + reviews + combos + bundles + shop).
+
+## Reviews marquee rail (step 7 — done)
+- `sections/purelane-reviews.liquid` mirrors the prototype's #reviews:
+  kicker + two aggregate badges (4.8 / 8,000+ reviews, Loved by 12 lakh+
+  homes), followed by an auto-scrolling marquee of glass review cards.
+- Each review block (title/body/name/product) is rendered twice in the
+  track so `translate3d(-50%)` loops seamlessly. Rail pauses on
+  hover/:focus-within; animation is removed under `prefers-reduced-motion`.
+- Cards match prototype: 284px @desktop (250px ≤760px), ~166px tall
+  (prototype 168px), 52s loop (40s mobile), edge fade mask.
+- Wired `index.json` order: hero → reviews → combos → bundles → shop.
 
 ## Bundles + picker engine (steps 4–5 — done)
 - **Tier products**: three real products created via Admin REST
