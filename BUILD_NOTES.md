@@ -56,8 +56,9 @@ Incremental notes on how the 5-section clone maps the prototype
   (`cmp-<width>.png` = prototype|theme side by side).
 
 ## Remaining
-- Wire `templates/index.json` in prototype order once all sections exist
-  (currently hero + reviews + combos + bundles + shop).
+- None for the homepage clone — full prototype order is wired. (Follow-ups if
+  requested: theme check's plugin update to silence the `inline_richtext`
+  false positive, wiring real footer menus in the theme editor.)
 
 ## Reviews marquee rail (step 7 — done)
 - `sections/purelane-reviews.liquid` mirrors the prototype's #reviews:
@@ -111,3 +112,74 @@ Incremental notes on how the 5-section clone maps the prototype
   specs), uniform height ~433px vs prototype 448px. The 15px delta is the
   smaller product images vs the prototype's tall inline SVG art.
 - Wired `index.json` order: hero → combos → bundles → shop.
+
+## Header + ticker + rail (step 8 — done)
+- `sections/purelane-header.liquid` replaces the Dawn header group. It
+  renders, top to bottom:
+  - `.purelane-ticker`: marquee of richtext messages (blocks, each rendered
+    twice via `{% for pass in (1..2) %}` so the `-50%` loop is seamless).
+  - `.purelane-header-nav`: floating glass nav pill (brand + nav links +
+    icons). `position: fixed; top:38px`; adds `.is-up` (slides to top:10px)
+    on scroll > 90px via `assets/purelane-header.js`.
+  - `.purelane-rail`: fixed vertical dot rail (≥1180px only) with scroll-spy
+    (`data-purelane-rail` links; JS highlights the section at ~42% viewport).
+  - `.purelane-navmenu`: mobile slide-in menu (burger/backdrop/Esc).
+- Section id on the real sections changed to the anchor targets so
+  `#ingredients` / `#how` / `#proof` / `#shop` / `#bundles` / `#voices` /
+  `#combos` resolve (nav links + rail dots + hero CTAs all depend on these).
+- `sections/header-group.json` rewritten to use only `purelane-header`
+  (ticker blocks, nav link blocks, rail dot blocks — all merchant-editable).
+- Dawn's base.css hides `a:empty` (`display:none`) which killed the empty
+  rail dots — fixed with `display: inline-block` on `.purelane-rail a`.
+- Verified: header/ticker/rail render on product pages too (header group is
+  global).
+
+## Ingredients / How / Proof (steps 9–11 — done)
+- `sections/purelane-ingredients.liquid` (#ingredients): kicker + heading +
+  5 ingredient blocks, each choosing an SVG art variant
+  (coconut/orange/soapnut/neem/lemongrass) recolored to the light-V2 palette
+  (#0d5b52 + #b8701c accents). Renders as the prototype's art row + rule.
+- `sections/purelane-pillars.liquid` (#how): 3 glass pillar cards
+  (scrubbing/leaf/heart icons); title/body/link per block.
+- `sections/purelane-proof.liquid` (#proof): proof copy + CTA, rotating
+  product showcase (`.purelane-rot`) with real product images, caption
+  (name/note) and dots, plus a 4-stat glass band. `assets/purelane-proof.js`
+  auto-cycles every 2.9s, gated by IntersectionObserver and
+  `prefers-reduced-motion`. Caption/dot "first" tracking uses a `slide_index`
+  counter so slides work even if a stat block precedes them.
+
+## Range / Why / Categories / Trust / Signup / Footer (steps 12–16 — done)
+- `sections/purelane-range.liquid` (#range): glass panel with kicker +
+  heading + body, then a horizontally scrollable strip of the collection's
+  product images (leaf-tile fallback for missing images/products). `overflow-x:
+  auto` at all widths (was only <760px, which leaked 385px of page scroll at
+  768px).
+- `sections/purelane-why-bundles.liquid` (#whybundles): kicker + heading +
+  4 benefit cards (percent/check/star/truck icons).
+- `sections/purelane-categories.liquid` (#categories): kicker + heading +
+  4 category cards (product image or leaf-tile fallback) linking to `#combos`.
+- `sections/purelane-trust.liquid`: single glass bar with 4 trust items
+  (leaf/box/heart/globe icons).
+- `sections/purelane-signup.liquid`: glass panel + Shopify customer form
+  (`{% form 'customer' %}`) with `contact[tags]=newsletter`; success/error
+  note rendered inside the form block (the `form` object only exists there).
+- `sections/purelane-footer.liquid` replaces the Dawn footer group: brand +
+  about + link columns + bottom bar, plus the mobile-only sticky CTA
+  (≥960px hidden) linking to `#bundles`. Link columns render a chosen menu,
+  falling back to `Label|URL` lines when no menu is set.
+- `sections/footer-group.json` rewritten to use only `purelane-footer`.
+- `templates/index.json` now orders: hero → reviews → ingredients → pillars →
+  proof → combos → bundles → shop → range → whybundles → categories → trust
+  → signup.
+
+## Verified (final gate)
+- `shopify theme check`: 0 errors (11 pre-existing Dawn warnings). The
+  `inline_richtext` filter is valid Shopify but the bundled theme-check
+  plugin doesn't know it — suppressed inline with a `theme-check-disable`
+  comment.
+- Programmatic layout at 375 / 768 / 1024 / 1440 (headless Chrome):
+  all 18 sections present and positioned in order, no horizontal page
+  overflow, sticky CTA visible only ≤960px, rail visible only ≥1180px,
+  mobile menu opens via burger, product pages render the global
+  header/footer/ticker/rail.
+- Pushed to theme #161735213297.

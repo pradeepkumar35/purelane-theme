@@ -1,0 +1,118 @@
+{{ 'purelane.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  Purelane Bundle Categories (#categories)
+  Mirrors the prototype: kicker + heading then a 4-up grid (2 cols
+  mobile, 4 cols desktop) of category cards linking to #combos.
+  Each card shows a product image and a title + subtitle.
+{% endcomment %}
+
+<section
+  id='categories'
+  class='purelane-categories'
+  data-section-id='{{ section.id }}'
+  data-purelane-anchor='categories'
+>
+  <div class='purelane-categories__inner'>
+    <div class='purelane-categories__head rv'>
+      {% if section.settings.kicker != blank %}
+        <span class='purelane-categories__kicker'>{{ section.settings.kicker }}</span>
+      {% endif %}
+      {% if section.settings.heading != blank %}
+        <h2 class='purelane-categories__heading'>{{ section.settings.heading }}</h2>
+      {% endif %}
+    </div>
+
+    <div class='purelane-cats'>
+      {% for block in section.blocks %}
+        {% assign cat_product = block.settings.product %}
+        <a class='purelane-cat glass rv{% unless forloop.first %} rv-d{{ forloop.index }}{% endunless %}' href='{{ block.settings.link }}' {{ block.shopify_attributes }}>
+          <span class='purelane-cat__ph' aria-hidden='true'>
+            {% if cat_product != blank and cat_product.featured_image %}
+              {{
+                cat_product.featured_image
+                | image_url: width: 360
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '240, 360',
+                  sizes: '(min-width: 900px) 260px, 40vw',
+                  alt: cat_product.featured_image.alt
+                | default: cat_product.title
+              }}
+            {% else %}
+              <span class='purelane-cat__tile'>
+                <svg viewBox="0 0 24 24" fill="none" stroke="#4f7d10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/><path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/></svg>
+              </span>
+            {% endif %}
+          </span>
+          <span class='purelane-cat__txt'>
+            <h4 class='purelane-cat__title'>{{ block.settings.title }}</h4>
+            <p class='purelane-cat__sub'>{{ block.settings.subtitle }}</p>
+          </span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<script src='{{ 'purelane-reveal.js' | asset_url }}' defer='defer'></script>
+{% schema %}
+{
+  "name": "Purelane Categories",
+  "tag": "section",
+  "class": "purelane-categories-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Bundle categories"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find the right bundle for you"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Kitchen bundle"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Grease, dishes & more"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Categories",
+      "blocks": [
+        { "type": "category", "settings": { "title": "Kitchen bundle", "subtitle": "Grease, dishes & more", "link": "#combos" } },
+        { "type": "category", "settings": { "title": "Bathroom bundle", "subtitle": "Deep clean & disinfect", "link": "#combos" } },
+        { "type": "category", "settings": { "title": "Laundry bundle", "subtitle": "Softer, fresher wash", "link": "#combos" } },
+        { "type": "category", "settings": { "title": "Hard water bundle", "subtitle": "Melt away limescale", "link": "#combos" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

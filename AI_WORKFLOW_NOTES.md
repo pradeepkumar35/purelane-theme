@@ -53,3 +53,27 @@ the live theme.
 - 2026-08-14 — Reviews marquee is CSS-animated (52s, 40s mobile) and pauses
   on hover/focus; `prefers-reduced-motion` disables it entirely (the
   prototype left the animation playing for everyone).
+- 2026-08-14 — The header group is a single custom `purelane-header` section
+  (ticker + nav pill + rail + mobile menu) replacing Dawn's announcement bar
+  + header, and the footer group a single `purelane-footer` (columns + sticky
+  CTA) replacing Dawn's footer group.
+- 2026-08-14 — Section `id` attributes are the anchor targets themselves
+  (`#ingredients`, `#how`, `#proof`, `#shop`, `#bundles`, `#voices`,
+  `#combos`) so nav links / rail dots / hero CTAs all resolve; no JS was
+  already depending on the old `PurelaneX-{{ section.id }}` ids.
+- 2026-08-14 — Ticker messages are richtext blocks rendered twice so the
+  `-50%` marquee loop is seamless; the valid `inline_richtext` filter needs a
+  `theme-check-disable` comment because the bundled theme-check plugin
+  doesn't recognize it.
+- 2026-08-14 — Dawn's `base.css` rule `a:empty { display: none }` hid the
+  empty rail dots; `.purelane-rail a` now forces `display: inline-block`.
+- 2026-08-14 — The full-range strip is `overflow-x: auto` at every width, not
+  just ≤760px — the desktop `justify-content: space-between` row with 9
+  images overflowed the page at 768px by 385px otherwise.
+- 2026-08-14 — The proof rotator is JS-cycled (2.9s, IntersectionObserver
+  gated, reduced-motion aware) and its caption/dot "active" state is tracked
+  with a `slide_index` counter rather than `forloop.first`, so slides keep
+  working even when a stat block comes first in the block order.
+- 2026-08-14 — Footer link columns use a chosen menu when set, otherwise
+  fall back to `Label|URL` lines (the admin API token lacks the `menus`
+  scope), so the columns render without needing menu setup.

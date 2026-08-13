@@ -1,0 +1,205 @@
+{{ 'purelane.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  Purelane Footer + Sticky CTA (replaces Dawn footer group)
+  Mirrors the prototype: brand column + 3 link columns + bottom bar,
+  plus the mobile-only sticky CTA that links to #bundles.
+  Link columns are built from blocks; each block holds a heading and
+  one link, so merchants can add as many as they need.
+{% endcomment %}
+
+<footer
+  id='PurelaneFooter-{{ section.id }}'
+  class='purelane-footer'
+  data-section-id='{{ section.id }}'
+>
+  <div class='purelane-footer__inner'>
+    <div class='purelane-footer__grid'>
+      <div class='purelane-footer__col'>
+        <a class='purelane-footer__brand purelane-brand' href='{% if section.settings.brand_url != blank %}{{ section.settings.brand_url }}{% else %}#MainContent{% endif %}' aria-label='{{ section.settings.brand_name }} home'>
+          <span class='purelane-brand__mark' aria-hidden='true'>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/><path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/><path d="M12 21v-6"/></svg>
+          </span>
+          <span class='purelane-brand__txt'>
+            <span class='purelane-brand__n1'>{{ section.settings.brand_name }}</span>
+            <span class='purelane-brand__n2'>{{ section.settings.brand_tagline }}</span>
+          </span>
+        </a>
+        {% if section.settings.about != blank %}
+          <p class='purelane-footer__about'>{{ section.settings.about }}</p>
+        {% endif %}
+      </div>
+
+      {% for block in section.blocks %}
+        {% if block.type == 'link_list' %}
+          <div class='purelane-footer__col' {{ block.shopify_attributes }}>
+            <h5>{{ block.settings.heading }}</h5>
+            {% if block.settings.menu != blank and block.settings.menu.links.size > 0 %}
+              {% for link in block.settings.menu.links %}
+                <a href='{{ link.url }}'>{{ link.title }}</a>
+              {% endfor %}
+            {% else %}
+              {% assign fallback_lines = block.settings.fallback_links | newline_to_br | split: '<br />' %}
+              {% for line in fallback_lines %}
+                {% assign parts = line | split: '|' %}
+                {% assign label = parts[0] | strip %}
+                {% assign url = parts[1] | strip %}
+                {% if label != blank %}
+                  <a href='{{ url }}'>{{ label }}</a>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class='purelane-footer__bot'>
+      <span>© {{ 'now' | date: '%Y' }} {{ section.settings.company_name }}</span>
+      {% if section.settings.policies_text != blank %}
+        <span>{{ section.settings.policies_text }}</span>
+      {% endif %}
+    </div>
+  </div>
+</footer>
+
+{% if section.settings.show_sticky_cta %}
+  <div class='purelane-sticky'>
+    <span class='purelane-sticky__lbl'>
+      <b>{{ section.settings.sticky_title }}</b>
+      <span>{{ section.settings.sticky_subtitle }}</span>
+    </span>
+    <a class='purelane-sticky__btn' href='{{ section.settings.sticky_link }}'>{{ section.settings.sticky_label }}</a>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Purelane Footer",
+  "tag": "footer",
+  "class": "purelane-footer-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name",
+      "default": "Purelane"
+    },
+    {
+      "type": "text",
+      "id": "brand_tagline",
+      "label": "Brand tagline",
+      "default": "Clean, simply"
+    },
+    {
+      "type": "url",
+      "id": "brand_url",
+      "label": "Brand link"
+    },
+    {
+      "type": "textarea",
+      "id": "about",
+      "label": "About text",
+      "default": "Effective cleaning, powered by nature. Made for Indian homes since day one."
+    },
+    {
+      "type": "text",
+      "id": "company_name",
+      "label": "Company name",
+      "default": "Purelane Eco Products Private Limited"
+    },
+    {
+      "type": "text",
+      "id": "policies_text",
+      "label": "Policies text",
+      "default": "Privacy · Terms · Refunds · Contact"
+    },
+    {
+      "type": "header",
+      "content": "Sticky CTA (mobile)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sticky_cta",
+      "label": "Show sticky CTA",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sticky_title",
+      "label": "Sticky title",
+      "default": "Pick any 3, pay ₹499"
+    },
+    {
+      "type": "text",
+      "id": "sticky_subtitle",
+      "label": "Sticky subtitle",
+      "default": "Free shipping, always"
+    },
+    {
+      "type": "text",
+      "id": "sticky_label",
+      "label": "Sticky button label",
+      "default": "Build bundle"
+    },
+    {
+      "type": "url",
+      "id": "sticky_link",
+      "label": "Sticky button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_list",
+      "name": "Link column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        },
+        {
+          "type": "textarea",
+          "id": "fallback_links",
+          "label": "Fallback links",
+          "info": "Used when no menu is chosen. One per line: Label|URL",
+          "default": "Bestsellers|#shop\nKitchen|#shop\nLaundry|#shop\nHome|#shop"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Footer",
+      "blocks": [
+        {
+          "type": "link_list",
+          "settings": {
+            "heading": "Shop",
+            "fallback_links": "Bestsellers|#shop\nKitchen|#shop\nLaundry|#shop\nHome|#shop\nSkin|#shop\nStarter kits|#bundles"
+          }
+        },
+        {
+          "type": "link_list",
+          "settings": {
+            "heading": "About",
+            "fallback_links": "How it works|#how\nSustainability|#ingredients\nFAQs|#proof\nReviews|#voices"
+          }
+        },
+        {
+          "type": "link_list",
+          "settings": {
+            "heading": "Get in touch",
+            "fallback_links": "hello@purelane.com|mailto:hello@purelane.com\n+91 9930 123 234|tel:+919930123234"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

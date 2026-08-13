@@ -1,0 +1,99 @@
+{{ 'purelane.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  Purelane Signup (Join the club)
+  Mirrors the prototype: glass panel with kicker + heading + lede and an
+  email signup form. Uses Shopify's customer form so emails are captured
+  as newsletter signups (no account created).
+{% endcomment %}
+
+<section
+  id='PurelaneSignup-{{ section.id }}'
+  class='purelane-signup'
+  data-section-id='{{ section.id }}'
+>
+  <div class='purelane-signup__inner'>
+    <div class='purelane-signup__panel glass rv'>
+      {% if section.settings.kicker != blank %}
+        <span class='purelane-signup__kicker'>{{ section.settings.kicker }}</span>
+      {% endif %}
+      {% if section.settings.heading != blank %}
+        <h2 class='purelane-signup__heading'>{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.lede != blank %}
+        <p class='purelane-signup__lede'>{{ section.settings.lede }}</p>
+      {% endif %}
+
+      {% form 'customer', id: 'purelane-signup', class: 'purelane-signup__form' %}
+        <input type='hidden' name='contact[tags]' value='newsletter'>
+        <input
+          type='email'
+          name='contact[email]'
+          class='purelane-signup__input'
+          placeholder='{{ section.settings.placeholder }}'
+          aria-label='Email address'
+          required
+        >
+        <button class='purelane-signup__submit' type='submit'>
+          {{ section.settings.button_label }}
+        </button>
+
+        {% if form.posted_successfully? %}
+          <p class='purelane-signup__note'>{{ section.settings.success_message }}</p>
+        {% elsif form.errors %}
+          <p class='purelane-signup__note'>{{ form.errors | default_errors }}</p>
+        {% endif %}
+      {% endform %}
+    </div>
+  </div>
+</section>
+<script src='{{ 'purelane-reveal.js' | asset_url }}' defer='defer'></script>
+{% schema %}
+{
+  "name": "Purelane Signup",
+  "tag": "section",
+  "class": "purelane-signup-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Join the Purelane Club"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get ₹100 off your first bundle"
+    },
+    {
+      "type": "textarea",
+      "id": "lede",
+      "label": "Lede",
+      "default": "Plus first access to new launches and restocks."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Email placeholder",
+      "default": "your@email.com"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Get my ₹100 off"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thanks for joining — your ₹100 off code is on its way."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Signup"
+    }
+  ]
+}
+{% endschema %}

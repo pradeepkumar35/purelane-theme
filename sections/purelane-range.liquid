@@ -1,0 +1,120 @@
+{{ 'purelane.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  Purelane Range (#range)
+  Mirrors the prototype: a glass panel with kicker + heading + body on
+  the left, then a horizontally scrollable strip of product images.
+  Products come from the chosen collection; missing images fall back to
+  the leaf tile. Swipe hint shows on mobile.
+{% endcomment %}
+
+{% assign range_collection = collections[section.settings.collection] %}
+
+<section
+  id='range'
+  class='purelane-range'
+  data-section-id='{{ section.id }}'
+  data-purelane-anchor='range'
+>
+  <div class='purelane-range__inner'>
+    <div class='purelane-range__panel glass rv'>
+      <div class='purelane-range__head'>
+        <div>
+          {% if section.settings.kicker != blank %}
+            <span class='purelane-range__kicker'>{{ section.settings.kicker }}</span>
+          {% endif %}
+          {% if section.settings.heading != blank %}
+            <h2 class='purelane-range__heading'>{{ section.settings.heading }}</h2>
+          {% endif %}
+        </div>
+        {% if section.settings.body != blank %}
+          <p class='purelane-range__body'>{{ section.settings.body }}</p>
+        {% endif %}
+      </div>
+
+      <div class='purelane-range__stripwrap'>
+        <div class='purelane-rangerow'>
+          {% if range_collection.products.size > 0 %}
+            {% for product in range_collection.products limit: 10 %}
+              {% if product.featured_image %}
+                <span class='purelane-rangerow__item'>
+                  {{
+                    product.featured_image
+                    | image_url: width: 240
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '120, 180, 240',
+                      sizes: '120px',
+                      alt: product.featured_image.alt
+                    | default: product.title
+                  }}
+                </span>
+              {% else %}
+                <span class='purelane-rangerow__item'>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#4f7d10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/><path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/></svg>
+                </span>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <span class='purelane-rangerow__item'>
+              <svg viewBox="0 0 24 24" fill="none" stroke="#4f7d10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/><path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/></svg>
+            </span>
+            <span class='purelane-rangerow__item'>
+              <svg viewBox="0 0 24 24" fill="none" stroke="#4f7d10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/><path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/></svg>
+            </span>
+            <span class='purelane-rangerow__item'>
+              <svg viewBox="0 0 24 24" fill="none" stroke="#4f7d10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/><path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/></svg>
+            </span>
+          {% endif %}
+        </div>
+      </div>
+      {% if section.settings.hint != blank %}
+        <p class='purelane-range__hint'>{{ section.settings.hint }}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+<script src='{{ 'purelane-reveal.js' | asset_url }}' defer='defer'></script>
+{% schema %}
+{
+  "name": "Purelane Range",
+  "tag": "section",
+  "class": "purelane-range-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "The full range"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Every room, one shelf"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Floors, taps, kitchen, laundry, bathroom and hands. Fourteen plant-based formulas that replace every harsh bottle under your sink."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Products shown as an image strip."
+    },
+    {
+      "type": "text",
+      "id": "hint",
+      "label": "Swipe hint",
+      "default": "Swipe to see the full shelf"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Range"
+    }
+  ]
+}
+{% endschema %}

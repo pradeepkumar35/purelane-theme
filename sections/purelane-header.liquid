@@ -1,0 +1,328 @@
+{{ 'purelane.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  Purelane Header (replaces Dawn header group)
+  Mirrors the prototype's ticker + navpill + rail:
+  - auto-scrolling ticker of messages (rendered twice for a seamless -50% loop)
+  - fixed navpill with brand, anchor nav, search/account/cart icons
+  - fixed right rail (section progress, shown >= 1180px)
+  - mobile slide-in menu driven by purelane-header.js
+  Cart icon links to the cart page and shows the live item count.
+{% endcomment %}
+
+<div class='purelane-ticker' aria-hidden='true'>
+  <div class='purelane-ticker__track'>
+    {%- for pass in (1..2) -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'ticker' -%}
+          <span>{%- comment -%} theme-check-disable UnknownFilter {%- endcomment -%}{{ block.settings.text | inline_richtext }}</span>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+<header
+  class='purelane-header-nav'
+  id='PurelaneHeader-{{ section.id }}'
+  data-purelane-header
+  data-section-id='{{ section.id }}'
+>
+  <div class='purelane-navpill glass'>
+    <a class='purelane-brand' href='{% if section.settings.brand_url != blank %}{{ section.settings.brand_url }}{% else %}#MainContent{% endif %}' aria-label='{{ section.settings.brand_name }} home'>
+      <span class='purelane-brand__mark' aria-hidden='true'>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 20.5 8v8L12 21 3.5 16V8L12 3Z"/><path d="M12 12 20.5 8M12 12v9M12 12 3.5 8"/></svg>
+      </span>
+      <span class='purelane-brand__txt'>
+        <span class='purelane-brand__n1'>{{ section.settings.brand_name }}</span>
+        <span class='purelane-brand__n2'>{{ section.settings.brand_tagline }}</span>
+      </span>
+    </a>
+
+    <nav class='purelane-navlinks' aria-label='Main'>
+      {% for block in section.blocks %}
+        {% if block.type == 'link' %}
+          <a href='{{ block.settings.url }}' {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
+        {% endif %}
+      {% endfor %}
+    </nav>
+
+    <div class='purelane-navtools'>
+      {% if section.settings.show_search %}
+        <a class='purelane-ico purelane-ico--hide-s' href='{{ routes.search_url }}' aria-label='Search'>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </a>
+      {% endif %}
+
+      {% if section.settings.show_account %}
+        <a class='purelane-ico purelane-ico--hide-s' href='{{ routes.account_url }}' aria-label='Account'>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6"/></svg>
+        </a>
+      {% endif %}
+
+      {% if section.settings.show_cart %}
+        <a class='purelane-ico' href='{{ routes.cart_url }}' aria-label='Cart, {{ cart.item_count }} items'>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h2l2.2 10.4a1.6 1.6 0 0 0 1.6 1.3h7.6a1.6 1.6 0 0 0 1.6-1.3L20.5 9H6.4"/><circle cx="10" cy="20.5" r="1.1"/><circle cx="17.5" cy="20.5" r="1.1"/></svg>
+          <span class='purelane-ico__dot'>{{ cart.item_count }}</span>
+        </a>
+      {% endif %}
+
+      <button
+        type='button'
+        class='purelane-ico purelane-burger'
+        aria-label='Menu'
+        aria-expanded='false'
+        aria-controls='purelane-navmenu-{{ section.id }}'
+        data-purelane-burger
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class='purelane-rail' aria-label='Section progress'>
+  {% for block in section.blocks %}
+    {% if block.type == 'rail' %}
+      <a
+        href='{{ block.settings.url }}'
+        aria-label='{{ block.settings.label }}'
+        data-purelane-rail
+        {% if forloop.index == 1 %}class='is-on'{% endif %}
+        {{ block.shopify_attributes }}
+      ></a>
+    {% endif %}
+  {% endfor %}
+</nav>
+
+<div class='purelane-navmenu__backdrop' data-purelane-backdrop></div>
+<aside
+  class='purelane-navmenu'
+  id='purelane-navmenu-{{ section.id }}'
+  data-purelane-navmenu
+  aria-label='Menu'
+  aria-hidden='true'
+>
+  <button type='button' class='purelane-navmenu__close' aria-label='Close menu' data-purelane-close>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+  </button>
+  {% for block in section.blocks %}
+    {% if block.type == 'link' %}
+      <a href='{{ block.settings.url }}' {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
+    {% endif %}
+  {% endfor %}
+</aside>
+
+<script src='{{ 'purelane-header.js' | asset_url }}' defer='defer'></script>
+
+{% schema %}
+{
+  "name": "Purelane Header",
+  "tag": "header",
+  "class": "purelane-header-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name",
+      "default": "Purelane"
+    },
+    {
+      "type": "text",
+      "id": "brand_tagline",
+      "label": "Brand tagline",
+      "default": "Clean, simply"
+    },
+    {
+      "type": "url",
+      "id": "brand_url",
+      "label": "Brand link"
+    },
+    {
+      "type": "header",
+      "content": "Nav tools"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart",
+      "label": "Show cart icon",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ticker",
+      "name": "Ticker message",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Message",
+          "info": "Use bold for the emphasised part (rendered in green).",
+          "default": "<p>Free shipping <b>on every bundle across India</b></p>"
+        }
+      ]
+    },
+    {
+      "type": "link",
+      "name": "Nav link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Home"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "rail",
+      "name": "Rail dot",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "info": "Used for the aria-label only."
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Section link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Header",
+      "blocks": [
+        {
+          "type": "ticker",
+          "settings": {
+            "text": "<p>Free shipping <b>on every bundle across India</b></p>"
+          }
+        },
+        {
+          "type": "ticker",
+          "settings": {
+            "text": "<p>100% plant-based <b>and non-toxic</b></p>"
+          }
+        },
+        {
+          "type": "ticker",
+          "settings": {
+            "text": "<p>Loved by <b>30,000+ happy homes</b></p>"
+          }
+        },
+        {
+          "type": "ticker",
+          "settings": {
+            "text": "<p>Buy 3 <b>at flat ₹499</b></p>"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Home",
+            "url": "#MainContent"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Ingredients",
+            "url": "#ingredients"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "How it works",
+            "url": "#how"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Shop",
+            "url": "#shop"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Bundles",
+            "url": "#bundles"
+          }
+        },
+        {
+          "type": "rail",
+          "settings": {
+            "label": "Hero",
+            "url": "#MainContent"
+          }
+        },
+        {
+          "type": "rail",
+          "settings": {
+            "label": "Ingredients",
+            "url": "#ingredients"
+          }
+        },
+        {
+          "type": "rail",
+          "settings": {
+            "label": "How it works",
+            "url": "#how"
+          }
+        },
+        {
+          "type": "rail",
+          "settings": {
+            "label": "Proof",
+            "url": "#proof"
+          }
+        },
+        {
+          "type": "rail",
+          "settings": {
+            "label": "Bundles",
+            "url": "#bundles"
+          }
+        },
+        {
+          "type": "rail",
+          "settings": {
+            "label": "Shop",
+            "url": "#shop"
+          }
+        },
+        {
+          "type": "rail",
+          "settings": {
+            "label": "Reviews",
+            "url": "#voices"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

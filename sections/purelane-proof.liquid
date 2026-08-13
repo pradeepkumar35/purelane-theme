@@ -1,0 +1,208 @@
+{{ 'purelane.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  Purelane Proof (#proof)
+  Mirrors the prototype: proof-l copy + a rotating product showcase
+  (auto-cycles with name/note caption and dots) + a 4-stat band.
+  Rotator slides use real product images; purelane-proof.js cycles them.
+{% endcomment %}
+
+<section
+  id='proof'
+  class='purelane-proof'
+  data-section-id='{{ section.id }}'
+  data-purelane-anchor='proof'
+>
+  <div class='purelane-proof__inner'>
+    <div class='purelane-proof__panel glass rv'>
+      <div class='purelane-proof__grid'>
+        <div class='purelane-proof__copy'>
+          {% if section.settings.kicker != blank %}
+            <span class='purelane-proof__kicker'>{{ section.settings.kicker }}</span>
+          {% endif %}
+          {% if section.settings.heading != blank %}
+            <h2 class='purelane-proof__heading'>{{ section.settings.heading }}</h2>
+          {% endif %}
+          {% if section.settings.body != blank %}
+            <p class='purelane-proof__body'>{{ section.settings.body }}</p>
+          {% endif %}
+          {% if section.settings.cta_label != blank %}
+            <a class='purelane-proof__cta' href='{{ section.settings.cta_link }}'>
+              {{ section.settings.cta_label }}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13m-5-6 6 6-6 6"/></svg>
+            </a>
+          {% endif %}
+        </div>
+
+        {% assign first_slide = nil %}
+{% for block in section.blocks %}
+  {% if block.type == 'slide' and first_slide == nil %}
+    {% assign first_slide = block %}
+  {% endif %}
+{% endfor %}
+
+        <div class='purelane-rot glass-2' data-purelane-rot aria-hidden='true'>
+          <div class='purelane-rot__frame'>
+            {% assign slide_index = 0 %}
+            {% for block in section.blocks %}
+              {% if block.type == 'slide' %}
+                {% assign p = block.settings.product %}
+                <div
+                  class='purelane-rot__slide{% if slide_index == 0 %} is-on{% endif %}'
+                  data-name='{{ block.settings.name }}'
+                  data-note='{{ block.settings.note }}'
+                  data-purelane-slide
+                  {{ block.shopify_attributes }}
+                >
+                  {% if p != blank and p.featured_image %}
+                    {{
+                      p.featured_image
+                      | image_url: width: 400
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '200, 300, 400',
+                        sizes: '(min-width: 900px) 420px, 80vw',
+                        alt: p.featured_image.alt
+                      | default: p.title
+                    }}
+                  {% endif %}
+                </div>
+                {% assign slide_index = slide_index | plus: 1 %}
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class='purelane-rot__cap'>
+            <b>{{ first_slide.settings.name }}</b>
+            <span>{{ first_slide.settings.note }}</span>
+          </div>
+          <div class='purelane-rot__dots'>
+            {% assign slide_index = 0 %}
+            {% for block in section.blocks %}
+              {% if block.type == 'slide' %}
+                <i class='purelane-rot__dot{% if slide_index == 0 %} is-on{% endif %}'></i>
+                {% assign slide_index = slide_index | plus: 1 %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class='purelane-proof__stats glass-2'>
+          {% for block in section.blocks %}
+            {% if block.type == 'stat' %}
+              <div class='purelane-stat' {{ block.shopify_attributes }}>
+                <div class='purelane-stat__ring'>{{ block.settings.value }}</div>
+                <h5 class='purelane-stat__title'>{{ block.settings.title }}</h5>
+                <p class='purelane-stat__body'>{{ block.settings.body }}</p>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script src='{{ 'purelane-proof.js' | asset_url }}' defer='defer'></script>
+<script src='{{ 'purelane-reveal.js' | asset_url }}' defer='defer'></script>
+{% schema %}
+{
+  "name": "Purelane Proof",
+  "tag": "section",
+  "class": "purelane-proof-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Why it works"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Tough on grime. Gentle on everything else."
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Every formula is built on plant-derived cleansers and essential oils. It behaves exactly like the cleaner you are used to, minus the things you never signed up for."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA label",
+      "default": "See the ingredient list"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Rotator product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Kitchen cleaner"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note",
+          "default": "Foam lifts grease, no scrubbing"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "99.9%"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Germ kill"
+        },
+        {
+          "type": "text",
+          "id": "body",
+          "label": "Body",
+          "default": "Tested against germs and bacteria"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Proof",
+      "blocks": [
+        { "type": "slide", "settings": { "name": "Kitchen cleaner", "note": "Foam lifts grease, no scrubbing" } },
+        { "type": "slide", "settings": { "name": "Tap & limescale", "note": "Melts hard water stains" } },
+        { "type": "slide", "settings": { "name": "Laundry detergent", "note": "Tough on odour, soft on fabric" } },
+        { "type": "slide", "settings": { "name": "Toilet cleaner", "note": "Kills 99.9% of germs" } },
+        { "type": "slide", "settings": { "name": "Floor cleaner", "note": "Neem powered, pet safe" } },
+        { "type": "slide", "settings": { "name": "Dishwash gel", "note": "Cuts grease, kind to hands" } },
+        { "type": "stat", "settings": { "value": "99.9%", "title": "Germ kill", "body": "Tested against germs and bacteria" } },
+        { "type": "stat", "settings": { "value": "0%", "title": "Sulphates", "body": "No SLS, chlorine or parabens" } },
+        { "type": "stat", "settings": { "value": "100%", "title": "Plant based", "body": "Cleansers derived from plants" } },
+        { "type": "stat", "settings": { "value": "4.8", "title": "Rated", "body": "Across 8,000+ verified reviews" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

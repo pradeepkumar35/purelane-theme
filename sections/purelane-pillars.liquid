@@ -1,0 +1,125 @@
+{{ 'purelane.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  Purelane Pillars (#how)
+  Mirrors the prototype: three glass pillar cards explaining the
+  "how it works" promise. Each block picks one of three icons.
+{% endcomment %}
+
+<section
+  id='how'
+  class='purelane-pillars'
+  data-section-id='{{ section.id }}'
+  data-purelane-anchor='how'
+>
+  <div class='purelane-pillars__inner'>
+    <div class='purelane-pillars__grid'>
+      {% for block in section.blocks %}
+        <article class='purelane-pillar glass rv{% unless forloop.first %} rv-d{{ forloop.index }}{% endunless %}' {{ block.shopify_attributes }}>
+          <span class='purelane-pillar__icon' aria-hidden='true'>
+            {% case block.settings.icon %}
+              {% when 'scrubbing' %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8.5" r="3.2"/><circle cx="16.4" cy="6.6" r="2.2"/><circle cx="15" cy="13" r="2.8"/><circle cx="8.6" cy="15.6" r="2.1"/><path d="M4 21h16"/></svg>
+              {% when 'leaf' %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v6.2c0 4.3 3.1 7.6 7.5 8.8 4.4-1.2 7.5-4.5 7.5-8.8V6L12 3Z"/><path d="m9 12 2.2 2.2L15.4 10"/></svg>
+              {% when 'heart' %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-9.4A4.1 4.1 0 0 1 12 8a4.1 4.1 0 0 1 7 2.6c0 5-7 9.4-7 9.4Z"/></svg>
+            {% endcase %}
+          </span>
+          <h3 class='purelane-pillar__title'>{{ block.settings.title }}</h3>
+          <p class='purelane-pillar__body'>{{ block.settings.body }}</p>
+          {% if block.settings.link_label != blank %}
+            <a class='purelane-pillar__link' href='{{ block.settings.link_url }}'>{{ block.settings.link_label }}</a>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<script src='{{ 'purelane-reveal.js' | asset_url }}' defer='defer'></script>
+{% schema %}
+{
+  "name": "Purelane Pillars",
+  "tag": "section",
+  "class": "purelane-pillars-section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "pillar",
+      "name": "Pillar",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "scrubbing", "label": "Scrubbing / bubbles" },
+            { "value": "leaf", "label": "Leaf / clean ingredients" },
+            { "value": "heart", "label": "Heart / safe around everyone" }
+          ],
+          "default": "scrubbing"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Less scrubbing"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body",
+          "default": "A foaming formulation. The foam clings to grease and lifts it, so you wipe instead of scrub."
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label",
+          "default": "Learn more"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Pillars",
+      "blocks": [
+        {
+          "type": "pillar",
+          "settings": {
+            "icon": "scrubbing",
+            "title": "Less scrubbing",
+            "body": "A foaming formulation. The foam clings to grease and lifts it, so you wipe instead of scrub.",
+            "link_label": "Learn more",
+            "link_url": "#shop"
+          }
+        },
+        {
+          "type": "pillar",
+          "settings": {
+            "icon": "leaf",
+            "title": "Clean ingredients",
+            "body": "No sulphates, no chlorine, no synthetic fragrance. Nothing on the label you would not want near your food.",
+            "link_label": "Learn more",
+            "link_url": "#ingredients"
+          }
+        },
+        {
+          "type": "pillar",
+          "settings": {
+            "icon": "heart",
+            "title": "Safe around everyone",
+            "body": "Gentle on hands, safe around kids and pets, and it leaves no toxic residue on the surfaces you touch every day.",
+            "link_label": "Learn more",
+            "link_url": "#proof"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

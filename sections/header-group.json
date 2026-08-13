@@ -8,54 +8,149 @@
  * ------------------------------------------------------------
  */
 {
-  "name": "t:sections.header.name",
+  "name": "Purelane Header Group",
   "type": "header",
   "sections": {
-    "announcement-bar": {
-      "type": "announcement-bar",
+    "purelane-header": {
+      "type": "purelane-header",
+      "settings": {
+        "brand_name": "Purelane",
+        "brand_tagline": "Clean, simply",
+        "show_search": true,
+        "show_account": true,
+        "show_cart": true
+      },
       "blocks": {
-        "announcement-bar-0": {
-          "type": "announcement",
+        "ticker-1": {
+          "type": "ticker",
           "settings": {
-            "text": "Welcome to our store",
-            "link": ""
+            "text": "<p>Free shipping <b>on every bundle across India</b></p>"
+          }
+        },
+        "ticker-2": {
+          "type": "ticker",
+          "settings": {
+            "text": "<p>100% plant-based <b>and non-toxic</b></p>"
+          }
+        },
+        "ticker-3": {
+          "type": "ticker",
+          "settings": {
+            "text": "<p>Loved by <b>30,000+ happy homes</b></p>"
+          }
+        },
+        "ticker-4": {
+          "type": "ticker",
+          "settings": {
+            "text": "<p>Buy 3 <b>at flat ₹499</b></p>"
+          }
+        },
+        "link-1": {
+          "type": "link",
+          "settings": {
+            "label": "Home",
+            "url": "#MainContent"
+          }
+        },
+        "link-2": {
+          "type": "link",
+          "settings": {
+            "label": "Ingredients",
+            "url": "#ingredients"
+          }
+        },
+        "link-3": {
+          "type": "link",
+          "settings": {
+            "label": "How it works",
+            "url": "#how"
+          }
+        },
+        "link-4": {
+          "type": "link",
+          "settings": {
+            "label": "Shop",
+            "url": "#shop"
+          }
+        },
+        "link-5": {
+          "type": "link",
+          "settings": {
+            "label": "Bundles",
+            "url": "#bundles"
+          }
+        },
+        "rail-1": {
+          "type": "rail",
+          "settings": {
+            "label": "Hero",
+            "url": "#MainContent"
+          }
+        },
+        "rail-2": {
+          "type": "rail",
+          "settings": {
+            "label": "Ingredients",
+            "url": "#ingredients"
+          }
+        },
+        "rail-3": {
+          "type": "rail",
+          "settings": {
+            "label": "How it works",
+            "url": "#how"
+          }
+        },
+        "rail-4": {
+          "type": "rail",
+          "settings": {
+            "label": "Proof",
+            "url": "#proof"
+          }
+        },
+        "rail-5": {
+          "type": "rail",
+          "settings": {
+            "label": "Bundles",
+            "url": "#bundles"
+          }
+        },
+        "rail-6": {
+          "type": "rail",
+          "settings": {
+            "label": "Shop",
+            "url": "#shop"
+          }
+        },
+        "rail-7": {
+          "type": "rail",
+          "settings": {
+            "label": "Reviews",
+            "url": "#voices"
           }
         }
       },
       "block_order": [
-        "announcement-bar-0"
-      ],
-      "settings": {
-        "auto_rotate": false,
-        "change_slides_speed": 5,
-        "color_scheme": "scheme-1",
-        "show_line_separator": true,
-        "show_social": false,
-        "enable_country_selector": false,
-        "enable_language_selector": false
-      }
-    },
-    "header": {
-      "type": "header",
-      "settings": {
-        "logo_position": "middle-left",
-        "mobile_logo_position": "center",
-        "menu": "main-menu",
-        "menu_type_desktop": "dropdown",
-        "sticky_header_type": "on-scroll-up",
-        "show_line_separator": true,
-        "color_scheme": "scheme-1",
-        "menu_color_scheme": "scheme-1",
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "margin_bottom": 0,
-        "padding_top": 20,
-        "padding_bottom": 20
-      }
+        "ticker-1",
+        "ticker-2",
+        "ticker-3",
+        "ticker-4",
+        "link-1",
+        "link-2",
+        "link-3",
+        "link-4",
+        "link-5",
+        "rail-1",
+        "rail-2",
+        "rail-3",
+        "rail-4",
+        "rail-5",
+        "rail-6",
+        "rail-7"
+      ]
     }
   },
   "order": [
-    "announcement-bar",
-    "header"
+    "purelane-header"
   ]
 }

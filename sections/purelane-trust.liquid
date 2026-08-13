@@ -1,0 +1,79 @@
+{{ 'purelane.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  Purelane Trust Bar
+  Mirrors the prototype: a single glass bar with 4 trust items
+  (2 cols mobile, 4 cols desktop). Each block picks one of four icons.
+{% endcomment %}
+
+<section
+  id='PurelaneTrust-{{ section.id }}'
+  class='purelane-trust'
+  data-section-id='{{ section.id }}'
+>
+  <div class='purelane-trust__inner'>
+    <div class='purelane-trust__bar glass rv'>
+      {% for block in section.blocks %}
+        <div class='purelane-trust__item' {{ block.shopify_attributes }}>
+          {% case block.settings.icon %}
+            {% when 'leaf' %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/><path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/></svg>
+            {% when 'box' %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M4 8 6.5 3h11L20 8M9.5 12h5"/></svg>
+            {% when 'heart' %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-9.4A4.1 4.1 0 0 1 12 8a4.1 4.1 0 0 1 7 2.6c0 5-7 9.4-7 9.4Z"/></svg>
+            {% when 'globe' %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2M12 3.4c2.4 2.4 3.6 5.4 3.6 8.6S14.4 18.2 12 20.6c-2.4-2.4-3.6-5.4-3.6-8.6S9.6 5.8 12 3.4Z"/></svg>
+          {% endcase %}
+          <span>{{ block.settings.text }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<script src='{{ 'purelane-reveal.js' | asset_url }}' defer='defer'></script>
+{% schema %}
+{
+  "name": "Purelane Trust Bar",
+  "tag": "section",
+  "class": "purelane-trust-section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "leaf", "label": "Leaf / plant derived" },
+            { "value": "box", "label": "Box / recyclable" },
+            { "value": "heart", "label": "Heart / safe" },
+            { "value": "globe", "label": "Globe / made in India" }
+          ],
+          "default": "leaf"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "info": "Use <br> to split lines.",
+          "default": "Plant derived<br>formulas"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Trust Bar",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "leaf", "text": "Plant derived<br>formulas" } },
+        { "type": "item", "settings": { "icon": "box", "text": "Recyclable<br>packaging" } },
+        { "type": "item", "settings": { "icon": "heart", "text": "Safe for<br>kids & pets" } },
+        { "type": "item", "settings": { "icon": "globe", "text": "Made in<br>India" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
