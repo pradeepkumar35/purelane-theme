@@ -121,6 +121,62 @@
       {% endfor %}
     </div>
 
+    <div class='purelane-hero__badgestrip' aria-label='Product promises'>
+      {% for block in section.blocks %}
+        {% if block.type == 'promise' %}
+          <div
+            class='purelane-hero__badge'
+            {{ block.shopify_attributes }}
+          >
+            <span class='purelane-hero__badge-icon' aria-hidden='true'>
+              {% case forloop.index %}
+                {% when 1 %}
+                  <svg
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    stroke-width='1.6'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                  >
+                    <path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/>
+                    <path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/>
+                  </svg>
+
+                {% when 2 %}
+                  <svg
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    stroke-width='1.6'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                  >
+                    <path d="M12 3 4.5 6v6.2c0 4.3 3.1 7.6 7.5 8.8 4.4-1.2 7.5-4.5 7.5-8.8V6L12 3Z"/>
+                    <path d="m9 12 2.2 2.2L15.4 10"/>
+                  </svg>
+
+                {% when 3 %}
+                  <svg
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    stroke-width='1.6'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                  >
+                    <circle cx="12" cy="12" r="8.4"/>
+                    <path d="M6.4 17.6 17.6 6.4"/>
+                  </svg>
+              {% endcase %}
+            </span>
+
+            <span>{{ block.settings.text }}</span>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
     <div class='purelane-hero__slides'>
       {% for block in section.blocks %}
         {% if block.type == 'slide' %}

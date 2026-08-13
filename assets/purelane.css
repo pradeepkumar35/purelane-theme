@@ -9,9 +9,9 @@
     display: flex;
     align-items: flex-end;
     padding: 150px 0 34px;
-    color: #ece6f7;
+    color: #241a3d;
     overflow: hidden;
-    background: linear-gradient(178deg, #1ea38d 0%, #0b8578 22%, #017069 48%, #4b3a8f 74%, #01524e 100%);
+    background: linear-gradient(178deg, #fbfffb 0%, #eafaec 24%, #d6f1dc 54%, #bfe8ca 100%);
 }
 
 .purelane-hero__heading-line {
@@ -19,7 +19,7 @@
 }
 
 .purelane-hero__heading-accent {
-    color: #f0a03c;
+    color: #b8701c;
 }
 
 .purelane-hero__rule {
@@ -33,14 +33,14 @@
 .purelane-hero__rule > span {
     height: 1px;
     flex: 1;
-    background: linear-gradient(90deg, rgba(236, 230, 247, 0.44), transparent);
+    background: linear-gradient(90deg, rgba(75, 58, 143, 0.34), transparent);
 }
 
 .purelane-hero__rule svg {
     width: 16px;
     height: 16px;
     flex: 0 0 auto;
-    color: #f0a03c;
+    color: #b8701c;
 }
 
 .purelane-hero {
@@ -69,8 +69,7 @@
     line-height: 0.87;
     letter-spacing: -0.018em;
     text-transform: uppercase;
-    color: #faf7fd;
-    text-shadow: 0 6px 40px rgba(2, 20, 19, 0.55);
+    color: #17102b;
 }
 
 .purelane-hero__description {
@@ -78,7 +77,7 @@
     font-family: Inter, system-ui, sans-serif;
     font-size: clamp(15px, 1.35vw, 17.5px);
     line-height: 1.62;
-    color: rgba(236, 230, 247, 0.74);
+    color: rgba(36, 26, 61, 0.78);
 }
 
 .purelane-hero__actions {
@@ -102,17 +101,27 @@
     line-height: 1;
     text-transform: uppercase;
     text-decoration: none;
+    transition: box-shadow 0.35s var(--ease);
 }
 
 .purelane-hero__actions a:first-child {
-    background: linear-gradient(135deg, #c9761d, #5d8d1c);
-    color: #08211a;
+    background: linear-gradient(135deg, #00706a, #004b46);
+    color: #f4fdf6;
+    box-shadow: 0 12px 26px rgba(0, 80, 74, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.purelane-hero__actions a:first-child:hover {
+    box-shadow: 0 18px 36px rgba(0, 80, 74, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 .purelane-hero__actions a:last-child {
-    border: 1px solid rgba(236, 230, 247, 0.3);
-    background: rgba(236, 230, 247, 0.1);
-    color: #faf7fd;
+    border: 1px solid rgba(75, 58, 143, 0.22);
+    background: rgba(255, 255, 255, 0.66);
+    color: #01423b;
+}
+
+.purelane-hero__actions a:last-child:hover {
+    background: rgba(255, 255, 255, 0.9);
 }
 
 @media (max-width: 1200px) {
@@ -152,9 +161,9 @@
     pointer-events: none;
     background: linear-gradient(
         102deg,
-        rgba(1, 45, 42, 0.68) 0%,
-        rgba(1, 45, 42, 0.4) 30%,
-        rgba(1, 45, 42, 0.1) 52%,
+        rgba(255, 255, 255, 0.8) 0%,
+        rgba(255, 255, 255, 0.5) 30%,
+        rgba(255, 255, 255, 0.12) 52%,
         transparent 66%
     );
 }
@@ -163,9 +172,9 @@
     .purelane-hero-section::before {
         background: linear-gradient(
             180deg,
-            rgba(1, 45, 42, 0.44) 0%,
-            rgba(1, 45, 42, 0.22) 34%,
-            rgba(1, 40, 38, 0.6) 100%
+            rgba(255, 255, 255, 0.62) 0%,
+            rgba(255, 255, 255, 0.34) 36%,
+            rgba(255, 255, 255, 0.66) 100%
         );
     }
 }
@@ -180,12 +189,12 @@
     z-index: 4;
     width: 96px;
     padding: 12px 8px;
-    border: 1px solid rgba(236, 230, 247, 0.16);
+    border: 1px solid rgba(75, 58, 143, 0.13);
     border-radius: 20px;
-    background: linear-gradient(158deg, rgba(236, 230, 247, 0.1), rgba(0, 48, 46, 0.22));
+    background: linear-gradient(158deg, rgba(255, 255, 255, 0.66), rgba(236, 230, 247, 0.44));
     box-shadow:
-        0 18px 48px rgba(18, 12, 34, 0.36),
-        inset 0 1px 0 rgba(255, 255, 255, 0.16);
+        0 16px 38px rgba(58, 44, 112, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86);
     backdrop-filter: blur(18px) saturate(135%);
     -webkit-backdrop-filter: blur(18px) saturate(135%);
     transform: translateY(-50%);
@@ -201,7 +210,7 @@
 }
 
 .purelane-hero__promise + .purelane-hero__promise {
-    border-top: 1px solid rgba(236, 230, 247, 0.14);
+    border-top: 1px solid rgba(75, 58, 143, 0.12);
 }
 
 .purelane-hero__promise-icon {
@@ -209,10 +218,10 @@
     width: 38px;
     height: 38px;
     place-items: center;
-    border: 1px solid rgba(236, 230, 247, 0.22);
+    border: 1px solid rgba(75, 58, 143, 0.16);
     border-radius: 50%;
-    background: rgba(236, 230, 247, 0.1);
-    color: #f0a03c;
+    background: rgba(255, 255, 255, 0.62);
+    color: #4f7d10;
 }
 
 .purelane-hero__promise-icon svg {
@@ -221,7 +230,7 @@
 }
 
 .purelane-hero__promise > span:last-child {
-    color: rgba(236, 230, 247, 0.74);
+    color: rgba(36, 26, 61, 0.78);
     font-size: 8.5px;
     font-weight: 700;
     line-height: 1.34;
@@ -250,17 +259,17 @@
     padding: 0;
     border: 0;
     border-radius: 50%;
-    background: rgba(236, 230, 247, 0.3);
+    background: rgba(75, 58, 143, 0.22);
     cursor: pointer;
 }
 
 .purelane-hero__dot.is-active {
-    background: #f0a03c;
-    box-shadow: 0 0 0 4px rgba(240, 160, 60, 0.16);
+    background: #b8701c;
+    box-shadow: 0 0 0 4px rgba(184, 112, 28, 0.18);
 }
 
 .purelane-hero__dot:focus-visible {
-    outline: 2px solid #f0a03c;
+    outline: 2px solid #4f7d10;
     outline-offset: 4px;
 }
 
@@ -281,6 +290,49 @@
 
 .purelane-hero__slide.is-active {
     display: block;
+}
+
+.purelane-hero__badgestrip {
+    display: none;
+}
+
+.purelane-hero__badge {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 62px;
+    padding: 9px 6px;
+    border: 1px solid rgba(75, 58, 143, 0.13);
+    border-radius: 14px;
+    background: linear-gradient(158deg, rgba(255, 255, 255, 0.66), rgba(236, 230, 247, 0.44));
+    box-shadow:
+        0 16px 38px rgba(58, 44, 112, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86);
+    color: rgba(36, 26, 61, 0.78);
+    text-align: center;
+    font-size: 8.5px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    backdrop-filter: blur(12px) saturate(130%);
+    -webkit-backdrop-filter: blur(12px) saturate(130%);
+}
+
+.purelane-hero__badge-icon {
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    color: #4f7d10;
+}
+
+.purelane-hero__badge-icon svg {
+    width: 18px;
+    height: 18px;
 }
 
 .purelane-hero__products {
@@ -311,7 +363,7 @@
     height: 100%;
     object-fit: contain;
     object-position: center bottom;
-    filter: drop-shadow(0 26px 40px rgba(1, 22, 20, 0.6));
+    filter: drop-shadow(0 14px 22px rgba(0, 74, 66, 0.15));
 }
 
 /* One product */
@@ -366,13 +418,13 @@
     gap: 5px;
     max-width: 52%;
     padding: 11px 14px 12px;
-    border: 1px solid rgba(236, 230, 247, 0.16);
+    border: 1px solid rgba(75, 58, 143, 0.13);
     border-radius: 16px;
-    background: linear-gradient(158deg, rgba(236, 230, 247, 0.1), rgba(0, 48, 46, 0.22));
+    background: linear-gradient(158deg, rgba(255, 255, 255, 0.66), rgba(236, 230, 247, 0.44));
     box-shadow:
-        0 18px 48px rgba(18, 12, 34, 0.36),
-        inset 0 1px 0 rgba(255, 255, 255, 0.16);
-    color: #faf7fd;
+        0 16px 38px rgba(58, 44, 112, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86);
+    color: #17102b;
     backdrop-filter: blur(18px) saturate(135%);
     -webkit-backdrop-filter: blur(18px) saturate(135%);
 }
@@ -382,6 +434,7 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    color: #b8701c;
 }
 
 .purelane-hero__offer-price {
@@ -397,11 +450,11 @@
 
 .purelane-hero__offer-price s {
     font-size: 12px;
-    color: rgba(236, 230, 247, 0.6);
+    color: rgba(36, 26, 61, 0.56);
 }
 
 .purelane-hero__offer-save {
-    color: #f0a03c;
+    color: #4f7d10;
     font-size: 11px;
     font-weight: 700;
 }
@@ -444,6 +497,28 @@
 
     .products-count-3 .purelane-hero__products a {
         width: 38%;
+    }
+}
+
+@media (max-width: 900px) {
+    .purelane-hero__badgestrip {
+        display: flex;
+        gap: 8px;
+        margin-top: 24px;
+    }
+}
+
+@media (max-width: 420px) {
+    .purelane-hero__badge {
+        min-height: 58px;
+        padding: 9px 4px;
+        font-size: 8px;
+    }
+
+    .purelane-hero__badge-icon,
+    .purelane-hero__badge-icon svg {
+        width: 16px;
+        height: 16px;
     }
 }
 
