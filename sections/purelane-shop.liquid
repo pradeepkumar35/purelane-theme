@@ -1,0 +1,111 @@
+{{ 'purelane.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  Purelane Shop
+  Bestsellers grid mirrored from the prototype's #shop section.
+  - Collection-driven grid (default: the "Shop" collection)
+  - Renders purelane-product-card for each product
+{% endcomment %}
+
+<section
+  id='PurelaneShop-{{ section.id }}'
+  class='purelane-shop'
+  data-purelane-shop
+  data-section-id='{{ section.id }}'
+>
+  <div class='purelane-shop__inner'>
+    <div class='purelane-shop__head'>
+      {% if section.settings.kicker != blank %}
+        <span class='purelane-shop__kicker'>{{ section.settings.kicker }}</span>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class='purelane-shop__heading'>{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      <div class='purelane-shop__rule' aria-hidden='true'>
+        <span></span>
+        <svg
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          stroke-width='1.6'
+          stroke-linecap='round'
+          stroke-linejoin='round'
+        >
+          <path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/>
+          <path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/>
+        </svg>
+        <span></span>
+      </div>
+    </div>
+
+    {% assign collection = collections[section.settings.collection] %}
+
+    <div class='purelane-shelf'>
+      {% if collection != blank and collection.products_count > 0 %}
+        {% for product in collection.products limit: 8 %}
+          {% render 'purelane-product-card',
+            product: product,
+            cta_behavior: 'add',
+            cta_label: section.settings.cta_label,
+            delay: forloop.index
+          %}
+        {% endfor %}
+      {% else %}
+        {% for i in (1..8) %}
+          <article class='purelane-card rv rv-d{{ forloop.index }}' data-purelane-card>
+            <div class='purelane-card__shot'>
+              <span class='purelane-card__noimage' role='img' aria-label='Placeholder'>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/><path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/></svg>
+              </span>
+            </div>
+            <h4 class='purelane-card__title'>Example product</h4>
+            <div class='purelane-card__price'>
+              <strong>₹0</strong>
+            </div>
+          </article>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+<script src='{{ 'purelane-reveal.js' | asset_url }}' defer='defer'></script>
+<script src='{{ 'product-form.js' | asset_url }}' defer='defer'></script>
+{% schema %}
+{
+  "name": "Purelane Shop",
+  "tag": "section",
+  "class": "purelane-shop-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Bestsellers"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Loved by 30,000 homes"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Products are pulled from this collection. Defaults to the 'Shop' collection."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Add to cart"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Shop"
+    }
+  ]
+}
+{% endschema %}

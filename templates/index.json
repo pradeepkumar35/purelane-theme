@@ -68,7 +68,16 @@
         "slide_2",
         "slide_3"
       ]
+    },
+    "purelane_shop": {
+      "type": "purelane-shop",
+      "settings": {
+        "kicker": "Bestsellers",
+        "heading": "Loved by 30,000 homes",
+        "collection": "shop",
+        "cta_label": "Add to cart"
+      }
     }
   },
-  "order": ["purelane_hero"]
+  "order": ["purelane_hero", "purelane_shop"]
 }

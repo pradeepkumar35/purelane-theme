@@ -1,0 +1,122 @@
+{% comment %}
+  Purelane product card
+  Mirrors the prototype's #shop cards (glass, pill badge, star rating,
+  price/compare/% off, add-to-cart). Driven by real product data plus the
+  `purelane` metafields (badge, rating, rating_count).
+
+  Accepts:
+  - product: {Object} Product Liquid object (required)
+  - badge_override: {String} Replaces the metafield badge if provided (optional)
+  - cta_label: {String} Button label (optional, default 'Add to cart')
+  - cta_behavior: {String} 'add' renders an add-to-cart form (default),
+    'link' renders a link to the product page (optional)
+  - size: {String} 'default' or 'compact' (compact for combos/trays) (optional)
+  - delay: {Integer} Reveal stagger index (optional)
+{% endcomment %}
+
+{%- liquid
+  assign card_badge = badge_override | default: product.metafields.purelane.badge.value
+  assign card_rating = product.metafields.purelane.rating.value
+  assign card_rating_count = product.metafields.purelane.rating_count.value
+  assign on_sale = false
+  assign percent_off = 0
+  if product.compare_at_price > product.price
+    assign on_sale = true
+    assign savings = product.compare_at_price | minus: product.price
+    assign percent_off = savings | times: 100 | divided_by: product.compare_at_price | round
+  endif
+  assign single_variant = false
+  if product.has_only_default_variant
+    assign single_variant = true
+  endif
+  assign form_id = 'purelane-card-' | append: product.id | append: '-' | append: section.id
+-%}
+
+<article
+  class="purelane-card{% if size == 'compact' %} purelane-card--compact{% endif %}{% if delay %} rv rv-d{{ delay }}{% endif %}"
+  data-purelane-card
+>
+  <div class="purelane-card__shot">
+    {%- if card_badge != blank -%}
+      <span class="purelane-card__pill">{{ card_badge }}</span>
+    {%- endif -%}
+
+    <a href="{{ product.url }}" class="purelane-card__media-link" tabindex="-1" aria-hidden="true">
+      {%- if product.featured_image -%}
+        {{
+          product.featured_image
+          | image_url: width: 533
+          | image_tag:
+            loading: 'lazy',
+            widths: '165, 360, 533',
+            sizes: '(min-width: 860px) 25vw, 50vw',
+            alt: product.featured_image.alt
+          | default: product.title
+        }}
+      {%- else -%}
+        <span class="purelane-card__noimage" role="img" aria-label="{{ product.title | escape }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/>
+            <path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/>
+          </svg>
+        </span>
+      {%- endif -%}
+    </a>
+  </div>
+
+  <h4 class="purelane-card__title">
+    <a href="{{ product.url }}">{{ product.title | escape }}</a>
+  </h4>
+
+  {%- if card_rating != blank and card_rating_count != blank -%}
+    <div class="purelane-card__rate">
+      <b>★ {{ card_rating }}</b> · {{ card_rating_count }} reviews
+    </div>
+  {%- endif -%}
+
+  <div class="purelane-card__price">
+    <strong>{{ product.price | money }}</strong>
+    {%- if on_sale -%}
+      <s>{{ product.compare_at_price | money }}</s>
+      <em>{{ percent_off }}% off</em>
+    {%- endif -%}
+  </div>
+
+  {%- if cta_behavior == 'link' -%}
+    <a href="{{ product.url }}" class="purelane-card__cta">
+      {{ cta_label | default: 'View product' }}
+    </a>
+  {%- elsif product.available and single_variant -%}
+    <product-form data-section-id="{{ section.id }}">
+      {%- form 'product',
+        product,
+        id: form_id,
+        class: 'purelane-card__form',
+        novalidate: 'novalidate',
+        data-type: 'add-to-cart-form'
+      -%}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}"
+          class="product-variant-id"
+        >
+        <button
+          type="submit"
+          name="add"
+          class="purelane-card__cta"
+        >
+          {{ cta_label | default: 'Add to cart' }}
+        </button>
+      {%- endform -%}
+    </product-form>
+  {%- elsif product.available -%}
+    <a href="{{ product.url }}" class="purelane-card__cta">
+      {{ 'products.product.choose_options' | t }}
+    </a>
+  {%- else -%}
+    <button type="button" class="purelane-card__cta" disabled>
+      {{ 'products.product.sold_out' | t }}
+    </button>
+  {%- endif -%}
+</article>

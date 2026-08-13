@@ -528,3 +528,323 @@
         height: 360px;
     }
 }
+
+/* =========================================================
+   PURELANE SHARED (shop grid, product cards, reveal)
+   ========================================================= */
+
+:root {
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.purelane-shop-section {
+    position: relative;
+    z-index: 2;
+}
+
+.purelane-shop {
+    width: 100%;
+    background: linear-gradient(178deg, #f0fbf2 0%, #d9f2df 28%, #bde6c8 60%, #a2d9b6 100%);
+}
+
+.purelane-shop__inner {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding: clamp(26px, 3.4vw, 40px) 18px;
+}
+
+.purelane-shop__head {
+    text-align: center;
+    margin-bottom: 26px;
+}
+
+.purelane-shop__kicker {
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(36, 26, 61, 0.56);
+}
+
+.purelane-shop__heading {
+    margin: 12px 0 0;
+    font-family: "Outfit", system-ui, sans-serif;
+    font-size: clamp(30px, 4.6vw, 54px);
+    line-height: 0.94;
+    font-weight: 800;
+    letter-spacing: -0.018em;
+    text-transform: uppercase;
+    color: #17102b;
+}
+
+.purelane-shop__rule {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin: 20px auto 0;
+    max-width: 240px;
+    justify-content: center;
+}
+
+.purelane-shop__rule span {
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(90deg, rgba(75, 58, 143, 0.34), transparent);
+}
+
+.purelane-shop__rule span:first-child {
+    background: linear-gradient(90deg, transparent, rgba(75, 58, 143, 0.34));
+}
+
+.purelane-shop__rule svg {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    color: #b8701c;
+}
+
+.purelane-shelf {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+@media (min-width: 860px) {
+    .purelane-shelf {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.purelane-card {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    border-radius: 22px;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(158deg, rgba(255, 255, 255, 0.8), rgba(236, 230, 247, 0.56) 58%, rgba(222, 212, 240, 0.5));
+    border: 1px solid rgba(75, 58, 143, 0.16);
+    box-shadow:
+        0 22px 54px rgba(58, 44, 112, 0.13),
+        inset 0 1px 0 rgba(255, 255, 255, 0.92);
+    transition: transform 0.4s var(--ease);
+}
+
+.purelane-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(115deg, rgba(255, 255, 255, 0.55), transparent 32%, transparent 74%, rgba(201, 118, 29, 0.06));
+}
+
+.purelane-card:hover {
+    transform: translateY(-5px);
+}
+
+.purelane-card__shot {
+    position: relative;
+    height: 150px;
+    border-radius: 14px;
+    margin-bottom: 14px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.6), rgba(236, 230, 247, 0.42));
+    border: 1px solid rgba(75, 58, 143, 0.1);
+}
+
+.purelane-card__shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 10px;
+    filter: drop-shadow(0 8px 13px rgba(0, 74, 66, 0.13));
+}
+
+.purelane-card__pill {
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    z-index: 1;
+    font-size: 8.5px;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(201, 118, 29, 0.34);
+    color: #4f7d10;
+}
+
+.purelane-card__noimage {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.62);
+    border: 1px solid rgba(75, 58, 143, 0.16);
+    color: #4f7d10;
+}
+
+.purelane-card__noimage svg {
+    width: 30px;
+    height: 30px;
+}
+
+@media (max-width: 760px) {
+    .purelane-card__shot {
+        height: 126px;
+    }
+
+    .purelane-card__shot img {
+        padding: 8px;
+    }
+}
+
+.purelane-card__title {
+    margin: 0 0 7px;
+    font-family: "Outfit", system-ui, sans-serif;
+    font-size: 13.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+    color: #17102b;
+}
+
+.purelane-card__title a {
+    text-decoration: none;
+    color: inherit;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.purelane-card__rate {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    color: rgba(36, 26, 61, 0.78);
+    margin-bottom: 10px;
+}
+
+.purelane-card__rate b {
+    color: #b8701c;
+    font-weight: 700;
+}
+
+.purelane-card__price {
+    margin-top: auto;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.purelane-card__price strong {
+    font-family: "Outfit", system-ui, sans-serif;
+    font-size: 18px;
+    color: #17102b;
+    font-weight: 700;
+}
+
+.purelane-card__price s {
+    font-size: 12px;
+    color: rgba(36, 26, 61, 0.56);
+}
+
+.purelane-card__price em {
+    font-style: normal;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #b8701c;
+}
+
+.purelane-card__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(75, 58, 143, 0.22);
+    background: rgba(255, 255, 255, 0.66);
+    color: #01423b;
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.35s var(--ease);
+    width: 100%;
+}
+
+.purelane-card__cta:hover {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.purelane-card__cta:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.purelane-card:focus-within {
+    outline: 2px solid #4f7d10;
+    outline-offset: 2px;
+}
+
+/* ---------- reveal ---------- */
+.rv {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(7px);
+    transition:
+        opacity 0.95s var(--ease),
+        transform 0.95s var(--ease),
+        filter 0.95s var(--ease);
+}
+
+.rv.in {
+    opacity: 1;
+    transform: none;
+    filter: none;
+}
+
+.rv-d1 {
+    transition-delay: 0.09s;
+}
+
+.rv-d2 {
+    transition-delay: 0.18s;
+}
+
+.rv-d3 {
+    transition-delay: 0.27s;
+}
+
+.rv-d4 {
+    transition-delay: 0.36s;
+}
+
+.rv-d5 {
+    transition-delay: 0.45s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rv {
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+}

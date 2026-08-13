@@ -1,0 +1,5 @@
+{
+  "plugins": ["prettier-plugin-liquid"],
+  "singleQuote": true,
+  "printWidth": 100
+}
