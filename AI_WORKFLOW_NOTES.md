@@ -26,3 +26,15 @@ the live theme.
   `purelane.css` (the hero CSS already referenced it; it was undefined).
 - 2026-08-14 — CTA "Add to cart" uses a Shopify product form (single-variant
   add-to-cart); multi-variant products fall back to a "Choose options" link.
+- 2026-08-14 — Bundles are sold as **real tier products** (one line item at
+  a flat price) rather than adding N individual products, because Shopify
+  cart lines can't apply a bundle discount on the fly. The picker adds the
+  tier variant with `properties[Pick 1..N]` naming each selection.
+- 2026-08-14 — Bundle flat prices (₹349/₹499/₹799) come from the prototype
+  tiers; they are stored on the tier products' price/compare-at so a merchant
+  can adjust them without code.
+- 2026-08-14 — The picker pool is the section's `collection` setting
+  (defaults to Shop), not a hardcoded list.
+- 2026-08-14 — Card product image is absolutely positioned inside the shot
+  frame with `object-fit: contain` + padding, so square product art scales to
+  fit the 242×150 landscape frame instead of overflowing (was zooming).
