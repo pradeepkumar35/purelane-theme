@@ -11,6 +11,7 @@
   id='PurelaneHero-{{ section.id }}'
   class='purelane-hero'
   data-purelane-hero
+  data-scene='1'
   data-section-id='{{ section.id }}'
 >
   <div class='purelane-hero__inner'>
@@ -171,7 +172,7 @@
               {% endcase %}
             </span>
 
-            <span>{{ block.settings.text }}</span>
+            <span>{{ block.settings.badge_text | default: block.settings.text }}</span>
           </div>
         {% endif %}
       {% endfor %}
@@ -322,6 +323,13 @@
           "type": "text",
           "id": "text",
           "label": "Promise",
+          "default": "Plant powered"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge label (short)",
+          "info": "Short label shown in the mobile badge strip. Falls back to the promise text when empty.",
           "default": "Plant powered"
         }
       ]

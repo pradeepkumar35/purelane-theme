@@ -183,3 +183,57 @@ Incremental notes on how the 5-section clone maps the prototype
   mobile menu opens via burger, product pages render the global
   header/footer/ticker/rail.
 - Pushed to theme #161735213297.
+
+## Issue pass (steps 1–7 of the fix list — done)
+- **Glass corners**: `.glass` and `.glass-2` now use `border-radius: 26px`
+  (`--r`) matching the prototype's `--paper` panels (verified computed
+  `26px` on the signup/proof/why panels at all widths).
+- **Navbar clipping**: `.purelane-header-section` z-index 2 → 100 so the
+  fixed nav pill (z-index 50) and sticky CTA (z-index 48) always stack above
+  the hero (z-index 2) and the fixed scenes layer (z-index 0). Computed
+  z-index verified headless.
+- **Hero scroll animation**: `assets/purelane-scenes.js` parallaxes
+  `.purelane-hero__slides` (translate3d + scale + opacity driven by
+  `scrollY`, capped at f=1 @700px) plus a 7s ambient drop-shadow loop via the
+  Web Animations API; mousemove parallax only at ≥1024px; all gated by
+  `prefers-reduced-motion`. Verified: at scrollY=320 the slides read
+  `translate3d(0,-24.69px,0) scale(.973)`, opacity `.749`.
+- **Background animation**: global `snippets/purelane-scenes.liquid`
+  (rendered once in `layout/theme.liquid` right after the skip link) holds the
+  prototype's `#scenes` fixed layer (4 `.scene` gradient scenes, drifting
+  water SVGs `.wl-a/b/c/s`, bubbles, vignette). Scenes CSS appended to
+  `purelane.css`. The 13 section wrappers' gradients were made transparent so
+  the scenes show through; footer uses a translucent glass (50% white +
+  blur). `data-scene="N"` added to all 14 sections/footer; the scroll picker
+  crossfades scenes 1→2→3→4 (verified `data-d` flips to 3 at #proof and 4 at
+  page bottom; initial s1.on).
+- **Copy mismatches**: hero promise blocks gained `badge_text`
+  ("Plant powered" / "Kids & pet safe" / "Zero harsh chem") rendered by the
+  badgestrip via `badge_text | default: text`; ingredient blocks gained
+  `name` (Coconut / Orange peel / Soap nut / Neem / Lemongrass) + prototype
+  bodies, heading "Sourced from nature"; pillars use prototype titles/bodies
+  + "Learn more" links (#shop/#ingredients/#proof). Verified rendered labels
+  in the served HTML.
+- **Text colors**: `.purelane-bundles__lede`, `.purelane-combos__lede`,
+  `.purelane-signup__lede` moved 0.7 → 0.78 (computed
+  `rgba(36,26,61,.78)`); `.purelane-hero__promise-icon`,
+  `.purelane-hero__badge-icon`, `.purelane-trust__item svg` recolored
+  `#4f7d10` → `#b8701c`.
+- **Product hover**: `.purelane-card.rv:hover { transform: translateY(-5px) }`
+  (specificity 0,3,0 beats `.rv.in`). Verified headless: hovering a shop card
+  lifts it (computed `matrix(...,0,-4.99)`).
+- **Note on parallel edits**: three simultaneous `templates/index.json` edits
+  raced and two were silently lost (badge_text, ingredient names); detected by
+  the headless check, re-applied sequentially and re-verified.
+
+## Verified (issue-pass final gate)
+- `shopify theme check`: 0 errors, 11 warnings (all pre-existing Dawn files —
+  none in purelane-*).
+- Headless Chrome at 375 / 768 / 1024 / 1440: scenes layer present with s1 on,
+  14 `data-scene` zones, no horizontal overflow, glass radius 26px, header
+  z-index 100, badge labels / ingredient names / pillar titles correct,
+  hero parallax transform+opacity on scroll, scene picker hits 3 and 4 at the
+  right scroll positions, card hover lifts.
+- Screenshots at `%TEMP%\opencode\shots\final-*.png`.
+- Pushed to theme #161735213297 (preview:
+  `https://purelane-dev-csw5qplv.myshopify.com?preview_theme_id=161735213297`).

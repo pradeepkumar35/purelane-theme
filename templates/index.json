@@ -15,19 +15,22 @@
         "promise_1": {
           "type": "promise",
           "settings": {
-            "text": "Plant powered"
+            "text": "Plant powered",
+            "badge_text": "Plant powered"
           }
         },
         "promise_2": {
           "type": "promise",
           "settings": {
-            "text": "Safe for kids & pets"
+            "text": "Safe for kids & pets",
+            "badge_text": "Kids & pet safe"
           }
         },
         "promise_3": {
           "type": "promise",
           "settings": {
-            "text": "Zero harsh chemicals"
+            "text": "Zero harsh chemicals",
+            "badge_text": "Zero harsh chem"
           }
         },
         "slide_1": {
@@ -315,35 +318,40 @@
           "type": "ingredient",
           "settings": {
             "art": "coconut",
-            "body": "Foams and lifts grease"
+            "name": "Coconut",
+            "body": "Plant-derived cleansers that lift grease"
           }
         },
         "ing_2": {
           "type": "ingredient",
           "settings": {
             "art": "orange",
-            "body": "Dissolves oil and grime"
+            "name": "Orange peel",
+            "body": "Natural degreaser and fresh citrus lift"
           }
         },
         "ing_3": {
           "type": "ingredient",
           "settings": {
             "art": "soapnut",
-            "body": "A natural surfactant"
+            "name": "Soap nut",
+            "body": "A traditional plant foaming agent"
           }
         },
         "ing_4": {
           "type": "ingredient",
           "settings": {
             "art": "neem",
-            "body": "Nature's germ fighter"
+            "name": "Neem",
+            "body": "Time-tested antibacterial from the tree"
           }
         },
         "ing_5": {
           "type": "ingredient",
           "settings": {
             "art": "lemongrass",
-            "body": "Cleans and freshens"
+            "name": "Lemongrass",
+            "body": "Clean fragrance with nothing synthetic"
           }
         }
       },
@@ -355,8 +363,7 @@
         "ing_5"
       ],
       "settings": {
-        "kicker": "Inside every bottle",
-        "heading": "Simple ingredients, serious cleaning"
+        "heading": "Sourced from nature"
       }
     },
     "purelane_pillars": {
@@ -366,24 +373,30 @@
           "type": "pillar",
           "settings": {
             "icon": "scrubbing",
-            "title": "Scrubs hard",
-            "body": "Powerful enough for 20-year-old grime, tough enough for daily mess."
+            "title": "Less scrubbing",
+            "body": "A foaming formulation. The foam clings to grease and lifts it, so you wipe instead of scrub.",
+            "link_label": "Learn more",
+            "link_url": "#shop"
           }
         },
         "pillar_2": {
           "type": "pillar",
           "settings": {
             "icon": "leaf",
-            "title": "Made from plants",
-            "body": "Plant-derived cleansers and essential oils instead of harsh chemicals."
+            "title": "Clean ingredients",
+            "body": "No sulphates, no chlorine, no synthetic fragrance. Nothing on the label you would not want near your food.",
+            "link_label": "Learn more",
+            "link_url": "#ingredients"
           }
         },
         "pillar_3": {
           "type": "pillar",
           "settings": {
             "icon": "heart",
-            "title": "Gentle on home",
-            "body": "No toxic fumes. Safe around kids, pets and the planet."
+            "title": "Safe around everyone",
+            "body": "Gentle on hands, safe around kids and pets, and it leaves no toxic residue on the surfaces you touch every day.",
+            "link_label": "Learn more",
+            "link_url": "#proof"
           }
         }
       },

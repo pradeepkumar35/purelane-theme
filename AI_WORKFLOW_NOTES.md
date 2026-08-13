@@ -77,3 +77,21 @@ the live theme.
 - 2026-08-14 — Footer link columns use a chosen menu when set, otherwise
   fall back to `Label|URL` lines (the admin API token lacks the `menus`
   scope), so the columns render without needing menu setup.
+- 2026-08-14 — The prototype's fixed `#scenes` animated background is
+  rendered once as a global `snippets/purelane-scenes.liquid` in
+  `layout/theme.liquid` (not a per-section asset), with scenes CSS appended
+  to `purelane.css` and a scroll-driven picker in `assets/purelane-scenes.js`.
+  Sections' own wrappers are transparent so the layer shows through; only the
+  footer stays translucent for contrast.
+- 2026-08-14 — Hero scroll parallax targets `.purelane-hero__slides` directly
+  (translate3d + scale + opacity from `scrollY`), and the scenes layer keeps
+  `data-d="1..4"` opacity fallbacks so content stays readable even if JS
+  fails. All scene/water animations respect `prefers-reduced-motion`.
+- 2026-08-14 — Badgestrip labels are a separate `badge_text` setting per
+  promise block (short versions "Kids & pet safe"/"Zero harsh chem") while
+  `text` keeps the full promise wording used in the hero promises list; the
+  strip renders `badge_text | default: text`.
+- 2026-08-14 — Issue-fix parallel edits to `templates/index.json` raced and
+  silently dropped two blocks; the headless verification caught it, edits
+  were re-applied sequentially and re-verified. Rule going forward: no
+  concurrent edits to the same file.
