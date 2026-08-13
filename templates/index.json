@@ -77,7 +77,59 @@
         "collection": "shop",
         "cta_label": "Add to cart"
       }
+    },
+    "purelane_bundles": {
+      "type": "purelane-bundles",
+      "settings": {
+        "kicker": "Build your bundle",
+        "heading": "One box. Every room.",
+        "lede": "Mix and match across kitchen, laundry, home and skin. One flat price, no code needed, free shipping either way.",
+        "collection": "shop"
+      },
+      "blocks": {
+        "tier_1": {
+          "type": "tier",
+          "settings": {
+            "tag": "Starter",
+            "product": "purelane-bundle-starter",
+            "qty": 2,
+            "price": "₹349",
+            "compare": "₹598",
+            "per_product": "Flat ₹174 per product",
+            "features": "Pick any two products\nFree shipping across India",
+            "cta_label": "Build this box"
+          }
+        },
+        "tier_2": {
+          "type": "tier",
+          "settings": {
+            "tag": "Most popular",
+            "product": "purelane-bundle-most-popular",
+            "qty": 3,
+            "price": "₹499",
+            "compare": "₹897",
+            "per_product": "Flat ₹166 per product",
+            "features": "Pick any three products\nCovers kitchen and laundry\nFree shipping across India",
+            "cta_label": "Build this box",
+            "is_best": true
+          }
+        },
+        "tier_3": {
+          "type": "tier",
+          "settings": {
+            "tag": "Whole home",
+            "product": "purelane-bundle-whole-home",
+            "qty": 5,
+            "price": "₹799",
+            "compare": "₹1495",
+            "per_product": "Flat ₹160 per product",
+            "features": "Pick any five products\nEvery room in one order\nFree shipping across India",
+            "cta_label": "Build this box"
+          }
+        }
+      },
+      "block_order": ["tier_1", "tier_2", "tier_3"]
     }
   },
-  "order": ["purelane_hero", "purelane_shop"]
+  "order": ["purelane_hero", "purelane_shop", "purelane_bundles"]
 }

@@ -1,0 +1,84 @@
+{% comment %}
+  Purelane bundle picker modal.
+  Rendered once per Purelane Bundles section instance. State is scoped to
+  this instance via data-section-id so duplicated sections / editor
+  add/remove/undo never cross-contaminate.
+
+  Accepts:
+  - picker_section_id: {String} the owning section.id
+  - pool_collection: {Object} Collection used as the pick pool
+  - tiers_json: {String} JSON map of { "N": "<tier variant id>" }
+{% endcomment %}
+
+<div
+  class="purelane-picker"
+  data-purelane-picker
+  data-section-id="{{ picker_section_id }}"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Build your bundle"
+  hidden
+>
+  <div class="purelane-picker__backdrop" data-picker-backdrop></div>
+
+  <div class="purelane-picker__panel glass">
+    <div class="purelane-picker__head">
+      <h3 class="purelane-picker__title" data-picker-title>Build your bundle</h3>
+      <button
+        type="button"
+        class="purelane-picker__close"
+        data-picker-close
+        aria-label="Close"
+      >×</button>
+    </div>
+
+    <p class="purelane-picker__hint" data-picker-hint></p>
+
+    <div class="purelane-picker__grid" data-picker-grid role="listbox" aria-multiselectable="true">
+      {% if pool_collection != blank and pool_collection.products_count > 0 %}
+        {% for product in pool_collection.products %}
+          <button
+            type="button"
+            class="purelane-picker__item"
+            data-picker-item
+            data-product-id="{{ product.id }}"
+            data-title="{{ product.title | escape }}"
+            data-price="{{ product.price | money }}"
+            role="option"
+            aria-selected="false"
+          >
+            <span class="purelane-picker__shot">
+              {%- if product.featured_image -%}
+                {{
+                  product.featured_image
+                  | image_url: width: 240
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '120, 240',
+                    sizes: '(min-width: 860px) 120px, 110px',
+                    alt: product.featured_image.alt
+                  | default: product.title
+                }}
+              {%- else -%}
+                <span class="purelane-picker__noimage" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/><path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/></svg>
+                </span>
+              {%- endif -%}
+            </span>
+            <span class="purelane-picker__name">{{ product.title | escape }}</span>
+            <span class="purelane-picker__meta">{{ product.price | money }}</span>
+          </button>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <div class="purelane-picker__footer">
+      <span class="purelane-picker__count" data-picker-count>0 selected</span>
+      <button type="button" class="purelane-picker__submit btn btn-primary" data-picker-submit disabled>
+        Add to cart
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="{{ 'purelane-bundle-picker.js' | asset_url }}" defer="defer"></script>
