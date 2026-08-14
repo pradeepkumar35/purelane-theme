@@ -1020,6 +1020,7 @@ body {
 }
 
 .purelane-tier__pix {
+    position: relative;
     height: 118px;
     display: grid;
     place-items: center;
@@ -1031,9 +1032,11 @@ body {
 }
 
 .purelane-tier__pix img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .purelane-tier__icon {

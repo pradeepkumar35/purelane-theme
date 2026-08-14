@@ -53,10 +53,14 @@
         >
           <span class='purelane-tier__tag'>{{ block.settings.tag }}</span>
 
-          {% if block.settings.image != blank %}
+          {% assign tier_image = block.settings.image %}
+          {% if tier_image == blank and tp != blank and tp.featured_image != blank %}
+            {% assign tier_image = tp.featured_image %}
+          {% endif %}
+          {% if tier_image != blank %}
             <div class='purelane-tier__pix' aria-hidden='true'>
               {{
-                block.settings.image
+                tier_image
                 | image_url: width: 300
                 | image_tag:
                   loading: 'lazy',

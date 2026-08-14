@@ -118,4 +118,12 @@ the live theme.
   than the prototype's `.inc` because the card stretches it — a flex stretch,
   not a text-wrap difference (verified identical 3-line wrap via range
   measurement).
+- 2026-08-14 — Bundle tier cards prefer the tier product's `featured_image`
+  (the merchant-uploaded bundle pack shots) over the block's decorative
+  `image_picker`; the leaf-icon is now only a last fallback. The tier pix
+  frame uses `object-fit: contain` with the `<img>` absolutely positioned
+  (`.purelane-tier__pix img { position:absolute; inset:0 }`) so the
+  landscape bundle artwork fits fully inside the fixed 118px frame — a plain
+  `height:100%` in a `display:grid` container was being sized to the image's
+  intrinsic aspect ratio and cropped top/bottom.
 
