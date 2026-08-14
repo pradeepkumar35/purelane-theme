@@ -318,3 +318,25 @@ Incremental notes on how the 5-section clone maps the prototype
   `proof`→Proof, `bundles`→Bundles, `shop`→Shop, top-of-page/reviews→Hero.
   Rail hidden (`display:none`) at 1024/768/375, `flex` at ≥1180 — matches the
   file's `@media(min-width:1180px)` gate.
+
+## Bug-fix pass (Clean v1) — Item 7: hero bg/animation colors (done, file-match)
+- Computed-style audit of every hero color against the file's light-V2 block
+  (`.scenes`, `.hero::before`, `.hp`/`.hero-prod` shadows, `.btn-primary`,
+  `.glass-2`, `.badge .bi`, `.ptag .cut`, `.hdots`, `.bub`, `.vig`, `.wl-*`).
+  Most already matched verbatim. Three literal mismatches fixed in
+  `assets/purelane.css`:
+  1. `.purelane-hero-section::before` gradient stops were 52%/66% → now the
+     file's literal 54%/68% (mobile 180deg .62/.34/.66 was already exact).
+  2. `.purelane-hero__promise-icon` color `#b8701c` → `#4f7d10` (file
+     light-V2 `.badge .bi{color:#4f7d10}`).
+  3. `.purelane-hero__offer-save` was a bare text line → now the file's
+     `.ptag .cut` pill: `rgba(201,118,29,.16)` bg, 1px
+     `rgba(201,118,29,.36)` border, `#4f7d10`, 8.4px/800/.11em uppercase,
+     `3px 8px` padding, radius 999px, `margin-top:7px`.
+- Verified computed at 1440 + 375: heading rgb(23,16,43), lede
+  rgba(36,26,61,.78), primary btn rgb(0,112,106)→rgb(0,75,70) + shadow,
+  ghost btn rgba(255,255,255,.66)/rgba(75,58,143,.22)/rgb(1,66,59), scenes
+  `#eee7fb` + s1-s4 gradients, water `soft-light`/`overlay` opacities, bubble
+  border `rgba(75,58,143,.26)`, vig gradients, product drop-shadow
+  `rgba(0,74,66,.15) 14px 22px` — all exact.
+- (The hero `.hdots` pill animation is handled under item 1.)

@@ -163,8 +163,8 @@
         102deg,
         rgba(255, 255, 255, 0.8) 0%,
         rgba(255, 255, 255, 0.5) 30%,
-        rgba(255, 255, 255, 0.12) 52%,
-        transparent 66%
+        rgba(255, 255, 255, 0.12) 54%,
+        transparent 68%
     );
 }
 
@@ -221,7 +221,7 @@
     border: 1px solid rgba(75, 58, 143, 0.16);
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.62);
-    color: #b8701c;
+    color: #4f7d10;
 }
 
 .purelane-hero__promise-icon svg {
@@ -454,9 +454,18 @@
 }
 
 .purelane-hero__offer-save {
+    display: inline-block;
+    align-self: flex-start;
+    margin-top: 7px;
+    padding: 3px 8px;
+    border: 1px solid rgba(201, 118, 29, 0.36);
+    border-radius: 999px;
+    background: rgba(201, 118, 29, 0.16);
     color: #4f7d10;
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 8.4px;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
 }
 
 @media (min-width: 901px) and (max-width: 1200px) {
