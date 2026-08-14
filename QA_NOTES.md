@@ -64,7 +64,20 @@ Verified against live store data (12 products in the `shop` collection: 9 indivi
 _commit for the picker fix: `184811b`_
 
 ## Pass 2 — Accessibility
-_pending_
+
+| section | test | result | fix applied (if any) | commit hash |
+| --- | --- | --- | --- | --- |
+| Hero | Keyboard focus enters hidden slides | FAIL — `aria-hidden` alone doesn't remove links from tab order; real Tab landed in `aria-hidden="true"` slides | Added `inert` attribute to inactive slides in `sections/purelane-hero.liquid` + toggled `inert`/`aria-hidden` in `purelane-hero.js` `showSlide` | — |
+| Hero | ARIA tabs pattern | PARTIAL — dots `role=tab` but slides had no `role=tabpanel` | Slides now `role=tabpanel` with `aria-label` on active, dots carry `aria-controls` | same |
+| Picker | Focus trap inside dialog | FAIL — Tab could escape the modal | Added `trapFocus()` Tab/Shift+Tab cycle in `purelane-bundle-picker.js` | same |
+| Picker | Focus restore on close | FAIL — focus stayed wherever it was | `open()` stores `lastFocused`, `close()` restores it | same |
+| All images | Alt text present | PASS — 53 images, 0 missing/empty alt | — | — |
+| All buttons | Accessible name | PASS — no unnamed buttons | — | — |
+| Hero | Single `h1`, subsequent headings | PASS — one `h1`; section heading levels vary (h2/h3/h4/h5) matching prototype | — | — |
+| Marquee | `prefers-reduced-motion: reduce` | PASS — animation disabled at `purelane.css:1869` | — | — |
+| Hero JS | Auto-advance under reduced motion | PASS — `start()` early-returns | — | — |
+
+_commit for accessibility fixes: `e530b83`_
 
 ## Pass 3 — Performance
 _pending_

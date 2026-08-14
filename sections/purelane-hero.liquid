@@ -179,10 +179,16 @@
     </div>
 
     <div class='purelane-hero__slides'>
+      {% assign hero_slide_index = 0 %}
       {% for block in section.blocks %}
         {% if block.type == 'slide' %}
           <article
             class='purelane-hero__slide products-count-{{ block.settings.products.size }}'
+            id='purelane-hero-panel-{{ section.id }}-{{ hero_slide_index }}'
+            role='tabpanel'
+            aria-hidden='{% if hero_slide_index == 0 %}false{% else %}true{% endif %}'
+            {% if hero_slide_index == 0 %}aria-label='{{ block.settings.label | default: "Hero offer" }}'{% endif %}
+            {% unless hero_slide_index == 0 %}inert{% endunless %}
             {{ block.shopify_attributes }}
           >
             {% if block.settings.label != blank %}
@@ -252,6 +258,7 @@
               </div>
             {% endif %}
           </article>
+          {% assign hero_slide_index = hero_slide_index | plus: 1 %}
         {% endif %}
       {% endfor %}
 
@@ -266,6 +273,7 @@
               role='tab'
               aria-selected='{% if slide_index == 0 %}true{% else %}false{% endif %}'
               aria-label='Show offer {{ slide_index | plus: 1 }}'
+              aria-controls='purelane-hero-panel-{{ section.id }}-{{ slide_index }}'
               data-hero-slide='{{ slide_index }}'
             ></button>
 

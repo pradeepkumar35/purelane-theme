@@ -32,7 +32,26 @@
       this.submit.addEventListener('click', () => this.addToCart());
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !this.root.hidden) this.close();
+        if (e.key === 'Tab' && !this.root.hidden) this.trapFocus(e);
       });
+    }
+
+    trapFocus(e) {
+      const focusables = [...this.root.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])')]
+        .filter((el) => !el.disabled && !el.hidden && getComputedStyle(el).display !== 'none');
+      if (!focusables.length) {
+        e.preventDefault();
+        return;
+      }
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && (document.activeElement === first || !this.root.contains(document.activeElement))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (document.activeElement === last || !this.root.contains(document.activeElement))) {
+        e.preventDefault();
+        first.focus();
+      }
     }
 
     open({ count, variantId, preselect = [] } = {}) {
@@ -50,6 +69,7 @@
       });
       this.render();
       this.root.hidden = false;
+      this.lastFocused = document.activeElement;
       document.body.style.overflow = 'hidden';
       const first = this.grid.querySelector('[data-picker-item]');
       if (first) first.focus();
@@ -58,6 +78,9 @@
     close() {
       this.root.hidden = true;
       document.body.style.overflow = '';
+      if (this.lastFocused && this.lastFocused.focus) {
+        this.lastFocused.focus();
+      }
     }
 
     toggle(item) {

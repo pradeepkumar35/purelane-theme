@@ -17,6 +17,12 @@
 
       slides.forEach((slide, i) => {
         slide.classList.toggle('is-active', i === index);
+        slide.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+        if (i === index) {
+          slide.removeAttribute('inert');
+        } else {
+          slide.setAttribute('inert', '');
+        }
       });
 
       dots.forEach((dot, i) => {
