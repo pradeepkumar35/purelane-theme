@@ -594,4 +594,59 @@ silently "fixed"), kept in AI_WORKFLOW_NOTES.md with a one-line reason each:
   hosted redirect). Confirm with the merchant whether classic accounts are
   intended before relying on these templates.
 
+## Task 3 — Cart drawer bug-fix pass (done, commits `ddc0af7` + `f6dc330`, pushed live)
+
+Three defects found and fixed in `assets/purelane-bundle-picker.js`,
+`assets/purelane-header.js`, `assets/purelane.css`:
+
+### BUG 1 — Picker rendered inside its section's stacking context
+- The bundle/combo picker modal was appended to its section element, so its
+  high z-index lost to Dawn's cart drawer (`z-index: 1000`) — the drawer
+  opened *underneath* the modal. Clicking through was the "Add to cart does
+  nothing" symptom.
+- Fix (`purelane-bundle-picker.js` `open()`): teleport the modal to
+  `document.body` via `document.body.appendChild(this.root)` so it escapes the
+  section's stacking context; also raised `.purelane-picker` z-index
+  `120` → `1002` (above drawer `1000`, below nothing else).
+
+### BUG 2 — Header count badge only updated on refresh
+- Root cause: `/cart/add.js` returns only the added line + section HTML — it
+  does **not** return `item_count` (confirmed by Dawn's own comment in
+  `cart-notification.js`). The badge subscriber in `purelane-header.js` read
+  `event.cartData.item_count`, got `undefined`, and returned early — so the
+  dot never moved for *any* add path (product grid, bundle, combo).
+- Fix (`purelane-header.js`): when `item_count` is a number, update directly;
+  otherwise fetch `/cart.js` and use its `item_count`.
+
+### BUG 3 — Drawer showed only the footer price after a bundle/combo add
+- Symptom: add a bundle/combo to an empty cart → drawer opened with the price
+  but an empty items area, until a page refresh or a product-grid add.
+- Root cause: the outer `<cart-drawer>` element keeps the server-rendered
+  `is-empty` class when the cart was empty at page load. Dawn's
+  `product-form.js` clears it in its `.finally`, but the bundle picker never
+  did. With the class still set, Dawn's `component-cart.css`
+  `.is-empty .cart__contents { display: none }` hides the items form while the
+  footer (price) stays visible. (The `.finally` of product-form also meant a
+  product-grid add "fixed" the display.)
+- Fix (`purelane-bundle-picker.js`): after a successful add, remove
+  `is-empty` from the `cart-drawer` element. Also switched the picker's
+  post-add render from the incomplete `/cart/add.js` response to an
+  authoritative `/cart.js?sections=cart-drawer,cart-icon-bubble` fetch so both
+  the drawer body and the badge come from the same fresh cart (mirrors Dawn's
+  `standard-actions-override.js` `refreshDawnCartUI`).
+
+### Verified
+- `node --check` passes; `shopify theme check` 0 offenses in changed files.
+- Badge live-update confirmed in a real browser by the merchant; drawer items
+  after bundle/combo add confirmed in the browser.
+- Deployed: GitHub `origin/master` + live theme #161762803953 (`--allow-live`).
+
+### Latent / not addressed (out of scope)
+- Combo path opens the picker via `open({ count, preselect })` with no
+  variantId → relies on `this.tiers[String(count)]`; if a combo count doesn't
+  match a tier qty, `addToCart()` silently returns (`!variantId` guard).
+- `.finally` resets the submit button label and overwrites the "Try again"
+  error label from `.catch`.
+
+
 

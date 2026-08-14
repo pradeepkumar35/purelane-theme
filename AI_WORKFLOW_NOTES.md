@@ -287,3 +287,40 @@ translation" between the static HTML and the live theme.
   rendering the theme template. The Dawn-native templates are correct and
   will serve once the merchant switches to classic accounts; confirm intent
   before relying on them.
+
+## 5. Cart drawer bug-fix session (commits `ddc0af7`, `f6dc330`)
+
+- **Delegated**: pure diagnosis from static code + Dawn's own source, since
+  Cloudflare bot protection 429s/challenges scripted storefront requests
+  (`/cart/add.js`, `/cart.js`) — a real browser was the only end-to-end
+  test, and the merchant did that part.
+- **Where the agent's reasoning was wrong / caught late**:
+  - Bug 3 (empty drawer) was *not* found by reading the picker in isolation.
+    The cause was Dawn's own contract: the outer `<cart-drawer>` keeps a
+    server-rendered `is-empty` class that only `product-form.js`'s `.finally`
+    clears, and Dawn's `component-cart.css` hides `.cart__contents` when an
+    ancestor has it. The fix only surfaced after reading Dawn's CSS/JS, not
+    the picker's own code. Lesson: when a custom widget drives Dawn widgets,
+    read the *host* framework's files for its invariants before assuming the
+    bug is in your own code.
+  - Bug 2 (badge) is a generalizable Shopify contract gotcha: `/cart/add.js`
+    responses don't include cart aggregates (`item_count`); only `/cart.js`
+    (or `/cart/change.js`) do. Treat "response has no item_count" as a
+    Shopify API fact, and design subscribers to fall back to `/cart.js`.
+  - The `--only` push, then a full `--allow-live` push, plus a `theme pull`
+    verification attempt — the CLI's `pull --path` reported success but wrote
+    nothing (empty dir), so verification-by-pull is unreliable; the push
+    output itself ("role: live") is the trustworthy signal.
+- **What to systematize for twenty more of these**:
+  - For cart/drawer work, keep a small checklist of Dawn's cross-file
+    invariants: `product-form.js` clears `is-empty`; `cart.js` toggles it on
+    quantity change; `component-cart.css` `.is-empty .cart__contents` hides
+    items; `/cart/add.js` lacks `item_count`; `getSectionsToRender()` defines
+    the drawer render contract. Check each before declaring "add works".
+  - When bot protection blocks HTTP verification, state the verification
+    boundary explicitly (what was statically verified vs. what needs a human
+    browser) and hand the browser click-through to the merchant with a
+    scripted checklist.
+  - Serialize live pushes: one canonical "push live" step (full theme,
+    `--allow-live`), never assume a prior `--only` push plus an untrusted
+    `pull` round-trip proves sync. Verify via the CLI's returned role/message.
