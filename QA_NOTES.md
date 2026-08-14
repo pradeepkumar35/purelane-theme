@@ -44,7 +44,24 @@ were recreated and probed directly.
   the `-50%` loop remains seamless. No practical limit hit at 15 blocks.
 
 ## Pass 4 — Edge-case products
-_pending_
+
+Verified against live store data (12 products in the `shop` collection: 9 individual + 3 bundle products).
+
+| section | test | result | fix applied (if any) | commit hash |
+| --- | --- | --- | --- | --- |
+| Shop grid | Sold-out product ("Multi-Surface Disinfectant") | PASS — disabled CTA, no form rendered | — | — |
+| Shop grid | Product with no featured image ("Dishwash Gel") | PASS — SVG no-image placeholder | — | — |
+| Shop grid | Very long title (124 chars) | PASS — clamps to 2 lines (`-webkit-line-clamp`) | — | — |
+| Shop grid | Multi-variant product | PASS — form with hidden variant id | — | — |
+| Shop grid | Bundle products excluded from grid | PASS | — | — |
+| Bundle picker | Sold-out / no-image / long title pool items | PASS — SVG placeholder + 2-line clamp | — | — |
+| Bundle picker | **Bundle products present in pool** | FAIL — "Purelane Bundle - Starter/Most Popular/Whole Home" were selectable as individual picks (picker iterated full collection without the `purelane-bundle` tag filter the grid applies) | Added `{% if product.tags contains 'purelane-bundle' %}{% continue %}{% endif %}` to `snippets/purelane-bundle-picker.liquid` pool loop; picker now lists 9 individual products | — |
+| Bundle picker | Empty pool (all products removed) | PASS — grid empty, submit stays disabled, no JS error | — | — |
+| Combos | Product with image vs no image in stack | PASS — image renders / tile fallback | — | — |
+| Combos | Long benefit labels | PASS | — | — |
+| Hero | Long product titles in slides | PASS | — | — |
+
+_commit for the picker fix: `184811b`_
 
 ## Pass 2 — Accessibility
 _pending_
