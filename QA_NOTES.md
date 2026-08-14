@@ -167,3 +167,17 @@ note above applies).
 | Register kicker | Redundant "Join Purelane" kicker + dead `.customer__kicker` CSS removed | PASS — no orphan refs | Removed kicker markup + CSS | — |
 | Theme check | 0 errors; no new offenses in `main-login.liquid` / `main-register.liquid` / `customer.css` | PASS | — | — |
 | **Submit loop** | Valid/invalid login, recover flow, register → redirect | **NOT VERIFIED — needs real browser** (hosted-customer-account redirect; Cloudflare blocks scripted POSTs). Run against classic accounts once enabled | — | — |
+## Pass 8 - Shop-now landing + cross-page nav anchors
+
+| section | test | result | fix applied (if any) | commit hash |
+| --- | --- | --- | --- | --- |
+| frontpage collection | /collections/frontpage shows all products, not just 1 | PASS (data) | added all 12 products via Admin GraphQL `collectionAddProducts` | 85e3610 |
+| frontpage collection | renders in purelane card grid like homepage #shop | PASS (code) | new `purelane-collection-grid` section + `collection.frontpage.json` override | 85e3610 |
+| frontpage collection | bundles excluded from grid (match homepage) | PASS (code) | skip `purelane-bundle` tagged products in section | 85e3610 |
+| navbar | nav link "Ingredients" from product page goes to homepage section | PASS (code) | prefix `#`-only urls with `routes.root_url` in header + hash handling in JS | 85e3610, 3a26e7a |
+| rail | "Reviews" dot now targets the reviews section | PASS (code) | `#voices` -> `#reviews` in header-group.json + schema preset | 85e3610 |
+
+- Liquid gotcha: `starts_with '#'` inside an `and` expression fails to parse
+  at push time ("Expected end_of_string"); switched to `nav_url[0] == '#'`.
+- Browser click-through on live store still pending (Cloudflare blocks scripted
+  storefront requests).

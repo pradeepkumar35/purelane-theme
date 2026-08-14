@@ -679,3 +679,31 @@ Three defects found and fixed in `assets/purelane-bundle-picker.js`,
 
 
 
+
+## Shop-now landing + cross-page nav anchors (Task 4 - done)
+- The hosted-account "Shop now" button links to `/collections/frontpage`.
+  The `frontpage` collection only held 1 product (Plant-Based Floor Cleaner),
+  so the landing showed a single product in Dawn's default collection grid.
+- Data fix (Admin GraphQL `collectionAddProducts`): added all 12 products to
+  the `frontpage` collection (id `gid://shopify/Collection/489342140657`).
+- New section `sections/purelane-collection-grid.liquid` renders the current
+  collection's products in the same format as the homepage #shop grid
+  (`purelane-shelf` + `purelane-product-card`, skipping `purelane-bundle`
+  tagged products, kicker/heading/rule header). New template override
+  `templates/collection.frontpage.json` points only the frontpage collection
+  at it; other collections keep Dawn's default grid.
+- Navbar/rail anchor links (`#ingredients`, `#how`, `#shop`, `#bundles`,
+  `#proof`, `#reviews`) previously pointed at sections that exist only on
+  the homepage, so from a product/collection page they did nothing. Fix:
+  `purelane-header.liquid` prefixes any `#`-only url with
+  `routes.root_url` (`/#ingredients`), so a click from any page navigates
+  to the homepage and lands on the section; `purelane-header.js` now extracts
+  the hash part for rail sync and only smooth-scrolls when the section exists
+  on the current page.
+- Also fixed a latent bug: the rail "Reviews" dot pointed at `#voices` but the
+  section id is `reviews` (header-group.json + schema preset).
+- Liquid note: `starts_with '#'` combined with `and` fails to parse on
+  push; use `nav_url[0] == '#'` (string indexing) instead.
+- Verified: `shopify theme check` 0 offenses in changed files; deployed to
+  GitHub `origin/master` and live theme #161762803953 (`--allow-live`).
+  Browser click-through still needed for final confirmation.
