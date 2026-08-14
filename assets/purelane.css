@@ -1931,9 +1931,7 @@ body {
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    background: rgba(255, 255, 255, 0.74);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: rgba(255, 255, 255, 0.9);
     border-bottom: 1px solid rgba(75, 58, 143, 0.12);
     color: rgba(36, 26, 61, 0.78);
 }
@@ -1943,7 +1941,6 @@ body {
     gap: 40px;
     padding: 9px 20px;
     animation: purelane-tick 30s linear infinite;
-    will-change: transform;
 }
 
 .purelane-ticker b {
@@ -3426,9 +3423,7 @@ body {
     bottom: 0;
     z-index: 48;
     padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
-    background: rgba(255, 255, 255, 0.86);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.94);
     border-top: 1px solid rgba(75, 58, 143, 0.14);
     display: flex;
     align-items: center;

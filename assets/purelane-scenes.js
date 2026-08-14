@@ -12,6 +12,7 @@
   let mx = 0;
   let my = 0;
   let zones = [];
+  let stageVisible = true;
 
   const collectZones = () => {
     zones = [...document.querySelectorAll('[data-scene]')];
@@ -45,7 +46,7 @@
     raf = null;
     const y = window.scrollY || window.pageYOffset;
 
-    if (!reduce) {
+    if (!reduce && stageVisible) {
       const wl = stage.querySelectorAll('.wl');
       const depths = [0.05, 0.09, 0.03, 0.02];
 
@@ -91,15 +92,50 @@
   }
 
   if (!reduce && prod) {
-    prod.animate(
-      [
-        { filter: 'drop-shadow(0 34px 54px rgba(2,20,19,.6))' },
-        { filter: 'drop-shadow(0 42px 68px rgba(2,20,19,.68))' },
-        { filter: 'drop-shadow(0 34px 54px rgba(2,20,19,.6))' },
-      ],
-      { duration: 7000, iterations: Infinity, easing: 'ease-in-out' }
-    );
+    prod.style.filter = 'drop-shadow(0 38px 60px rgba(2,20,19,.64))';
   }
 
-  document.addEventListener('shopify:section:load', collectZones);
+  const pauseTargets = () =>
+    document.querySelectorAll(
+      '.purelane-reviews__track, .purelane-ticker__track, .purelane-scenes .wl-a, .purelane-scenes .wl-b, .purelane-scenes .wl-c, .purelane-scenes .wl-s, .purelane-scenes .bub span'
+    );
+
+  const resumeAnims = (target) => {
+    target.style.animationPlayState = '';
+  };
+
+  const pauseAnims = (target) => {
+    target.style.animationPlayState = 'paused';
+  };
+
+  const animateIO = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          resumeAnims(entry.target);
+        } else {
+          pauseAnims(entry.target);
+        }
+      });
+    },
+    { rootMargin: '120px 0px 120px 0px' }
+  );
+
+  const observePauseTargets = () => {
+    pauseTargets().forEach((el) => animateIO.observe(el));
+  };
+
+  const stageIO = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        stageVisible = entry.isIntersecting;
+      });
+    },
+    { rootMargin: '200px 0px 200px 0px' }
+  );
+  stageIO.observe(stage);
+
+  observePauseTargets();
+  document.addEventListener('shopify:section:load', observePauseTargets);
+  document.addEventListener('shopify:section:unload', observePauseTargets);
 })();

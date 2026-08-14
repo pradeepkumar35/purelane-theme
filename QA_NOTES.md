@@ -103,3 +103,23 @@ as a section setting.
 | Hero autoplay | Reduced motion still respected | PASS — `start()` early-returns before reading speed | — | — |
 | All sections | Settings referenced = settings declared | PASS — 0 orphaned refs across 15 sections | — | — |
 | Nav | Menus/links editor-driven | PASS — `link_list` + URL settings | — | — |
+
+## Pass 5 — Performance / GPU tuning
+
+Diagnosis: the always-running infinite CSS animations (reviews marquee `52s`, ticker `30s`, scenes drift/sway/surface `11–34s`,
+bubbles `--dur`), a 7s infinite `filter: drop-shadow()` animation on the hero product, and live `backdrop-filter` blurs over
+moving content keep the GPU compositing every frame. Fixes below remove the per-frame work without changing the look
+(shadow and glass effects preserved as static equivalents).
+
+| item | test | result | fix applied (if any) | commit hash |
+| --- | --- | --- | --- | --- |
+| Hero product | Infinite 7s `drop-shadow` filter animation | FAIL — `prod.animate` re-filtered every frame forever | Removed the animation; applied a static `drop-shadow` via `prod.style.filter` (`purelane-scenes.js`) | `—` |
+| Off-screen | Infinite animations still compositing off-screen | FAIL — marquee/ticker/scenes always animated | IntersectionObserver pauses `animation-play-state` on the ticker, marquee, scenes `.wl-a/b/c/s` and bubbles when off-screen; resumes on return (`purelane-scenes.js`) | same |
+| Parallax | `.wl` parallax writes styles even when stage hidden | FAIL — `frame()` updated `--px/--py` + product transform on every scroll regardless of visibility | Gated parallax work behind a `stageVisible` flag driven by an IntersectionObserver on `#scenes` | same |
+| Ticker | `will-change: transform` + `backdrop-filter: blur(14px)` over the moving track | FAIL — permanent GPU layer + per-frame re-blur | Removed `will-change`; replaced live blur with opaque `rgba(255,255,255,.9)` background (`purelane.css`) | same |
+| Sticky CTA | `backdrop-filter: blur(20px)` over scrolling content | FAIL — re-blur on every scroll frame | Replaced with near-opaque `rgba(255,255,255,.94)` background (`purelane.css`) | same |
+| Static glass | Hero promises/badge/offer, picker backdrop, footer blurs | PASS — static backdrops; blur cost is one-time, visual unchanged | — | — |
+| Live DOM | Served JS/CSS match working tree | PASS — probe confirmed: no `prod.animate`, static filter applied, no ticker/sticky blur, no ticker `will-change` | — | — |
+| Live DOM | Off-screen pause / on-screen resume | PASS — probe: ticker paused at page bottom & resumed at top; marquee/bubbles paused below fold | — | — |
+| Reduced motion | Static shadow still skipped | PASS — static filter only applied when `!reduce` | — | — |
+| Theme check | No new offenses | PASS — 0 errors, 14 pre-existing Dawn warnings | — | — |
