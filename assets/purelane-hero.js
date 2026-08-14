@@ -38,7 +38,7 @@
         return;
       }
 
-      clearInterval(timer);
+      if (timer) return;
 
       const speed = parseInt(root.dataset.autoplaySpeed || '3800', 10);
       if (!Number.isFinite(speed) || speed <= 0) return;
@@ -60,9 +60,6 @@
         start();
       });
     });
-
-    root.addEventListener('mouseenter', stop);
-    root.addEventListener('mouseleave', start);
 
     showSlide(0);
 
