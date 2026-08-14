@@ -191,22 +191,38 @@
                   {{ block.settings.label }}
                 </span>
 
-                {% assign primary_product = block.settings.products | first %}
-
-                {% if primary_product %}
+                {% if block.settings.offer_price != blank %}
                   <span class='purelane-hero__offer-price'>
-                    <strong>{{ primary_product.price | money }}</strong>
+                    <strong>{{ block.settings.offer_price }}</strong>
 
-                    {% if primary_product.compare_at_price > primary_product.price %}
-                      <s>{{ primary_product.compare_at_price | money }}</s>
+                    {% if block.settings.offer_compare != blank %}
+                      <s>{{ block.settings.offer_compare }}</s>
                     {% endif %}
                   </span>
 
-                  {% if primary_product.compare_at_price > primary_product.price %}
-                    {% assign discount = primary_product.compare_at_price
-                      | minus: primary_product.price
-                    %}
-                    <span class='purelane-hero__offer-save'> Save {{ discount | money }} </span>
+                  {% if block.settings.offer_save != blank %}
+                    <span class='purelane-hero__offer-save'>
+                      {{ block.settings.offer_save }}
+                    </span>
+                  {% endif %}
+                {% else %}
+                  {% assign primary_product = block.settings.products | first %}
+
+                  {% if primary_product %}
+                    <span class='purelane-hero__offer-price'>
+                      <strong>{{ primary_product.price | money }}</strong>
+
+                      {% if primary_product.compare_at_price > primary_product.price %}
+                        <s>{{ primary_product.compare_at_price | money }}</s>
+                      {% endif %}
+                    </span>
+
+                    {% if primary_product.compare_at_price > primary_product.price %}
+                      {% assign discount = primary_product.compare_at_price
+                        | minus: primary_product.price
+                      %}
+                      <span class='purelane-hero__offer-save'> Save {{ discount | money }} </span>
+                    {% endif %}
                   {% endif %}
                 {% endif %}
               </div>
@@ -347,6 +363,24 @@
           "default": "Single bottle"
         },
         {
+          "type": "text",
+          "id": "offer_price",
+          "label": "Offer price",
+          "info": "Flat bundle price shown in the offer pill (e.g. ₹349). Blank falls back to the first product's price."
+        },
+        {
+          "type": "text",
+          "id": "offer_compare",
+          "label": "Offer compare-at price",
+          "info": "Struck-through price beside the offer price (e.g. ₹598)."
+        },
+        {
+          "type": "text",
+          "id": "offer_save",
+          "label": "Offer save pill",
+          "info": "Text shown in the save pill (e.g. \"Save ₹249\")."
+        },
+        {
           "type": "product_list",
           "id": "products",
           "label": "Products",
@@ -386,13 +420,19 @@
         {
           "type": "slide",
           "settings": {
-            "label": "Any 2 products"
+            "label": "Any 2 products",
+            "offer_price": "₹349",
+            "offer_compare": "₹598",
+            "offer_save": "Save ₹249"
           }
         },
         {
           "type": "slide",
           "settings": {
-            "label": "Any 3 products"
+            "label": "Any 3 products",
+            "offer_price": "₹499",
+            "offer_compare": "₹897",
+            "offer_save": "Save ₹398"
           }
         }
       ]

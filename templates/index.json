@@ -46,6 +46,9 @@
           "type": "slide",
           "settings": {
             "label": "Any 2 products",
+            "offer_price": "₹349",
+            "offer_compare": "₹598",
+            "offer_save": "Save ₹249",
             "products": [
               "tap-limescale-cleaner",
               "kitchen-degreaser-lemon-enzyme"
@@ -56,6 +59,9 @@
           "type": "slide",
           "settings": {
             "label": "Any 3 products",
+            "offer_price": "₹499",
+            "offer_compare": "₹897",
+            "offer_save": "Save ₹398",
             "products": [
               "tap-limescale-cleaner",
               "copper-bronze-brass-cleaner",

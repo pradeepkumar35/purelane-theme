@@ -386,12 +386,31 @@
     transition-delay: 0.06s;
 }
 
-.purelane-hero__slide.is-active .purelane-hero__products a:nth-child(2) {
+/* One product: single entrance */
+.products-count-1 .purelane-hero__products a {
+    transition-delay: 0.06s;
+}
+
+/* Two products: left, then right (proto .hp.d1 = 0.06s, .hp.d2 = 0.30s) */
+.products-count-2 .purelane-hero__products a:nth-child(1) {
+    transition-delay: 0.06s;
+}
+
+.products-count-2 .purelane-hero__products a:nth-child(2) {
     transition-delay: 0.3s;
 }
 
-.purelane-hero__slide.is-active .purelane-hero__products a:nth-child(3) {
+/* Three products: left, then right, then middle (proto .hp.d1/.d2/.d3) */
+.products-count-3 .purelane-hero__products a:nth-child(1) {
+    transition-delay: 0.06s;
+}
+
+.products-count-3 .purelane-hero__products a:nth-child(2) {
     transition-delay: 0.54s;
+}
+
+.products-count-3 .purelane-hero__products a:nth-child(3) {
+    transition-delay: 0.3s;
 }
 
 .purelane-hero__products img {

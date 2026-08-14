@@ -126,4 +126,14 @@ the live theme.
   landscape bundle artwork fits fully inside the fixed 118px frame — a plain
   `height:100%` in a `display:grid` container was being sized to the image's
   intrinsic aspect ratio and cropped top/bottom.
+- 2026-08-14 — Hero slide entrance order: the three-product slide animates
+  left → right → middle (delays scoped by `.products-count-N` so the
+  two-product slide keeps left → right): `.products-count-3` delays are
+  nth-child(1)=0.06s, (2)=0.54s, (3)=0.3s, matching the prototype's
+  `.hp.d1/.d2/.d3`.
+- 2026-08-14 — Hero offer pill now has per-slide `offer_price` /
+  `offer_compare` / `offer_save` settings so the "Any 2 / Any 3 products"
+  slides show the flat bundle prices (₹349/₹598/Save ₹249 and
+  ₹499/₹897/Save ₹398) instead of the first product's own price. Falls back
+  to product-derived price when blank (slide 1 keeps its product price).
 
