@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "product-grid": {
+      "type": "purelane-collection-grid",
+      "settings": {
+        "kicker": "Shop",
+        "heading": "All products",
+        "cta_label": "Add to cart"
+      }
+    }
+  },
+  "order": [
+    "product-grid"
+  ]
+}

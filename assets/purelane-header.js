@@ -27,10 +27,11 @@ if (!window.purelaneHeader) {
     const railLinks = Array.from(document.querySelectorAll('[data-purelane-rail]'));
     const targets = railLinks.map((a) => {
       const href = a.getAttribute('href') || '#MainContent';
+      const hash = href.includes('#') ? href.slice(href.indexOf('#')) : href;
       const el =
-        href === '#MainContent' || href === '#top'
+        hash === '#MainContent' || hash === '#top'
           ? document.getElementById('MainContent')
-          : document.querySelector(href);
+          : document.querySelector(hash);
       return { link: a, el };
     });
 
@@ -73,16 +74,20 @@ if (!window.purelaneHeader) {
     /* ---------- smooth scroll for anchor nav links ---------- */
     document.querySelectorAll('.purelane-navlinks a, .purelane-rail a').forEach((a) => {
       const href = a.getAttribute('href') || '';
-      if (href.startsWith('#')) {
-        a.addEventListener('click', (e) => {
-          const target = href === '#MainContent' || href === '#top' ? null : document.querySelector(href);
-          if (!target) return; // let the browser do a native jump to top via #MainContent
-          if (reduce) return;
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          history.replaceState(null, '', href);
-        });
-      }
+      const hashIndex = href.indexOf('#');
+      if (hashIndex === -1) return;
+      const hash = href.slice(hashIndex);
+      a.addEventListener('click', (e) => {
+        // Only intercept when the section exists on this page (e.g. the
+        // homepage). Otherwise the browser navigates to the root + hash and
+        // lands on the homepage section from any other page.
+        const target = hash === '#MainContent' || hash === '#top' ? null : document.querySelector(hash);
+        if (!target) return;
+        if (reduce) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', hash);
+      });
     });
 
     /* ---------- cart drawer integration ---------- */

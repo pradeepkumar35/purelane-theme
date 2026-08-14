@@ -126,7 +126,7 @@
           "type": "rail",
           "settings": {
             "label": "Reviews",
-            "url": "#voices"
+            "url": "#reviews"
           }
         }
       },

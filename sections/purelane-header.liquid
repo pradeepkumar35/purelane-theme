@@ -28,7 +28,7 @@
   data-section-id='{{ section.id }}'
 >
   <div class='purelane-navpill glass'>
-    <a class='purelane-brand' href='{% if section.settings.brand_url != blank %}{{ section.settings.brand_url }}{% else %}#MainContent{% endif %}' aria-label='{{ section.settings.brand_name }} home'>
+    <a class='purelane-brand' href='{% if section.settings.brand_url != blank %}{{ section.settings.brand_url }}{% else %}{{ routes.root_url }}{% endif %}' aria-label='{{ section.settings.brand_name }} home'>
       <span class='purelane-brand__mark' aria-hidden='true'>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 20.5 8v8L12 21 3.5 16V8L12 3Z"/><path d="M12 12 20.5 8M12 12v9M12 12 3.5 8"/></svg>
       </span>
@@ -41,7 +41,11 @@
     <nav class='purelane-navlinks' aria-label='Main'>
       {% for block in section.blocks %}
         {% if block.type == 'link' %}
-          <a href='{{ block.settings.url }}' {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
+          {%- assign nav_url = block.settings.url | append: '' -%}
+          {%- if nav_url != blank and nav_url starts_with '#' -%}
+            {%- assign nav_url = routes.root_url | append: nav_url -%}
+          {%- endif -%}
+          <a href='{{ nav_url }}' {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
         {% endif %}
       {% endfor %}
     </nav>
@@ -88,8 +92,12 @@
 <nav class='purelane-rail' aria-label='Section progress'>
   {% for block in section.blocks %}
     {% if block.type == 'rail' %}
+      {%- assign rail_url = block.settings.url | append: '' -%}
+      {%- if rail_url != blank and rail_url starts_with '#' -%}
+        {%- assign rail_url = routes.root_url | append: rail_url -%}
+      {%- endif -%}
       <a
-        href='{{ block.settings.url }}'
+        href='{{ rail_url }}'
         aria-label='{{ block.settings.label }}'
         data-purelane-rail
         {% if forloop.index == 1 %}class='is-on'{% endif %}
@@ -112,7 +120,11 @@
   </button>
   {% for block in section.blocks %}
     {% if block.type == 'link' %}
-      <a href='{{ block.settings.url }}' {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
+      {%- assign menu_url = block.settings.url | append: '' -%}
+      {%- if menu_url != blank and menu_url starts_with '#' -%}
+        {%- assign menu_url = routes.root_url | append: menu_url -%}
+      {%- endif -%}
+      <a href='{{ menu_url }}' {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
     {% endif %}
   {% endfor %}
 </aside>
@@ -323,7 +335,7 @@
           "type": "rail",
           "settings": {
             "label": "Reviews",
-            "url": "#voices"
+            "url": "#reviews"
           }
         }
       ]
