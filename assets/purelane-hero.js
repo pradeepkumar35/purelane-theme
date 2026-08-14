@@ -36,18 +36,39 @@
 
       timer = setInterval(() => {
         showSlide((current + 1) % slides.length);
-      }, 5000);
+      }, 3800);
+    };
+
+    const stop = () => {
+      clearInterval(timer);
+      timer = null;
     };
 
     dots.forEach((dot, index) => {
       dot.addEventListener('click', () => {
+        stop();
         showSlide(index);
         start();
       });
     });
 
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+
     showSlide(0);
-    start();
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            entry.isIntersecting ? start() : stop();
+          });
+        },
+        { threshold: 0.2 }
+      ).observe(root);
+    } else {
+      start();
+    }
 
     document.addEventListener('shopify:section:unload', (event) => {
       if (event.detail?.sectionId === root.dataset.sectionId) {

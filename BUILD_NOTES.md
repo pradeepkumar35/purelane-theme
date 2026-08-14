@@ -340,3 +340,40 @@ Incremental notes on how the 5-section clone maps the prototype
   border `rgba(75,58,143,.26)`, vig gradients, product drop-shadow
   `rgba(0,74,66,.15) 14px 22px` — all exact.
 - (The hero `.hdots` pill animation is handled under item 1.)
+
+
+## Bug-fix pass (Clean v1) — Item 1: hero entrance / dots / image blend (done)
+- Entrance: `.purelane-hero__slide` is now opacity-based (`opacity:0` +
+  `pointer-events:none` / `.is-active` `opacity:1`) with an 0.85s
+  crossfade, mirroring the file's `.hslide`/`.hslide.on`. Product anchors
+  get the file's entrance: `translateY(28px) scale(.94)` with staggered
+  delays `.06/.30/.54s` (`nth-child` 1/2/3); the offer pill `.ptag`
+  entrance `translateY(16px)` at `.62s`.
+- Dots: markup moved inside `.purelane-hero__slides` (below the stage, like
+  the file's `.hdots` after the `.hstage`). CSS: 6px circle -> active 20px
+  pill (`border-radius:999px`), `.4s var(--ease)`, active `#b8701c`,
+  base `rgba(75,58,143,.22)`, hover `rgba(75,58,143,.4)` (file light-V2).
+  Centered under the stage (`top:100%`, `margin-top:8px`), width = stage
+  width, gap 7px. Verified 6px/20px pill at 375/768/1024/1440, 8px below slide
+  bottom, centered, 1 active dot.
+- Hero images: real product photos are opaque PNGs with a light-gray studio
+  background (the prototype uses transparent SVGs, which is why it needs no
+  trick). Measured blend outcomes (active slide, 1440):
+  - `screen`: gray rect melts but product washes to near-uniform
+    luminance (rendered mean 244/stdev 12 vs raw 219/26) — product ghost.
+  - `multiply` (chosen): product preserved almost exactly (mean 220/stdev
+    28 vs raw 219/26); gray rect becomes a subtle mint-tinted shape. The
+    anchor (stacking context via transform/filter) is the blend backdrop and
+    its s1-mint gradient matches the scene, so the box blends in.
+  - `assets/purelane.css` `.purelane-hero__products img` uses
+    `mix-blend-mode: multiply`; the anchor carries the s1 mint gradient +
+    `drop-shadow` (drop-shadow moved from img to anchor so it doesn't
+    interfere with the blend).
+- JS: `assets/purelane-hero.js` auto-advance interval 5000ms -> 3800ms
+  (file uses 3800), added pause-on-hover (`mouseenter`/`mouseleave`) and
+  IntersectionObserver `threshold:.2` start/stop, matching the file's
+  `hplay/hstop` behavior. Verified advance at ~3831ms, reduced-motion guard
+  intact.
+- Verified at 375/768/1024/1440: crossfade runs, entrance stagger transforms
+  run on `.is-active`, dots pill 6->20px, blend `multiply`, dots centered
+  below stage, no overflow.

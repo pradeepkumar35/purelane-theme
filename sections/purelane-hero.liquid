@@ -238,24 +238,25 @@
           </article>
         {% endif %}
       {% endfor %}
-    </div>
-    <div class='purelane-hero__dots' role='tablist' aria-label='Hero offers'>
-      {% assign slide_index = 0 %}
 
-      {% for block in section.blocks %}
-        {% if block.type == 'slide' %}
-          <button
-            type='button'
-            class='purelane-hero__dot{% if slide_index == 0 %} is-active{% endif %}'
-            role='tab'
-            aria-selected='{% if slide_index == 0 %}true{% else %}false{% endif %}'
-            aria-label='Show offer {{ slide_index | plus: 1 }}'
-            data-hero-slide='{{ slide_index }}'
-          ></button>
+      <div class='purelane-hero__dots' role='tablist' aria-label='Hero offers'>
+        {% assign slide_index = 0 %}
 
-          {% assign slide_index = slide_index | plus: 1 %}
-        {% endif %}
-      {% endfor %}
+        {% for block in section.blocks %}
+          {% if block.type == 'slide' %}
+            <button
+              type='button'
+              class='purelane-hero__dot{% if slide_index == 0 %} is-active{% endif %}'
+              role='tab'
+              aria-selected='{% if slide_index == 0 %}true{% else %}false{% endif %}'
+              aria-label='Show offer {{ slide_index | plus: 1 }}'
+              data-hero-slide='{{ slide_index }}'
+            ></button>
+
+            {% assign slide_index = slide_index | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+      </div>
     </div>
   </div>
 </section>
