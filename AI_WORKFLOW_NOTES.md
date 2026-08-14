@@ -324,3 +324,40 @@ translation" between the static HTML and the live theme.
   - Serialize live pushes: one canonical "push live" step (full theme,
     `--allow-live`), never assume a prior `--only` push plus an untrusted
     `pull` round-trip proves sync. Verify via the CLI's returned role/message.
+
+## 6. Login / signup reskin pass (Task 4)
+
+- **Delegated**: a visual-only reskin of Dawn's native customer pages. The
+  theme had a Task-2 base already (`main-login`/`main-register` +
+  `customer.css`); this pass added a brand wordmark top-center, aligned
+  focus-visible to the site's green-outline a11y pattern, removed a
+  redundant register kicker, and verified theme check stays at 0 errors.
+- **Where it needed correction / could have gone wrong**:
+  - **Scope discipline was the risk, not the logic.** The spec's trap is
+    "reskin, not rebuild": the only safe edits are markup structure +
+    CSS. The form names, `aria-invalid`, error divs, and `:target` recover
+    toggle had to stay byte-identical to Dawn, or auth breaks. Verified by
+    diffing against the pre-existing Task-2 templates rather than rewriting.
+  - **Background decision had to be made, not assumed.** The spec offered
+    two candidates (hero gradient vs. sitewide non-hero background). The
+    right answer was "neither needs a change" — `purelane-scenes` is global
+    in `layout/theme.liquid` and the customer section is transparent like
+    every other section, so the pages already match the shop/bundles/combos
+    background. Lesson: for "match the site" tasks, check whether the site
+    *already* matches before writing new CSS.
+  - **Brand title had to reuse existing tokens, not new ones.** The
+    wordmark is `.purelane-brand__n1`/`.n2` scaled up, not a new font/color.
+    Kept the amber input focus ring (a Task-2 design choice) and *added* the
+    site's `#4f7d10` outline for focus-visible instead of replacing one
+    focus style with another.
+- **What to systematize for twenty more of these**:
+  - A "touch nothing inside the native `{% form %}` contract" rule: audit a
+    diff of template markup vs. Dawn before and after a reskin; only CSS
+    selectors and wrapper markup may change.
+  - When the task says "match the site", first grep for the actual token /
+    layer the site uses (here: `purelane-scenes`, `.purelane-brand__n1`)
+    and reuse it verbatim — that's faster and safer than reinventing.
+  - Keep a one-line "left alone on purpose" note for anything adjacent but
+    out of scope (here: checkout left on Shopify's hosted checkout because
+    checkout customization is Plus-only and out of scope for a theme
+    rebuild). It pre-empts the "why is this still Dawn?" review comment.

@@ -4,6 +4,12 @@ Product metafields in the `purelane` namespace. Consumed by
 `snippets/purelane-product-card.liquid`, which is rendered by the Shop
 section (`sections/purelane-shop.liquid`).
 
+> Update (login/signup reskin pass): **no new metafield or metaobject was
+> created** for the customer login/register work. The reskin only added
+> `brand_name` / `brand_tagline` as plain *section settings* (text fields in
+> the `main-login`/`main-register` schemas), not metafields. Everything else
+> reuses `shop.name`, locale strings, and existing CSS tokens.
+
 > Scope: these are the ONLY custom metafield/metaobject definitions created
 > for this build. There are **no metaobjects** — combos and bundle tiers are
 > real products (tagged `purelane-bundle`, `tier-N`, `product_type: Purelane

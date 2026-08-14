@@ -3,8 +3,12 @@
 
 <div class="customer register">
   <div class="customer__panel glass">
+    <a class="customer__brand" href="{{ routes.root_url }}" aria-label="{{ section.settings.brand_name }} home">
+      <span class="customer__brand-n1">{{ section.settings.brand_name }}</span>
+      <span class="customer__brand-n2">{{ section.settings.brand_tagline }}</span>
+    </a>
+
     <div class="customer__head">
-      <span class="customer__kicker">Join Purelane</span>
       <h1>{{ 'customer.register.title' | t }}</h1>
     </div>
     <p class="customer__lede">Create an account to track orders and save your favourite bundles.</p>
@@ -93,6 +97,19 @@
   "name": "Purelane Register",
   "tag": "section",
   "class": "customer-section",
-  "settings": []
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name",
+      "default": "Purelane"
+    },
+    {
+      "type": "text",
+      "id": "brand_tagline",
+      "label": "Brand tagline",
+      "default": "Clean, simply"
+    }
+  ]
 }
 {% endschema %}

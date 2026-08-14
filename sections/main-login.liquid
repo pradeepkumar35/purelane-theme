@@ -3,6 +3,11 @@
 
 <div class="customer login">
   <div class="customer__panel glass">
+    <a class="customer__brand" href="{{ routes.root_url }}" aria-label="{{ section.settings.brand_name }} home">
+      <span class="customer__brand-n1">{{ section.settings.brand_name }}</span>
+      <span class="customer__brand-n2">{{ section.settings.brand_tagline }}</span>
+    </a>
+
     <h1 id="recover" class="customer__heading" tabindex="-1">
       {{ 'customer.recover_password.title' | t }}
     </h1>
@@ -118,6 +123,19 @@
   "name": "Purelane Login",
   "tag": "section",
   "class": "customer-section",
-  "settings": []
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name",
+      "default": "Purelane"
+    },
+    {
+      "type": "text",
+      "id": "brand_tagline",
+      "label": "Brand tagline",
+      "default": "Clean, simply"
+    }
+  ]
 }
 {% endschema %}

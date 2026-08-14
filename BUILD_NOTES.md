@@ -594,6 +594,35 @@ silently "fixed"), kept in AI_WORKFLOW_NOTES.md with a one-line reason each:
   hosted redirect). Confirm with the merchant whether classic accounts are
   intended before relying on these templates.
 
+## Task 4 — Login / signup reskin pass (done, section markup + `customer.css`)
+- **Visual reskin only — no auth logic touched.** All `{% form %}` calls,
+  field names, `aria-invalid`, error/warning markup, `:target` recover
+  toggle, and redirects are unchanged Dawn-native.
+- **Brand wordmark top-center**: both sections now render a `.customer__brand`
+  block (`PURELANE` + tagline "Clean, simply") above the form, styled from
+  the same `.purelane-brand__n1`/`.n2` tokens (Outfit 800 uppercase n1,
+  Inter tracked uppercase n2) but scaled up as a page title. Values come from
+  new `brand_name` / `brand_tagline` section settings (defaults "Purelane" /
+  "Clean, simply"). Links to `routes.root_url`.
+- **Background consistency (no change needed)**: the login/register pages
+  already sit on the sitewide animated gradient — `purelane-scenes` is
+  rendered globally in `layout/theme.liquid`, and `.customer-section` is
+  transparent (`z-index: 2`) like every other Purelane section, so the scene
+  crossfades show through behind the glass panel. This matches the
+  "non-hero site background" treatment (the lavender/mint gradient) rather
+  than the hero's own gradient — same visual language as shop/bundles/combos.
+- **Form styling**: unchanged from the Task 2 reskin (Inter body, Outfit
+  headings, pill inputs with amber focus ring, teal gradient `.btn-primary`
+  CTA, ghost `.btn-ghost`). Focus-visible now ALSO matches the rest of the
+  site's a11y pattern (`outline: 2px solid #4f7d10; outline-offset: 3px`)
+  on inputs/buttons/links, consistent with `.purelane-hero__dot` etc.
+- Removed the redundant "Join Purelane" register kicker (brand wordmark
+  already carries the name); deleted the now-dead `.customer__kicker` CSS.
+- **Checkout note**: checkout was left as **Shopify's native hosted
+  checkout** — reskinning checkout is explicitly out of scope for a theme
+  rebuild on a non-Plus store (checkout customization is Plus-only), so no
+  checkout templates/code were touched.
+
 ## Task 3 — Cart drawer bug-fix pass (done, commits `ddc0af7` + `f6dc330`, pushed live)
 
 Three defects found and fixed in `assets/purelane-bundle-picker.js`,

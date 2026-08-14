@@ -147,3 +147,23 @@ moving content keep the GPU compositing every frame. Fixes below remove the per-
 | Register | Dawn-native `{% form 'create_customer' %}` with per-field error markup | PASS | — | `6ca755d` |
 | CSS | `customer.css` reskin: glass panel, Outfit headings, pill inputs, amber focus, teal CTA; loads `customer.css` + `purelane.css` | PASS — theme check 0 new offenses | — | `6ca755d` |
 | **Render** | `/account/login` shows the theme form | **FLAGGED — store has new hosted customer accounts** (`customerAccounts: OPTIONAL`); `/account/login` 302-redirects to `shopify.com/…/account`. Templates are correct and will serve once classic accounts are enabled (or for non-hosted flows). Confirm with merchant | — | — |
+
+## Pass 8 — Login / signup reskin (Task 4)
+
+Scope: visual reskin of the existing native login/register templates — no
+change to Dawn's form logic. Static review + `shopify theme check`; the
+interactive submit loop still needs a real browser (hosted-account redirect
+note above applies).
+
+| item | test | result | fix applied (if any) | commit hash |
+| --- | --- | --- | --- | --- |
+| Brand wordmark | Both sections render `.customer__brand` (n1 + n2) top-center from new `brand_name`/`brand_tagline` settings, linking to `routes.root_url` | PASS — static (markup + schema) | — | — |
+| Brand tokens | Wordmark reuses `.purelane-brand__n1`/`.n2` style (Outfit 800 uppercase / Inter tracked uppercase) scaled up, not new fonts | PASS — CSS review | — | — |
+| Background | Login/register sit on the sitewide `purelane-scenes` gradient (global in `layout/theme.liquid`), transparent section `z-index:2` | PASS — same treatment as shop/bundles/combos | — | — |
+| Native form logic | `customer_login`, `recover_customer_password`, `create_customer`, `guest_login` forms + field names + `aria-invalid` + error divs + `:target` toggle byte-identical to Task 2 / Dawn | PASS — diffed, only wrapper markup changed | — | — |
+| Keyboard | Tab order: brand → fields → submit → links; no `tabindex` games added | PASS (static) — focus-visible rule added for inputs/buttons/links | Added `.customer__…:focus-visible { outline: 2px solid #4f7d10; outline-offset: 3px }` in `customer.css` | — |
+| Focus states | Focus ring matches site a11y pattern (green `#4f7d10` outline, like `.purelane-hero__dot`) | PASS — CSS matches site tokens | — | — |
+| Contrast | Body `#17102b` on glass (white → `rgba(236,230,247,…)`), buttons `#f4fdf6` on teal gradient, errors red-on-tinted-red | PASS — reuses site palette | — | — |
+| Register kicker | Redundant "Join Purelane" kicker + dead `.customer__kicker` CSS removed | PASS — no orphan refs | Removed kicker markup + CSS | — |
+| Theme check | 0 errors; no new offenses in `main-login.liquid` / `main-register.liquid` / `customer.css` | PASS | — | — |
+| **Submit loop** | Valid/invalid login, recover flow, register → redirect | **NOT VERIFIED — needs real browser** (hosted-customer-account redirect; Cloudflare blocks scripted POSTs). Run against classic accounts once enabled | — | — |
