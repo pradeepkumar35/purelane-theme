@@ -14,9 +14,8 @@
       "settings": {
         "title": "Collections",
         "sort": "alphabetical",
-        "image_ratio": "square",
-        "columns_desktop": 3,
-        "columns_mobile": "2"
+        "image_ratio": "adapt",
+        "cta_label": "Shop collection"
       }
     }
   },

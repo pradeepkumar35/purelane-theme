@@ -16,7 +16,7 @@
   <div class='purelane-footer__inner'>
     <div class='purelane-footer__grid'>
       <div class='purelane-footer__col'>
-        <a class='purelane-footer__brand purelane-brand' href='{% if section.settings.brand_url != blank %}{{ section.settings.brand_url }}{% else %}#MainContent{% endif %}' aria-label='{{ section.settings.brand_name }} home'>
+        <a class='purelane-footer__brand purelane-brand' href='{% if section.settings.brand_url != blank %}{{ section.settings.brand_url }}{% else %}{{ routes.root_url }}{% endif %}' aria-label='{{ section.settings.brand_name }} home'>
           <span class='purelane-brand__mark' aria-hidden='true'>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/><path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/><path d="M12 21v-6"/></svg>
           </span>
@@ -36,7 +36,12 @@
             <h5>{{ block.settings.heading }}</h5>
             {% if block.settings.menu != blank and block.settings.menu.links.size > 0 %}
               {% for link in block.settings.menu.links %}
-                <a href='{{ link.url }}'>{{ link.title }}</a>
+                {%- capture foot_url %}{{ link.url }}{% endcapture -%}
+                {%- assign foot_first = foot_url | slice: 0, 1 -%}
+                {%- if foot_first == '#' -%}
+                  {%- assign foot_url = routes.root_url | append: foot_url -%}
+                {%- endif -%}
+                <a href='{{ foot_url }}'>{{ link.title }}</a>
               {% endfor %}
             {% else %}
               {% assign fallback_lines = block.settings.fallback_links | newline_to_br | split: '<br />' %}
@@ -45,7 +50,12 @@
                 {% assign label = parts[0] | strip %}
                 {% assign url = parts[1] | strip %}
                 {% if label != blank %}
-                  <a href='{{ url }}'>{{ label }}</a>
+                  {%- capture foot_url %}{{ url }}{% endcapture -%}
+                  {%- assign foot_first = foot_url | slice: 0, 1 -%}
+                  {%- if foot_first == '#' -%}
+                    {%- assign foot_url = routes.root_url | append: foot_url -%}
+                  {%- endif -%}
+                  <a href='{{ foot_url }}'>{{ label }}</a>
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -69,7 +79,12 @@
       <b>{{ section.settings.sticky_title }}</b>
       <span>{{ section.settings.sticky_subtitle }}</span>
     </span>
-    <a class='purelane-sticky__btn' href='{{ section.settings.sticky_link }}'>{{ section.settings.sticky_label }}</a>
+    {%- capture sticky_url %}{{ section.settings.sticky_link }}{% endcapture -%}
+    {%- assign sticky_first = sticky_url | slice: 0, 1 -%}
+    {%- if sticky_first == '#' -%}
+      {%- assign sticky_url = routes.root_url | append: sticky_url -%}
+    {%- endif -%}
+    <a class='purelane-sticky__btn' href='{{ sticky_url }}'>{{ section.settings.sticky_label }}</a>
   </div>
 {% endif %}
 

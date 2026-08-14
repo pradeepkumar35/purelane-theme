@@ -707,3 +707,73 @@ Three defects found and fixed in `assets/purelane-bundle-picker.js`,
 - Verified: `shopify theme check` 0 offenses in changed files; deployed to
   GitHub `origin/master` and live theme #161762803953 (`--allow-live`).
   Browser click-through still needed for final confirmation.
+
+## Live-hardening + /products + product pages (2026-08-15 — live theme #161774731505)
+
+### Fresh live theme instance (cache-busting, done)
+- Symptom: plain `/` and `/collections/frontpage` kept serving stale HTML even
+  after code fixes — `Server-Timing` reported the right theme but the body was
+  old. Verified the code itself was correct via cache-bypassing URLs
+  (`?type=x`, `?preview_theme_id`, `?view=frontpage` all rendered fresh;
+  `?_fd=0` and `no-cache` headers did not).
+- Fix: duplicated the theme (`shopify theme duplicate --theme 161762803953
+  --name "Purelane Clean v1 (fresh)" --force --json` → #161774731505), pushed
+  the local files over it, verified fresh renders, then
+  `shopify theme publish --theme 161774731505 --force` and renamed it to
+  "Purelane Clean v1 (live)" via GraphQL `themeUpdate`. Old #161762803953 is
+  now unpublished. User confirmed the store renders correctly.
+- Lesson: page cache can outlive a theme push; `?type=x` is the reliable
+  verification trick.
+
+### /products — list-collections page as purelane cards (done)
+- Rewrote `sections/main-list-collections.liquid` from Dawn's
+  `card-collection` grid to the homepage #shop visual language: each
+  collection renders as a `purelane-card` (glass shot with the collection's
+  featured image or leaf fallback, title, product count via
+  `'products.facets.product_count_simple' | t: count: ...`, and a
+  "Shop collection" CTA).
+- The `shop` collection card is hidden from this page (`{%- if
+  collection.handle == 'shop' -%}{%- continue -%}{%- endif -%}`).
+- Layout: `.purelane-list-collections` centered (`width: min(1180px, 100%);
+  margin: 0 auto`) with vertical `clamp(48px, 8vw, 96px)` and horizontal
+  `clamp(20px, 6vw, 48px)` padding; the shelf is a centered flex wrap
+  (`justify-content: center`, `max-width: 820px`); cards are
+  `flex: 0 0 auto; width: min(300px, 100%)`; CTA is `white-space: nowrap`.
+- Schema: removed `columns_desktop` / `columns_mobile`, added `cta_label`
+  (default "Shop collection"). `templates/list-collections.json` updated:
+  `image_ratio: "adapt"`, `cta_label`, columns settings dropped.
+
+### Product pages — fonts, image shadow (done)
+- `sections/main-product.liquid` gained a scoped `<style>` block: the
+  `.product__info-container` subtree (p/span/a/li/price/form labels/text/
+  description/rte) uses **Inter**; headings and `.price--large` use
+  **Outfit** with `letter-spacing: -0.018em` (matches the homepage type);
+  `.product__media-wrapper .product-media-container.global-media-settings`
+  gets `box-shadow: 0 22px 54px rgba(58, 44, 112, 0.13)`.
+- Verified in the served page: font override, Outfit on headings, image
+  shadow, and purelane.css all present.
+
+### "You may also like" — recommendations as purelane cards (done)
+- Rewrote `sections/related-products.liquid` to render
+  `recommendations.products` as `purelane-product-card` (cta_behavior
+  `'link'`, cta_label "View product") inside a `purelane-shelf`; section now
+  loads `purelane.css` instead of Dawn's card/price/related css.
+- **Bug fixed — invisible recommendation cards**: the `/recommendations/
+  products` section-load response strips `<script>` tags, so no JS runs inside
+  the AJAX-rendered section. The card's `delay` param adds `rv rv-dN` reveal
+  classes (`opacity: 0`) that depend on `purelane-reveal.js` — with no JS the
+  cards stayed invisible. Fix: render without `delay` so cards have no reveal
+  class (visible immediately). Rule: **recommendation/AJAX-rendered cards must
+  not carry `rv` reveal classes.**
+- Verified fresh AJAX response: 4 `class="purelane-card"` (no `rv`, no
+  `card-wrapper` Dawn markup).
+
+### Header/footer anchor prefixing hardened (done)
+- Swapped the `append: ''` + `nav_url[0] == '#'` trick for
+  `capture` + `slice: 0, 1` in `purelane-header.liquid` (nav links, rail
+  links, mobile menu) and `purelane-footer.liquid` (menu links, fallback
+  lines, sticky CTA) so a nil/blank url can't throw. Footer-group fallback
+  links updated `#voices` → `#reviews`.
+- Verified: `shopify theme check` 0 errors (13 pre-existing Dawn warnings);
+  deployed to GitHub `origin/master` and live theme #161774731505
+  (`--allow-live`).

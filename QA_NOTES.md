@@ -181,3 +181,30 @@ note above applies).
   at push time ("Expected end_of_string"); switched to `nav_url[0] == '#'`.
 - Browser click-through on live store still pending (Cloudflare blocks scripted
   storefront requests).
+
+## Pass 9 — Live-hardening + /products + product pages (2026-08-15)
+
+Verified via storefront fetches (`?type=x` / `?preview_theme_id` bypass the
+page cache) + `shopify theme check`. Live theme #161774731505.
+
+| section | test | result | fix applied (if any) | commit hash |
+| --- | --- | --- | --- | --- |
+| Theme instance | Plain `/` and `/collections/frontpage` served stale HTML after code pushes (`Server-Timing` theme correct, body old) | FAIL — page cache outlives a push; `?_fd=0`/`no-cache` didn't help | Duplicated theme → #161774731505, pushed files, verified fresh, published live, old #161762803953 unpublished | — |
+| Theme instance | Code correctness confirmed via `?type=x`, `?preview_theme_id`, `?view=frontpage` (all render fresh) | PASS — cache-bypassing URLs are the reliable verification surface | (kept as the method going forward) | — |
+| Theme instance | Merchant confirms store renders correctly | PASS | — | — |
+| /products | `shop` collection card absent, `frontpage` card present (with 12 products) | PASS | `{% continue %}` on `collection.handle == 'shop'` in `main-list-collections.liquid` | — |
+| /products | Renders `purelane-card` markup (no Dawn `card-wrapper`/`card-collection`) | PASS | full rewrite to purelane-card + purelane-shelf | — |
+| /products | Centered flex layout, horizontal padding `clamp(20px,6vw,48px)`, cards `min(300px,100%)`, CTA `white-space: nowrap` | PASS | scoped `<style>` block | — |
+| Product page | Font override: `.product__info-container` subtree Inter, headings/price Outfit | PASS (served HTML) | `<style>` in `main-product.liquid` | — |
+| Product page | Media shadow `0 22px 54px rgba(58,44,112,.13)` | PASS (served HTML) | same | — |
+| You may also like | Recommendations render purelane-product-card (cta link, "View product") | PASS (fresh AJAX) | rewrite of `related-products.liquid` | — |
+| You may also like | Cards visible (not opacity-0) after section-load | FAIL — `/recommendations/products` strips `<script>`; `rv rv-dN` reveal classes need `purelane-reveal.js` that never loads → cards invisible | removed `delay` param so cards render without reveal classes | — |
+| You may also like | Fresh AJAX response has 4 plain `class="purelane-card"`, 0 `rv-d`, 0 `card-wrapper` | PASS | — | — |
+| Header/Footer | `#`-only links prefixed with `routes.root_url` (nav, rail, menu, footer columns, sticky CTA) | PASS | `capture` + `slice: 0, 1` pattern (nil-safe) | — |
+| Footer group | Fallback link `#voices` → `#reviews` | PASS | footer-group.json | — |
+| All | `shopify theme check` 0 errors (13 pre-existing Dawn warnings) | PASS | — | — |
+
+- **AJAX-strip rule**: `/recommendations/products` section-load responses do
+  not carry `<script>` tags. Anything AJAX-rendered (recommendations, product
+  recommendations) must be fully functional without JS — no `rv` reveal
+  classes, no behavior depending on an injected script.

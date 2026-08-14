@@ -39,6 +39,32 @@
     }
   {%- endstyle -%}
 
+  <style>
+    .product__info-container,
+    .product__info-container p,
+    .product__info-container span,
+    .product__info-container a,
+    .product__info-container li,
+    .product__info-container .price,
+    .product__info-container .product-form__input label,
+    .product__info-container .product__text,
+    .product__info-container .product__description,
+    .product__info-container .rte {
+      font-family: Inter, system-ui, sans-serif;
+    }
+    .product__title h1,
+    .product__info-container h1,
+    .product__info-container h2,
+    .product__info-container h3,
+    .product__info-container .price--large {
+      font-family: "Outfit", system-ui, sans-serif;
+      letter-spacing: -0.018em;
+    }
+    .product__media-wrapper .product-media-container.global-media-settings {
+      box-shadow: 0 22px 54px rgba(58, 44, 112, 0.13);
+    }
+  </style>
+
   <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
   {%- if product.quantity_price_breaks_configured? -%}

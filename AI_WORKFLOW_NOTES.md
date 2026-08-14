@@ -287,6 +287,39 @@ translation" between the static HTML and the live theme.
   rendering the theme template. The Dawn-native templates are correct and
   will serve once the merchant switches to classic accounts; confirm intent
   before relying on them.
+- 2026-08-15 — Page cache outlives theme pushes: plain `/` and
+  `/collections/frontpage` served stale HTML (`Server-Timing` showed the
+  pushed theme, body was old). Verified code via cache-bypassing URLs
+  (`?type=x`, `?preview_theme_id`, `?view=frontpage`) and finally duplicated
+  + republished the theme (#161774731505, old #161762803953 unpublished).
+  `?_fd=0` and `no-cache` headers do NOT bypass. Rule: verify new code with
+  `?type=x`, not a plain URL.
+- 2026-08-15 — `/products` (list-collections) rewritten from Dawn's
+  `card-collection` grid to the homepage #shop visual language
+  (`purelane-card` + `purelane-shelf`): featured-image shot (leaf fallback),
+  title, product count (`products.facets.product_count_simple`),
+  "Shop collection" CTA. The `shop` collection card is hidden via
+  `{% continue %}` on `collection.handle == 'shop'`. Centered flex wrap
+  (`justify-content: center`, `max-width: 820px`), cards
+  `flex: 0 0 auto; width: min(300px, 100%)`, CTA `white-space: nowrap`;
+  container `width: min(1180px, 100%)` with `clamp` padding.
+- 2026-08-15 — Product pages use homepage type: `.product__info-container`
+  subtree set to Inter, headings/`.price--large` to Outfit
+  (`letter-spacing: -0.018em`), product media shadow
+  `0 22px 54px rgba(58,44,112,.13)` — scoped `<style>` in
+  `main-product.liquid`, Dawn layout untouched.
+- 2026-08-15 — "You may also like" renders recommendations as
+  `purelane-product-card` (cta link) in a `purelane-shelf` instead of Dawn's
+  card-product grid. **Reveal bug**: `/recommendations/products` section-load
+  strips `<script>` tags, so `rv rv-dN` reveal classes (opacity 0) never got
+  `purelane-reveal.js` and cards were invisible; fixed by omitting `delay` so
+  cards render without reveal classes. Rule: AJAX-rendered cards must not
+  depend on JS/reveal.
+- 2026-08-15 — Anchor prefixing hardened across `purelane-header.liquid`
+  (nav/rail/menu) and `purelane-footer.liquid` (menu links, fallback lines,
+  sticky CTA): `capture` + `slice: 0, 1` instead of `append: ''` + `[0]`
+  indexing so a nil url can't throw. Footer-group fallback link `#voices` →
+  `#reviews` (matches the real section id).
 
 ## 5. Cart drawer bug-fix session (commits `ddc0af7`, `f6dc330`)
 

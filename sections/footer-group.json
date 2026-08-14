@@ -37,7 +37,7 @@
           "type": "link_list",
           "settings": {
             "heading": "About",
-            "fallback_links": "How it works|#how\nSustainability|#ingredients\nFAQs|#proof\nReviews|#voices"
+            "fallback_links": "How it works|#how\nSustainability|#ingredients\nFAQs|#proof\nReviews|#reviews"
           }
         },
         "col-contact": {
