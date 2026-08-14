@@ -39,7 +39,7 @@ if (!window.purelaneHeader) {
       const mid = y + window.innerHeight * 0.42;
       let idx = 0;
       targets.forEach((t, i) => {
-        if (t.el && t.el.offsetTop <= mid) idx = i;
+        if (t.el && t.el.getBoundingClientRect().top + y <= mid) idx = i;
       });
       targets.forEach((t, i) => t.link.classList.toggle('is-on', i === idx));
     }

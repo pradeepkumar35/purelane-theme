@@ -294,3 +294,27 @@ Incremental notes on how the 5-section clone maps the prototype
   400/500/600/700 `loaded`; measured text widths now differ from system-ui
   (Outfit 270.8 vs 267.4, Inter 289.8 vs 267.4), proving the webfonts are
   actually rendering.
+
+## Bug-fix pass (Clean v1) — Item 6: .rail scroll-spy (done, file-match + one judgment call)
+- **Cause of "active dot always Reviews"**: `syncRail` in `purelane-header.js`
+  used `t.el.offsetTop`, which returned **0** for nearly every section
+  (offsetParent quirk — only `#MainContent` had a real value). With `0 <=
+  mid` always true, `idx` landed on the *last* rail link ("Reviews")
+  regardless of scroll.
+- Fix A (JS): compute the document-absolute position robustly:
+  `t.el.getBoundingClientRect().top + y <= mid`.
+- Fix B (markup): the reviews section was hardcoded `id='voices'` — but in
+  the prototype the reviews section is `id="reviews"` and the rail's Reviews
+  dot hrefs to `#voices`, which **doesn't exist** there. Renamed the build's
+  reviews section to `id='reviews'` / `data-purelane-anchor='reviews'`.
+- Judgment call (signed off by this change, revert = one line): the rail's
+  Reviews dot now stays inactive, exactly like the prototype (its `#voices`
+  target is a dangling anchor). This also un-deadlocks the Ingredients dot
+  (previously the Reviews section's position above it made it win every
+  time). The other 6 dots track correctly:
+  Hero → Ingredients → How it works → Proof → Bundles → Shop.
+- Verified at 1440 (rail `position:fixed`, `right:14px`, `top:450px`, 7
+  links, 6 real targets): `ingredients`→Ingredients, `how`→How it works,
+  `proof`→Proof, `bundles`→Bundles, `shop`→Shop, top-of-page/reviews→Hero.
+  Rail hidden (`display:none`) at 1024/768/375, `flex` at ≥1180 — matches the
+  file's `@media(min-width:1180px)` gate.
