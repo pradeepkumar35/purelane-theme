@@ -45,12 +45,17 @@
 
     <div class='purelane-shelf'>
       {% if collection != blank and collection.products_count > 0 %}
-        {% for product in collection.products limit: 8 %}
+        {% assign card_index = 0 %}
+        {% for product in collection.products %}
+          {% if product.tags contains 'purelane-bundle' %}
+            {% continue %}
+          {% endif %}
+          {% assign card_index = card_index | plus: 1 %}
           {% render 'purelane-product-card',
             product: product,
             cta_behavior: 'add',
             cta_label: section.settings.cta_label,
-            delay: forloop.index
+            delay: card_index
           %}
         {% endfor %}
       {% else %}

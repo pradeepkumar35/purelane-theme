@@ -237,3 +237,26 @@ Incremental notes on how the 5-section clone maps the prototype
 - Screenshots at `%TEMP%\opencode\shots\final-*.png`.
 - Pushed to theme #161735213297 (preview:
   `https://purelane-dev-csw5qplv.myshopify.com?preview_theme_id=161735213297`).
+
+## Bug-fix pass (Clean v1) — Item 5: #shop grid (done, file-match + one judgment call signed off)
+- **Bundle tiers leaking into the grid**: the "shop" collection actually
+  contains the 3 bundle-tier products ("Purelane Bundle – Starter/Most
+  Popular/Whole Home"), so the old `limit: 8` render showed bundles first
+  and cut off real products. `purelane-shop.liquid` now skips any product
+  tagged `purelane-bundle` and renders **all 9 real products** (no cap) —
+  including the sold-out, no-image, and long-title edge cases.
+  - Judgment call: excluded by tag at render time rather than splitting the
+    collection (single source of truth stays the Shop collection; a merchant
+    who adds a new non-bundle product gets it automatically).
+- **Card shot background — verified, no white box**: `.purelane-card__shot`
+  already uses the file's light-V2 gradient
+  `linear-gradient(160deg,rgba(255,255,255,.6),rgba(236,230,247,.42))`
+  + `border rgba(75,58,143,.1)` — the file's spec, NOT a solid white
+  background. No change needed; confirmed computed at all widths.
+- **Image sizing**: images were rendering ~110px in a 150px shot via a
+  shrink-to-fit loop (anchor auto-width + `calc(100% - 12px)`). Now clamped
+  to the file's spec — `max-height:122px` desktop / `108px` ≤760px
+  (`.card .shot svg{height:122px}` / `.card .shot .pimg{height:108px}`).
+  Verified computed 122×122 / 108×108 at 375/768/1024/1440.
+- Verified: 9 cards, zero bundle handles, no horizontal overflow, 4/2-col
+  grid intact.
