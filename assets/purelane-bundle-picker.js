@@ -144,14 +144,47 @@
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
       })
         .then((res) => res.json())
-        .then((response) => {
+        .then(async (response) => {
           if (response.status) throw new Error(response.description || response.message || 'add failed');
           this.close();
-          if (typeof publish === 'function') {
-            publish('cart-update', { source: 'purelane-bundle-picker', cartData: response });
+
+          // The outer <cart-drawer> keeps the server-rendered `is-empty`
+          // class when the cart was empty at page load. Clear it or the CSS
+          // rule `.is-empty .cart__contents { display: none }` hides the
+          // items and only the footer price shows. Dawn's product-form does
+          // the same in its .finally block.
+          if (drawer && drawer.classList.contains('is-empty')) {
+            drawer.classList.remove('is-empty');
           }
+
+          // /cart/add.js only returns the added line plus sections — not the
+          // full cart shape (item_count, totals) that subscribers need. Fetch
+          // the authoritative /cart.js so the drawer body and the header count
+          // dot both refresh reliably.
+          let cart = null;
           if (drawer) {
-            drawer.renderContents(response);
+            const sectionIds = [...new Set(drawer.getSectionsToRender().map((s) => s.id))].join(',');
+            try {
+              const res = await fetch(
+                `${window.routes?.cart_url || '/cart'}.js?sections=${sectionIds}`,
+                { headers: { Accept: 'application/json' } }
+              );
+              if (res.ok) cart = await res.json();
+            } catch (e) {
+              cart = null;
+            }
+          }
+
+          if (typeof publish === 'function') {
+            publish('cart-update', { source: 'purelane-bundle-picker', cartData: cart || response });
+          }
+
+          if (drawer) {
+            if (cart?.sections) {
+              drawer.renderContents(cart);
+            } else {
+              drawer.renderContents(response);
+            }
           } else {
             window.location.href = '/cart';
           }

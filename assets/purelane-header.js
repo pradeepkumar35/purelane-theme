@@ -101,9 +101,21 @@ if (!window.purelaneHeader) {
     if (cartDot && typeof subscribe === 'function') {
       subscribe('cart-update', (event) => {
         const count = event?.cartData?.item_count;
-        if (typeof count !== 'number') return;
-        cartDot.textContent = count;
-        if (cartLink) cartLink.setAttribute('aria-label', `Cart, ${count} items`);
+        if (typeof count === 'number') {
+          cartDot.textContent = count;
+          if (cartLink) cartLink.setAttribute('aria-label', `Cart, ${count} items`);
+          return;
+        }
+        // /cart/add.js returns the added line only (no item_count). Fetch the
+        // authoritative cart so the badge stays in sync after any add path.
+        fetch(`${window.routes?.cart_url || '/cart'}.js`, { headers: { Accept: 'application/json' } })
+          .then((r) => r.json())
+          .then((cart) => {
+            if (typeof cart?.item_count !== 'number') return;
+            cartDot.textContent = cart.item_count;
+            if (cartLink) cartLink.setAttribute('aria-label', `Cart, ${cart.item_count} items`);
+          })
+          .catch(() => {});
       });
     }
 
