@@ -892,6 +892,45 @@ body {
     cursor: not-allowed;
 }
 
+.purelane-card__cta.loading {
+    color: transparent;
+    position: relative;
+}
+
+.purelane-card__cta.loading > .loading__spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.purelane-card__cta.loading > .loading__spinner .spinner {
+    width: fit-content;
+}
+
+.purelane-card__cta.loading > .loading__spinner .path {
+    stroke: #01423b;
+}
+
+.purelane-card__error.product-form__error-message-wrapper:not([hidden]) {
+    display: flex;
+    align-items: flex-start;
+    font-size: 11px;
+    line-height: 1.4;
+    letter-spacing: 0.04rem;
+    margin-bottom: 8px;
+}
+
+.purelane-card__error.product-form__error-message-wrapper .svg-wrapper {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 6px;
+}
+
 .purelane-card:focus-within {
     outline: 2px solid #4f7d10;
     outline-offset: 2px;

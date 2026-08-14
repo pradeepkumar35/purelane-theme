@@ -85,6 +85,28 @@ if (!window.purelaneHeader) {
       }
     });
 
+    /* ---------- cart drawer integration ---------- */
+    const cartLink = document.querySelector('[data-purelane-cart]');
+    if (cartLink) {
+      cartLink.addEventListener('click', (e) => {
+        const drawer = document.querySelector('cart-drawer');
+        if (drawer) {
+          e.preventDefault();
+          drawer.open(cartLink);
+        }
+      });
+    }
+
+    const cartDot = document.querySelector('.purelane-ico__dot');
+    if (cartDot && typeof subscribe === 'function') {
+      subscribe('cart-update', (event) => {
+        const count = event?.cartData?.item_count;
+        if (typeof count !== 'number') return;
+        cartDot.textContent = count;
+        if (cartLink) cartLink.setAttribute('aria-label', `Cart, ${count} items`);
+      });
+    }
+
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
     onScroll();

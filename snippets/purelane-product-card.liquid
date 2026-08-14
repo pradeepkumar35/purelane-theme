@@ -87,7 +87,13 @@
       {{ cta_label | default: 'View product' }}
     </a>
   {%- elsif product.available and single_variant -%}
-    <product-form data-section-id="{{ section.id }}">
+    <product-form data-section-id="{{ section.id }}" data-hide-errors="false">
+      <div class="purelane-card__error product-form__error-message-wrapper" role="alert" hidden>
+        <span class="svg-wrapper">
+          {{- 'icon-error.svg' | inline_asset_content -}}
+        </span>
+        <span class="product-form__error-message"></span>
+      </div>
       {%- form 'product',
         product,
         id: form_id,
@@ -106,7 +112,8 @@
           name="add"
           class="purelane-card__cta"
         >
-          {{ cta_label | default: 'Add to cart' }}
+          <span>{{ cta_label | default: 'Add to cart' }}</span>
+          {%- render 'loading-spinner' -%}
         </button>
       {%- endform -%}
     </product-form>
