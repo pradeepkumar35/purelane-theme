@@ -260,3 +260,21 @@ Incremental notes on how the 5-section clone maps the prototype
   Verified computed 122×122 / 108×108 at 375/768/1024/1440.
 - Verified: 9 cards, zero bundle handles, no horizontal overflow, 4/2-col
   grid intact.
+
+## Bug-fix pass (Clean v1) — Item 2: #ingredients duplicate heading (done, file-match)
+- The section rendered BOTH a kicker span ("Sourced from nature") and the
+  `.d2` h2 — the kicker was the section's schema default, not set in the
+  template. The prototype has exactly one `<h2 class="d2">Sourced from
+  nature</h2>` and no kicker.
+- Fix: removed the `kicker` setting and its rendering from
+  `sections/purelane-ingredients.liquid` (and the now-dead
+  `.purelane-ingredients__kicker` CSS). Removing it outright (rather than
+  blanking a setting) guarantees a single heading even if the section is
+  re-added in the editor — Shopify also rejects a blank schema `default`.
+- Separators: verified the existing `.purelane-ing__item + .purelane-ing__item::before`
+  already matches the file — 1px, `top:14%/bottom:14%`, light-V2 gradient
+  `transparent → rgba(75,58,143,.2) → transparent`, gated `@media
+  (min-width:760px)`. No change needed; confirmed present at 768/1024/1440
+  and absent at 375.
+- Verified: single `h2` "Sourced from nature" in Outfit at clamp sizes
+  (30/35.3/47.1/54px across 375/768/1024/1440).

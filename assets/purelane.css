@@ -2207,15 +2207,6 @@
     margin-bottom: 12px;
 }
 
-.purelane-ingredients__kicker {
-    font-family: Inter, system-ui, sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: rgba(36, 26, 61, 0.56);
-}
-
 .purelane-ingredients__heading {
     margin: 12px 0 0;
     font-family: "Outfit", system-ui, sans-serif;

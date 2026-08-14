@@ -16,9 +16,6 @@
   <div class='purelane-ingredients__inner'>
     <div class='purelane-ingredients__panel glass rv'>
       <div class='purelane-ingredients__head'>
-        {% if section.settings.kicker != blank %}
-          <span class='purelane-ingredients__kicker'>{{ section.settings.kicker }}</span>
-        {% endif %}
         {% if section.settings.heading != blank %}
           <h2 class='purelane-ingredients__heading'>{{ section.settings.heading }}</h2>
         {% endif %}
@@ -107,12 +104,6 @@
   "tag": "section",
   "class": "purelane-ingredients-section",
   "settings": [
-    {
-      "type": "text",
-      "id": "kicker",
-      "label": "Kicker",
-      "default": "Sourced from nature"
-    },
     {
       "type": "text",
       "id": "heading",
