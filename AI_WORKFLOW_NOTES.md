@@ -95,3 +95,16 @@ the live theme.
   silently dropped two blocks; the headless verification caught it, edits
   were re-applied sequentially and re-verified. Rule going forward: no
   concurrent edits to the same file.
+- 2026-08-14 — Hero product photos are opaque studio PNGs (not transparent
+  SVGs like the prototype), so `mix-blend-mode: multiply` over the anchor's
+  s1-mint gradient blends the gray rect away while preserving the product
+  (measured mean/stdev 220/28 vs raw 219/26; `screen` washed it to 244/12).
+- 2026-08-14 — Global `body` reset in `purelane.css` (font Inter, line-height
+  1.62, letter-spacing normal) overrides Dawn's Assistant/1.8/0.06rem so text
+  wraps identically to the prototype. This is page-wide, so it also affects
+  the Dawn header/footer fonts.
+- 2026-08-14 — `.purelane-combo__inc` keeps `flex: 1`; its box is ~11px taller
+  than the prototype's `.inc` because the card stretches it — a flex stretch,
+  not a text-wrap difference (verified identical 3-line wrap via range
+  measurement).
+
