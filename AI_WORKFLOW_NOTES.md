@@ -96,9 +96,20 @@ the live theme.
   were re-applied sequentially and re-verified. Rule going forward: no
   concurrent edits to the same file.
 - 2026-08-14 — Hero product photos are opaque studio PNGs (not transparent
-  SVGs like the prototype), so `mix-blend-mode: multiply` over the anchor's
-  s1-mint gradient blends the gray rect away while preserving the product
-  (measured mean/stdev 220/28 vs raw 219/26; `screen` washed it to 244/12).
+  SVGs like the prototype). The original `mix-blend-mode: multiply` over the
+  anchor's green gradient tinted the gray boxes mint-green and the gradient
+  box showed above the bottle, so it was REVERSED (item-8 fix): the anchor's
+  green gradient background is now `transparent` (drop-shadow kept on the
+  anchor) and the img blend is removed. The product photo shows its natural
+  studio-gray tones on the green scene.
+- 2026-08-14 — Dawn's `base.css` rule
+  `a:empty, div:empty, section:empty, … { display: none }` also hid the
+  empty gradient `.scene` divs (plus `.bub span` bubbles and `.vig`
+  vignette) of the global scenes layer, so the whole background painted
+  lavender `#eee7fb` instead of the prototype's lime-green. Item-8 fix:
+  `display: block` on `.purelane-scenes .scene`, `.purelane-scenes .bub span`,
+  `.purelane-scenes .vig`. Any future empty decorative element needs an
+  explicit `display`.
 - 2026-08-14 — Global `body` reset in `purelane.css` (font Inter, line-height
   1.62, letter-spacing normal) overrides Dawn's Assistant/1.8/0.06rem so text
   wraps identically to the prototype. This is page-wide, so it also affects

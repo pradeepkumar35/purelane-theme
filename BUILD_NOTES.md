@@ -415,3 +415,36 @@ Incremental notes on how the 5-section clone maps the prototype
   "Includes" box height still differs by 11px because `.purelane-combo__inc`
   is `flex:1`, which is a stretch not a wrap).
 
+## Bug-fix pass (Clean v1) — Item 8: page background + hero product images (done)
+- Report: "background color is still wrong — lavender, prototype is lime
+  green" and "hero slide images have a slight green tint with an abnormal
+  vertical extension above the image."
+- **Background root cause**: Dawn's `base.css` ships
+  `a:empty, div:empty, section:empty, … { display: none }`. The scenes layer
+  is made of *empty* gradient divs (`.purelane-scenes .scene`), so every
+  `.scene` computed `display:none` and its green gradient never painted —
+  only the lavender `#eee7fb` base showed. This was invisible to earlier
+  computed-style audits (they read `.scene.on`'s `opacity:1` + background
+  string, not `display`/paint). Real composited-pixel capture proved it:
+  proto `[235,249,238]` mint vs theme `[240,235,250]` lavender everywhere.
+- Fix: `display:block` on `.purelane-scenes .scene`,
+  `.purelane-scenes .bub span`, and `.purelane-scenes .vig` (the `.bub span`
+  bubbles and `.vig` vignette are empty elements too and were equally
+  `display:none`). Composite pixels at 375/768/1440 now match the prototype
+  (mint greens, e.g. `[224,244,229]` at mid-viewport).
+- **Hero image tint + extension root cause**: `.purelane-hero__products a`
+  painted the s1 mint-green gradient as a solid box behind the product photo,
+  and the photo itself used `mix-blend-mode: multiply` over it. The opaque
+  studio-gray product PNGs (alpha 255) were multiplied green → mint tint, and
+  the gradient box extended above the actual bottle → "vertical extension
+  above the image". (The earlier item-1 multiply decision was signed off on
+  computed values; pixel-level rendering made the tint obvious.)
+- Fix: `.purelane-hero__products a` background → `transparent` (drop-shadow
+  kept on the anchor); `mix-blend-mode: multiply` removed from the img. The
+  product now shows its own studio-gray tones cleanly on the scene — no green
+  tint, no box above the bottle.
+- Verified: composite pixels at 1440 match proto across the whole viewport;
+  vertical profile through the stage shows clean gray product pixels (212-232)
+  on the mint scene; wrap-audit still all-match at 375/768/1024/1440;
+  `shopify theme check` 0 errors, 14 pre-existing Dawn warnings.
+

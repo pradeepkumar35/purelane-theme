@@ -366,7 +366,7 @@
     flex: 0 0 auto;
     color: inherit;
     text-decoration: none;
-    background: linear-gradient(178deg, #fbfffb 0%, #eafaec 24%, #d6f1dc 54%, #bfe8ca 100%);
+    background: transparent;
     filter: drop-shadow(0 14px 22px rgba(0, 74, 66, 0.15));
     opacity: 0;
     transform: translateY(28px) scale(0.94);
@@ -400,7 +400,6 @@
     height: 100%;
     object-fit: contain;
     object-position: center bottom;
-    mix-blend-mode: multiply;
 }
 
 /* One product */
@@ -3486,6 +3485,7 @@ html {
 }
 
 .purelane-scenes .scene {
+    display: block;
     position: absolute;
     inset: 0;
     opacity: 0;
@@ -3637,6 +3637,7 @@ html {
 }
 
 .purelane-scenes .bub span {
+    display: block;
     position: absolute;
     bottom: -6%;
     left: var(--x);
@@ -3668,6 +3669,7 @@ html {
 }
 
 .purelane-scenes .vig {
+    display: block;
     position: absolute;
     inset: 0;
     pointer-events: none;
