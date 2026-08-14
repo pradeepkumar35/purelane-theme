@@ -1,8 +1,131 @@
 # AI Workflow Notes
 
-One-line log of every production decision that deliberately deviates from
-the prototype, so nothing is "lost in translation" between static HTML and
-the live theme.
+How this theme was built with an AI coding agent, what the agent got wrong,
+and what to systematize before doing 20 more of these.
+
+## 1. What was delegated to the agent
+
+The whole build was agent-driven: taking `purelane-homepage.html` (a static
+151KB prototype with 1717 lines) and producing a working Shopify Dawn theme.
+The agent did the mapping, the code, and the verification:
+
+- **Section mapping**: every prototype block → a semantic Shopify section
+  (hero, reviews, ingredients, how, proof, combos, bundles, shop, range,
+  why-bundles, categories, trust, signup) + header/footer groups.
+- **Data modeling**: decided which hardcoded prototype values become real
+  store data (products, collections, metafields) vs. merchant settings.
+- **Implementation**: wrote all sections/snippets/assets; replaced the Dawn
+  header/footer groups; wired global layout (`layout/theme.liquid`,
+  `templates/index.json`).
+- **Verification**: headless-Chrome probes at 375/768/1024/1440, computed-
+  style audits, composite-pixel captures, `shopify theme check`, and a QA
+  pass-by-pass report (`QA_NOTES.md`).
+- **Deployment**: `shopify theme push` to a dev theme, then to an
+  unpublished "Purelane Clean v1" theme for merchant review.
+
+The human (user) did the judgment calls the agent flagged: signing off on
+deviations, choosing where to publish, deciding repo scope. The agent never
+made a "this is wrong but I'll just change it" call silently — every such
+decision is logged below in §2 and in the deviation log in §4.
+
+## 2. Where the agent got it wrong (and how it was corrected)
+
+Each of these was a real miss during the build, caught by the human or by a
+later QA pass. They're the strongest evidence for the rules in §3.
+
+### Bug: duplicate heading on #ingredients
+- **What**: the section rendered BOTH a kicker span ("Sourced from nature")
+  and the `.d2` heading. The kicker was the schema *default*, not set in the
+  template, so the section always doubled its heading.
+- **Fix**: removed the `kicker` setting entirely (not blanked) so a heading
+  can't silently reappear if the section is re-added in the editor.
+
+### Bug: rail "active dot" always stuck on Reviews
+- **What**: `syncRail` used `t.el.offsetTop`, which returned `0` for almost
+  every section (offsetParent quirk), so the "first link <= mid" logic always
+  picked the last dot (Reviews).
+- **Fix**: switched to document-absolute position
+  (`getBoundingClientRect().top + y`); also renamed the reviews section from
+  `id="voices"` to `id="reviews"` to match the prototype's real anchor.
+- **Lesson**: never trust `offsetTop` in scroll-spy; the DOM API contract is
+  `getBoundingClientRect()`.
+
+### Bug: background painted lavender instead of the prototype's lime-green
+- **What**: Dawn's `base.css` hides empty elements (`a:empty, div:empty, … {
+  display: none }`), so the empty gradient `.scene` divs of the fixed
+  background layer were never painted. Computed-style audits read `opacity:1`
+  + background strings and missed it; only real composite-pixel capture
+  showed `[240,235,250]` lavender vs the prototype's `[235,249,238]` mint.
+- **Fix**: explicit `display: block` on the empty `.scene`, `.bub span`, and
+  `.vig` elements.
+- **Lesson**: computed-style checks are necessary but not sufficient — verify
+  paint, not just computed values.
+
+### Bug: hero product images tinted green with a box above the bottle
+- **What**: the earlier `mix-blend-mode: multiply` decision (made on
+  computed values) looked right in style audits but the real opaque studio
+  PNGs multiplied over the green anchor gradient → mint tint + gradient box
+  extending above the product.
+- **Fix**: REVERSED it (anchor transparent, blend removed). Pixel capture,
+  not style strings, drove the correction.
+
+### Bug: fonts silently falling back to system-ui
+- **What**: the CSS hardcodes "Outfit"/"Inter" but nothing ever loaded them;
+  Dawn's own font setting was Assistant. `document.fonts.check('12px Inter')`
+  returned true via a system-fallback false positive, hiding the problem.
+- **Fix**: added the prototype's exact Google Fonts link in
+  `layout/theme.liquid`. Verified by measuring glyph widths, not just
+  `fonts.check`.
+
+### Bug: `will-change` + infinite filter animation burned GPU (Pass 5)
+- **What**: the hero product ran a 7s infinite `filter: drop-shadow()`
+  animation via the Web Animations API, and `will-change: transform` on the
+  ticker track held permanent GPU layers — both compositing every frame even
+  off-screen.
+- **Fix**: static drop-shadow instead of the animation; IntersectionObserver
+  pause/resume for off-screen marquees/ticker/bubbles; `will-change` removed
+  on the ticker track; live `backdrop-filter` on the ticker/sticky CTA
+  replaced with opaque backgrounds.
+- **Lesson**: infinite CSS/WAAPI animations are a recurring perf trap; gate
+  them off-screen and prefer static equivalents when the look doesn't move.
+
+### Process miss: parallel edits to one file lost silently
+- **What**: three simultaneous edits to `templates/index.json` raced and two
+  were silently dropped; only the headless verification caught the missing
+  blocks.
+- **Fix**: re-applied sequentially, re-verified. Rule: **no concurrent edits
+  to the same file**.
+
+## 3. What to systematize for the next 20 projects
+
+- **Always diff against the prototype file explicitly before marking a
+  section done.** The agent's natural tendency was to "port the intent" and
+  skip a strict diff; that's exactly how the duplicate heading, the rainbow
+  of a wrong heading level, and the missing kicker slipped through. A
+  section is only *done* when its rendered output is diffed (text, classes,
+  computed layout) against the prototype block-by-block.
+- **Verify paint, not just computed style.** Add a composite-pixel capture
+  step to every visual QA. Style-string audits gave false confidence on the
+  scenes background and the hero blend.
+- **No concurrent edits to the same file.** Serialize file mutations; treat
+  the last write as authoritative.
+- **Probe live DOM, not just static files.** The served asset must be
+  diffed against the working tree (dev-server caching hid mismatches). See
+  the Pass 5 probe pattern: fetch the served JS/CSS and assert on it.
+- **Measure real glyphs.** `document.fonts.check()` has a fallback false
+  positive; assert on measured text widths or `document.fonts.load()` +
+  `document.fonts.ready`.
+- **Log every judgment call with a one-line reason.** The deviation log
+  (§4) is what let the human sign off fast instead of re-auditing.
+- **A fixed QA checklist per theme** (a11y → perf → editor-survivability →
+  no-hardcoded-values) run by an automated probe, as in `QA_NOTES.md`.
+- **One theme-build per repo, no force-pushes after publish.** History is
+  clean and reviewable because the repo is small and self-contained.
+
+## 4. Deviation log (production decisions that diverge from the prototype)
+
+One-line log of every deliberate deviation, so nothing is "lost in
+translation" between the static HTML and the live theme.
 
 - 2026-08-14 — Replaced the prototype's hardcoded product cards/SVGs with a
   single data-driven card snippet driven by real product data + `purelane`
@@ -58,7 +181,7 @@ the live theme.
   + header, and the footer group a single `purelane-footer` (columns + sticky
   CTA) replacing Dawn's footer group.
 - 2026-08-14 — Section `id` attributes are the anchor targets themselves
-  (`#ingredients`, `#how`, `#proof`, `#shop`, `#bundles`, `#voices`,
+  (`#ingredients`, `#how`, `#proof`, `#shop`, `#bundles`, `#reviews`,
   `#combos`) so nav links / rail dots / hero CTAs all resolve; no JS was
   already depending on the old `PurelaneX-{{ section.id }}` ids.
 - 2026-08-14 — Ticker messages are richtext blocks rendered twice so the
@@ -136,4 +259,3 @@ the live theme.
   slides show the flat bundle prices (₹349/₹598/Save ₹249 and
   ₹499/₹897/Save ₹398) instead of the first product's own price. Falls back
   to product-derived price when blank (slide 1 keeps its product price).
-

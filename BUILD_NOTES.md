@@ -448,3 +448,86 @@ Incremental notes on how the 5-section clone maps the prototype
   on the mint scene; wrap-audit still all-match at 375/768/1024/1440;
   `shopify theme check` 0 errors, 14 pre-existing Dawn warnings.
 
+## Flags on the original prototype file (`purelane-homepage.html`)
+
+What I'd tell a developer who inherits this file before trusting it as a spec:
+
+- **All product art is inline SVG — there are zero `<img>` tags** (0 imgs, 68
+  SVGs). The build *cannot* copy this: real store products ship opaque studio
+  PNGs, which behave differently under blend modes and scaling. Every
+  "just copy the HTML" approach to hero/shop/combos art breaks here.
+- **No real data layer.** 17 hardcoded `4.8` rating strings, a fixed
+  `8,000+` reviews badge, `12 lakh+` homes, and 30 hardcoded `₹` prices. None
+  of these map to a native store field, so they had to become metafields +
+  settings (see METAFIELDS.md). This is the prototype's biggest "missing
+  native-field equivalent": ratings/review-counts don't exist on Shopify
+  products by default.
+- **Heavy div-itis + non-semantic structure.** 204 `<div>`s vs 13 `<section>`s,
+  203 `<span>`s, only 1 `<h1>` / 9 `<h2>` / 8 `<h3>` but 21 `<h4>` — heading
+  levels are inconsistent. No `<table>` anywhere, minimal real lists (3
+  `<ul>`). The build restructured everything into semantic Shopify sections
+  with proper heading order.
+- **40 inline `style="…"` attributes** and 2 `<style>` blocks — the file mixes
+  presentation into markup, so a theme conversion has to consolidate styles.
+- **Custom icon approach**: the file's icons are inline SVG paths inside each
+  element (no `<symbol>`/`<use>` defs). Fine for a static page, but the build
+  moved them into per-block settings/icon keys so merchants can swap them.
+- **Accessibility is *partially* there but inconsistent**: 72 `aria-label`s and
+  52 `role=` attributes suggest an effort, but there are 19 `aria-hidden` and
+  no focus management, no `tabindex`/`onclick` (interactions are delegated),
+  and the rating numbers are text, not a semantic rating widget. The build
+  added proper ARIA tabs, focus traps, and `prefers-reduced-motion` handling.
+- **Layout is only hinted at by breakpoints** — the file has `@media
+  (min-width: 760px)` / `1180px` / `960px` gates (some implied by classes
+  like `.c`), but several widths were inconsistent (e.g. `.purelane-range`
+  desktop row overflowed at 768px). We had to measure computed layout, not
+  trust the media queries.
+
+## Deviations flagged rather than silently changed
+
+Everything below is a deliberate divergence that was signed off (rather than
+silently "fixed"), kept in AI_WORKFLOW_NOTES.md with a one-line reason each:
+
+- Real product PNGs vs the prototype's transparent SVG art (blend-mode
+  approach REVERSED once pixel capture showed the green tint).
+- Bundle tiers are real products sold as a single line item at a flat price
+  (Shopify can't apply an on-the-fly bundle discount to N cart lines).
+- Footer link columns fall back to `Label|URL` lines when no menu is set
+  (admin token lacks the `menus` scope).
+- Reviews rail's Reviews dot is deliberately left inactive (prototype's
+  `#voices` anchor is dangling — matching the file, not "fixing" it).
+- `.purelane-combo__inc` keeps `flex: 1` (a ~11px stretch, not a wrap bug).
+- Combo card heights are ~433px vs the prototype's 448px (smaller product
+  images vs the file's tall inline SVG art).
+
+## What I'd do with more time
+
+- **Cart page polish**: the picker adds tier bundles to the cart, but the
+  stock Dawn cart renders the `properties[Pick N]` note as plain text. A
+  custom cart page (and a proper bundle line-item breakdown + "bundle
+  savings" callout) is the natural next step — it's the one place the bundle
+  UX is still generic.
+- **Reviews rail bonus polish**: the vertical dot rail is present and
+  functional, but the Reviews dot stays inactive (prototype's dangling
+  `#voices`). With more time I'd add a real `#reviews` anchor target and wire
+  it, plus hover-preview tooltips on the rail dots.
+- **Remaining "bonus" sections**: the prototype's trust bar and signup panel
+  are built, but the full bonus wishlist (e.g. a sticky mobile "bundle" CTA
+  with live total, a "save per bundle" calculator, per-collection landing
+  sections) is untested end-to-end with the picker on product pages.
+- **QA items surfaced but not fixed**:
+  - `theme check` still reports 14 warnings — all pre-existing Dawn files
+    (orphaned snippets), not purelane files. Cleaning those means shipping a
+    patched Dawn, which I deliberately didn't do.
+  - The `inline_richtext` theme-check false positive is suppressed with a
+    `theme-check-disable` comment; updating the check plugin (or adding a
+    note in `.theme-check.yml`) would remove the need.
+  - Hero product images are lazy-loaded after slide 1; if the merchant adds a
+    first-slide product with a huge file, LCP could regress (not testable
+    with current store images).
+- **Editor hardening**: merchant reordering/blocks are all schema-driven and
+  verified, but a full click-through in the theme editor of every section's
+  block add/remove (vs. the current DOM-level tests) would close the last
+  gap.
+
+

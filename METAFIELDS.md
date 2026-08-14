@@ -1,16 +1,22 @@
 # Purelane Metafields
 
 Product metafields in the `purelane` namespace. Consumed by
-`snippets/purelane-product-card.liquid` (and reused by the Shop, Combos and
-Bundle-picker sections).
+`snippets/purelane-product-card.liquid`, which is rendered by the Shop
+section (`sections/purelane-shop.liquid`).
+
+> Scope: these are the ONLY custom metafield/metaobject definitions created
+> for this build. There are **no metaobjects** — combos and bundle tiers are
+> real products (tagged `purelane-bundle`, `tier-N`, `product_type: Purelane
+> Bundle`), not metaobject records, so nothing else needs defining in the
+> Admin.
 
 ## Definitions
 
-| Key           | Type                | Description                     |
-| ------------- | ------------------- | ------------------------------- |
-| `purelane.rating`       | `number_decimal` | Average product rating (e.g. 4.8). |
-| `purelane.rating_count` | `number_integer` | Number of customer reviews.     |
-| `purelane.badge`        | `single_line_text_field` | Short badge label, e.g. "Best seller", "Top rated", "New". |
+| Key | Type | Description | Consumers |
+| --- | --- | --- | --- |
+| `purelane.rating` | `number_decimal` | Average product rating (e.g. 4.8). | Shop section product cards (star row) |
+| `purelane.rating_count` | `number_integer` | Number of customer reviews. | Shop section product cards (review count) |
+| `purelane.badge` | `single_line_text_field` | Short badge label, e.g. "Best seller", "Top rated", "New". | Shop section product cards (pill badge) |
 
 Notes:
 
@@ -44,5 +50,6 @@ prototype's #shop cards; the rest are plausible values consistent with those.
 
 - `snippets/purelane-product-card.liquid` — reads all three; renders the star
   row, review count, and pill badge.
-- Shop section: collection grid over the product cards.
-- Bundle picker / Combos: product cards (compact variant).
+- Shop section (`sections/purelane-shop.liquid`) — the only section that
+  renders `purelane-product-card`. (Combos and the bundle picker use their own
+  card markup and product settings, not these metafields.)
