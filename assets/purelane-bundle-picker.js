@@ -68,6 +68,10 @@
         }
       });
       this.render();
+      // Teleport the picker out of the section's stacking context so its
+      // z-index is evaluated at the root and it always paints above the
+      // header, sticky CTA and later sections.
+      document.body.appendChild(this.root);
       this.root.hidden = false;
       this.lastFocused = document.activeElement;
       document.body.style.overflow = 'hidden';
