@@ -42,7 +42,7 @@
       {% for block in section.blocks %}
         {% if block.type == 'link' %}
           {%- assign nav_url = block.settings.url | append: '' -%}
-          {%- if nav_url != blank and nav_url starts_with '#' -%}
+          {%- if nav_url != blank and nav_url[0] == '#' -%}
             {%- assign nav_url = routes.root_url | append: nav_url -%}
           {%- endif -%}
           <a href='{{ nav_url }}' {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
@@ -93,7 +93,7 @@
   {% for block in section.blocks %}
     {% if block.type == 'rail' %}
       {%- assign rail_url = block.settings.url | append: '' -%}
-      {%- if rail_url != blank and rail_url starts_with '#' -%}
+      {%- if rail_url != blank and rail_url[0] == '#' -%}
         {%- assign rail_url = routes.root_url | append: rail_url -%}
       {%- endif -%}
       <a
@@ -121,7 +121,7 @@
   {% for block in section.blocks %}
     {% if block.type == 'link' %}
       {%- assign menu_url = block.settings.url | append: '' -%}
-      {%- if menu_url != blank and menu_url starts_with '#' -%}
+      {%- if menu_url != blank and menu_url[0] == '#' -%}
         {%- assign menu_url = routes.root_url | append: menu_url -%}
       {%- endif -%}
       <a href='{{ menu_url }}' {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
