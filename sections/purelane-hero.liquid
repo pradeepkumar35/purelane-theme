@@ -239,11 +239,18 @@
                 {% for product in block.settings.products %}
                   <a href='{{ product.url }}'>
                     {% if product.featured_image %}
+                      {% assign hero_img_loading = 'lazy' %}
+                      {% assign hero_img_fetch = '' %}
+                      {% if hero_slide_index == 0 %}
+                        {% assign hero_img_loading = 'eager' %}
+                        {% assign hero_img_fetch = 'high' %}
+                      {% endif %}
                       {{
                         product.featured_image
                         | image_url: width: 800
                         | image_tag:
-                          loading: 'lazy',
+                          loading: hero_img_loading,
+                          fetchpriority: hero_img_fetch,
                           widths: '240, 360, 540, 720',
                           sizes: '(min-width: 990px) 40vw, 90vw',
                           alt: product.featured_image.alt

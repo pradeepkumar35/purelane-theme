@@ -80,4 +80,14 @@ _commit for the picker fix: `184811b`_
 _commit for accessibility fixes: `e530b83`_
 
 ## Pass 3 — Performance
-_pending_
+
+| section | test | result | fix applied (if any) | commit hash |
+| --- | --- | --- | --- | --- |
+| Hero | LCP image loading | FAIL — hero product images (LCP element, above the fold) were `loading="lazy"`, delaying LCP | First hero slide's product images now `loading="eager"` + `fetchpriority="high"`; remaining slides stay lazy (`sections/purelane-hero.liquid`) | — |
+| All images | `loading` strategy | PASS — all non-hero images remain lazy | — | — |
+| All images | `fetchpriority` | FAIL — no image prioritized | `high` set on first hero slide only | same |
+| Assets | JS weight | PASS — purelane JS is small (~8KB picker, hero/reveal/scenes minimal) | — | — |
+| Assets | CSS weight | PASS — purelane.css ~79KB, loaded via section stylesheet tags | — | — |
+| Scenes | `requestAnimationFrame`-gated scroll/mousemove | PASS — no unthrottled scroll handlers; `prefers-reduced-motion` disables parallax | — | — |
+| LCP/CLS/TBT | Headless paint metrics | NOT MEASURED — LCP/CLS observers returned no entries in headless; verified loading strategy statically instead | — | — |
+
