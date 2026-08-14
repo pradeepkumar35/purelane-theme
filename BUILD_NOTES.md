@@ -377,3 +377,41 @@ Incremental notes on how the 5-section clone maps the prototype
 - Verified at 375/768/1024/1440: crossfade runs, entrance stagger transforms
   run on `.is-active`, dots pill 6->20px, blend `multiply`, dots centered
   below stage, no overflow.
+
+## Bug-fix pass (Clean v1) — Item 4: text wrapping / line counts (done)
+- Goal: every matched text wraps to the same number of lines as the prototype
+  at 375 / 768 / 1024 / 1440.
+- Root causes found (all text is identical — pure layout/font causes):
+  1. Dawn `base.css` sets `body { letter-spacing: 0.06rem }` (computed 0.6px);
+     the prototype's body uses `letter-spacing: normal`. The 0.6px-per-char
+     extra tracking widened every paragraph and pushed long text onto an extra
+     line. Fixed with a `body { letter-spacing: normal }` reset in
+     `assets/purelane.css`.
+  2. Dawn defaults the body font to **Assistant** (theme font setting) and
+     line-height to **1.8**; the prototype uses **Inter** at line-height
+     **1.62**. Different glyph widths / leading change wrapping even at the
+     same element width + font-size. Fixed with
+     `body { font-family: "Inter", ...; line-height: 1.62 }` (Inter already
+     loaded via `layout/theme.liquid` from item 3).
+  3. `purelane-why__panel` used `clamp(26px, 3.4vw, 40px)` padding; the
+     prototype's `.glass.sec-pad` drops to `22px 18px` at `≤760px`. The extra
+     8px/side shrank the heading and grid columns, causing extra wraps at
+     375. Added the same `@media (max-width: 760px)` override to
+     `.purelane-why__panel` and `.purelane-ingredients__panel`.
+  4. `.purelane-combos__lede` was `max-width:560px / 14.5px / line-height 1.5`;
+     the prototype's `.lede` is `max-width:44ch /
+     clamp(15px, 1.35vw, 17.5px) / line-height 1.62`. Updated to match.
+- Audit tooling: `%TEMP%\opencode\wrap-audit.mjs` serves the prototype locally
+  and compares computed wraps for every matched text at the 4 viewports.
+  Line count is measured with `Range.getClientRects()` over non-whitespace
+  text nodes (not `height / line-height`), because `flex:1` elements like
+  `.purelane-combo__inc` are stretched taller by their card and would
+  false-positive. Theme-only texts (e.g. "Free shipping on every bundle
+  across India", real product copy) are real store content, not fixes.
+- Verified: all matched texts wrap identically at 375 / 768 / 1024 / 1440.
+  The two earlier 375-only diffs ("Clean fragrance…", "Includes: …") were
+  fixed by the padding / font changes and re-verified at exact same width +
+  font-size + line count (range-measured 2 and 3 lines respectively; the
+  "Includes" box height still differs by 11px because `.purelane-combo__inc`
+  is `flex:1`, which is a stretch not a wrap).
+
