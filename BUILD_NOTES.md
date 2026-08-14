@@ -278,3 +278,19 @@ Incremental notes on how the 5-section clone maps the prototype
   and absent at 375.
 - Verified: single `h2` "Sourced from nature" in Outfit at clamp sizes
   (30/35.3/47.1/54px across 375/768/1024/1440).
+
+## Bug-fix pass (Clean v1) — Item 3: Inter/Outfit font loading (done, file-match)
+- Audit found the CSS hardcodes `"Outfit"` (headings) and `"Inter"` (body)
+  everywhere but NOTHING ever loaded them — no Google Fonts link, no
+  @font-face, and Dawn's own setting is `assistant_n4`. Every heading/body
+  glyph was silently falling back to system-ui (including
+  `document.fonts.check('12px Inter') === true`, a system-fallback
+  false positive). The prototype loads Outfit 500/600/700/800 + Inter
+  400/500/600/700 from Google Fonts.
+- Fix: added preconnect + the exact prototype stylesheet link in
+  `layout/theme.liquid` `<head>`:
+  `family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap`.
+- Verified: `document.fonts` shows Outfit 500/600/700/800 and Inter
+  400/500/600/700 `loaded`; measured text widths now differ from system-ui
+  (Outfit 270.8 vs 267.4, Inter 289.8 vs 267.4), proving the webfonts are
+  actually rendering.
