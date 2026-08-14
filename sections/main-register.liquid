@@ -1,0 +1,98 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+{{ 'purelane.css' | asset_url | stylesheet_tag }}
+
+<div class="customer register">
+  <div class="customer__panel glass">
+    <div class="customer__head">
+      <span class="customer__kicker">Join Purelane</span>
+      <h1>{{ 'customer.register.title' | t }}</h1>
+    </div>
+    <p class="customer__lede">Create an account to track orders and save your favourite bundles.</p>
+
+    {%- form 'create_customer', novalidate: 'novalidate', class: 'customer__form' -%}
+      {%- if form.errors -%}
+        <div class="customer__message customer__message--error" tabindex="-1" autofocus>
+          <span class="visually-hidden">{{ 'accessibility.error' | t }} </span>
+          {{ form.errors | default_errors }}
+        </div>
+      {%- endif -%}
+
+      <div class="field">
+        <input
+          type="text"
+          name="customer[first_name]"
+          id="RegisterForm-FirstName"
+          {% if form.first_name %} value="{{ form.first_name }}"{% endif %}
+          autocomplete="given-name"
+          placeholder="{{ 'customer.register.first_name' | t }}"
+        >
+        <label for="RegisterForm-FirstName">{{ 'customer.register.first_name' | t }}</label>
+      </div>
+
+      <div class="field">
+        <input
+          type="text"
+          name="customer[last_name]"
+          id="RegisterForm-LastName"
+          {% if form.last_name %} value="{{ form.last_name }}"{% endif %}
+          autocomplete="family-name"
+          placeholder="{{ 'customer.register.last_name' | t }}"
+        >
+        <label for="RegisterForm-LastName">{{ 'customer.register.last_name' | t }}</label>
+      </div>
+
+      <div class="field">
+        <input
+          type="email"
+          name="customer[email]"
+          id="RegisterForm-email"
+          {% if form.email %} value="{{ form.email }}"{% endif %}
+          spellcheck="false"
+          autocapitalize="off"
+          autocomplete="email"
+          aria-required="true"
+          {% if form.errors contains 'email' %}
+            aria-invalid="true"
+            aria-describedby="RegisterForm-email-error"
+          {% endif %}
+          placeholder="{{ 'customer.register.email' | t }}"
+        >
+        <label for="RegisterForm-email">{{ 'customer.register.email' | t }}</label>
+      </div>
+
+      <div class="field">
+        <input
+          type="password"
+          name="customer[password]"
+          id="RegisterForm-password"
+          aria-required="true"
+          {% if form.errors contains 'password' %}
+            aria-invalid="true"
+            aria-describedby="RegisterForm-password-error"
+          {% endif %}
+          placeholder="{{ 'customer.register.password' | t }}"
+        >
+        <label for="RegisterForm-password">{{ 'customer.register.password' | t }}</label>
+      </div>
+
+      <div class="customer__actions">
+        <button type="submit" class="btn-primary">{{ 'customer.register.submit' | t }}</button>
+      </div>
+
+      <div class="customer__divider" role="separator" aria-hidden="true"></div>
+
+      <a class="btn-ghost customer__register-link" href="{{ routes.account_login_url }}">
+        {{- 'customer.log_in' | t -}}
+      </a>
+    {%- endform -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Purelane Register",
+  "tag": "section",
+  "class": "customer-section",
+  "settings": []
+}
+{% endschema %}

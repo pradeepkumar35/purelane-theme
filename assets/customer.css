@@ -1,0 +1,274 @@
+/* =========================================================
+   PURELANE CUSTOMER (login / register / recover)
+   Dawn-native form logic, reskinned to match the Purelane
+   prototype (glass panels, Inter/Outfit, pill inputs, the
+   teal gradient CTA and amber focus).
+   ========================================================= */
+
+.customer-section {
+  position: relative;
+  z-index: 2;
+  padding: clamp(28px, 4.5vw, 56px) 18px;
+}
+
+.customer {
+  width: 100%;
+}
+
+.customer__panel {
+  width: min(460px, 100%);
+  margin: 0 auto;
+  padding: clamp(30px, 4.5vw, 46px);
+  text-align: center;
+}
+
+.customer__heading,
+.customer__head h1 {
+  margin: 0;
+  font-family: "Outfit", system-ui, sans-serif;
+  font-size: clamp(26px, 4vw, 38px);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.018em;
+  text-transform: uppercase;
+  color: #17102b;
+}
+
+.customer__head .customer__kicker {
+  display: block;
+  margin-bottom: 12px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(36, 26, 61, 0.56);
+}
+
+.customer__lede {
+  max-width: 40ch;
+  margin: 14px auto 0;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: clamp(14px, 1.35vw, 16px);
+  line-height: 1.5;
+  color: rgba(36, 26, 61, 0.78);
+}
+
+.customer__form {
+  margin-top: 24px;
+  text-align: left;
+}
+
+.customer__form .field {
+  display: flex;
+  position: relative;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.customer__form .field:first-of-type {
+  margin-top: 0;
+}
+
+.customer__form .field input {
+  width: 100%;
+  height: 48px;
+  margin: 0;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1;
+  color: #17102b;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(75, 58, 143, 0.2);
+  box-shadow: none;
+}
+
+.customer__form .field input::placeholder {
+  color: rgba(36, 26, 61, 0.56);
+  opacity: 1;
+}
+
+.customer__form .field input:focus,
+.customer__form .field input:not(:placeholder-shown),
+.customer__form .field input:-webkit-autofill {
+  padding: 0 18px;
+  outline: none;
+  border-color: #b8701c;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(184, 112, 28, 0.16);
+}
+
+.customer__form .field label {
+  display: none;
+}
+
+.customer__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.customer__actions button {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.customer__actions .btn-primary {
+  color: #f4fdf6;
+  background: linear-gradient(135deg, #00706a, #004b46);
+  box-shadow: 0 12px 26px rgba(0, 80, 74, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  transition: box-shadow 0.35s var(--ease);
+}
+
+.customer__actions .btn-primary:hover {
+  box-shadow: 0 18px 36px rgba(0, 80, 74, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.customer__link {
+  display: inline-block;
+  margin: 0 auto;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(36, 26, 61, 0.72);
+  text-decoration: none;
+  transition: color 0.3s var(--ease);
+}
+
+.customer__link:hover {
+  color: #00706a;
+}
+
+.customer__divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 22px 0;
+  color: rgba(36, 26, 61, 0.4);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.customer__divider::before,
+.customer__divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(75, 58, 143, 0.18);
+}
+
+.customer__register-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  line-height: 1;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: background 0.3s var(--ease);
+}
+
+.customer__guest {
+  margin-top: 22px;
+}
+
+.customer__guest h2 {
+  margin: 0 0 12px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(36, 26, 61, 0.6);
+}
+
+.customer__guest .btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.customer__message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.customer__message--error {
+  color: #8a2418;
+  background: rgba(219, 68, 55, 0.1);
+  border: 1px solid rgba(219, 68, 55, 0.28);
+}
+
+.customer__message--success {
+  color: #0e5a33;
+  background: rgba(67, 160, 71, 0.12);
+  border: 1px solid rgba(67, 160, 71, 0.3);
+}
+
+/* ---- recover / login toggle (Dawn `:target` mechanism) ---- */
+
+#recover,
+#recover + div {
+  display: none;
+}
+
+#recover:target {
+  display: block;
+}
+
+#recover:target + div {
+  display: block;
+}
+
+#recover:target ~ #login,
+#recover:target ~ #login + div {
+  display: none;
+}
+
+#recover,
+#login {
+  scroll-margin-top: 12rem;
+}

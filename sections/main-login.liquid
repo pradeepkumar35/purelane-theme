@@ -1,0 +1,123 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+{{ 'purelane.css' | asset_url | stylesheet_tag }}
+
+<div class="customer login">
+  <div class="customer__panel glass">
+    <h1 id="recover" class="customer__heading" tabindex="-1">
+      {{ 'customer.recover_password.title' | t }}
+    </h1>
+    <div class="customer__recover">
+      <p class="customer__lede">{{ 'customer.recover_password.subtext' | t }}</p>
+      {%- form 'recover_customer_password', class: 'customer__form' -%}
+        {%- assign recover_success = form.posted_successfully? -%}
+        {%- if form.errors -%}
+          <div class="customer__message customer__message--error" tabindex="-1" autofocus>
+            <span class="visually-hidden">{{ 'accessibility.error' | t }} </span>
+            {{ form.errors | default_errors }}
+          </div>
+        {%- endif -%}
+
+        <div class="field">
+          <input
+            type="email"
+            value=""
+            name="email"
+            id="RecoverEmail"
+            autocorrect="off"
+            autocapitalize="off"
+            autocomplete="email"
+            {% if form.errors %} aria-invalid="true" aria-describedby="RecoverEmail-email-error" autofocus{% endif %}
+            placeholder="{{ 'customer.login_page.email' | t }}"
+          >
+          <label for="RecoverEmail">{{ 'customer.login_page.email' | t }}</label>
+        </div>
+
+        <div class="customer__actions">
+          <button type="submit" class="btn-primary">{{ 'customer.login_page.submit' | t }}</button>
+          <a class="customer__link" href="#login">{{ 'customer.login_page.cancel' | t }}</a>
+        </div>
+      {%- endform -%}
+    </div>
+
+    <h1 id="login" class="customer__heading" tabindex="-1">
+      {{ 'customer.login_page.title' | t }}
+    </h1>
+    <div class="customer__login">
+      {%- if recover_success == true -%}
+        <h3 class="customer__message customer__message--success" role="status" tabindex="-1" autofocus>
+          {{ 'customer.recover_password.success' | t }}
+        </h3>
+      {%- endif -%}
+
+      {%- form 'customer_login', novalidate: 'novalidate', class: 'customer__form' -%}
+        {%- if form.errors -%}
+          <div class="customer__message customer__message--error" tabindex="-1" autofocus>
+            <span class="visually-hidden">{{ 'accessibility.error' | t }} </span>
+            {{ form.errors | default_errors }}
+          </div>
+        {%- endif -%}
+
+        <div class="field">
+          <input
+            type="email"
+            name="customer[email]"
+            id="CustomerEmail"
+            autocomplete="email"
+            autocorrect="off"
+            autocapitalize="off"
+            {% if form.errors contains 'form' %} aria-invalid="true"{% endif %}
+            placeholder="{{ 'customer.login_page.email' | t }}"
+            {% if form.email %} value="{{ form.email }}"{% endif %}
+            spellcheck="false"
+            autofocus
+          >
+          <label for="CustomerEmail">{{ 'customer.login_page.email' | t }}</label>
+        </div>
+
+        {%- if form.password_needed -%}
+          <div class="field">
+            <input
+              type="password"
+              value=""
+              name="customer[password]"
+              id="CustomerPassword"
+              autocomplete="current-password"
+              {% if form.errors contains 'form' %} aria-invalid="true"{% endif %}
+              placeholder="{{ 'customer.login_page.password' | t }}"
+            >
+            <label for="CustomerPassword">{{ 'customer.login_page.password' | t }}</label>
+          </div>
+        {%- endif -%}
+
+        <div class="customer__actions">
+          <button type="submit" class="btn-primary">{{ 'customer.login_page.sign_in' | t }}</button>
+          <a class="customer__link" href="#recover">{{ 'customer.login_page.forgot_password' | t }}</a>
+        </div>
+
+        <div class="customer__divider" role="separator" aria-hidden="true"></div>
+
+        <a class="btn-ghost customer__register-link" href="{{ routes.account_register_url }}">
+          {{- 'customer.login_page.create_account' | t -}}
+        </a>
+
+        {%- if shop.checkout.guest_login -%}
+          <div class="customer__guest">
+            <h2>{{ 'customer.login_page.guest_title' | t }}</h2>
+            {%- form 'guest_login' -%}
+              <button type="submit" class="btn-ghost">{{ 'customer.login_page.guest_continue' | t }}</button>
+            {%- endform -%}
+          </div>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Purelane Login",
+  "tag": "section",
+  "class": "customer-section",
+  "settings": []
+}
+{% endschema %}
