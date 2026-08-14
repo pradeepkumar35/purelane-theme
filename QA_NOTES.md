@@ -55,19 +55,17 @@ Verified against live store data (12 products in the `shop` collection: 9 indivi
 | Shop grid | Multi-variant product | PASS — form with hidden variant id | — | — |
 | Shop grid | Bundle products excluded from grid | PASS | — | — |
 | Bundle picker | Sold-out / no-image / long title pool items | PASS — SVG placeholder + 2-line clamp | — | — |
-| Bundle picker | **Bundle products present in pool** | FAIL — "Purelane Bundle - Starter/Most Popular/Whole Home" were selectable as individual picks (picker iterated full collection without the `purelane-bundle` tag filter the grid applies) | Added `{% if product.tags contains 'purelane-bundle' %}{% continue %}{% endif %}` to `snippets/purelane-bundle-picker.liquid` pool loop; picker now lists 9 individual products | — |
+| Bundle picker | **Bundle products present in pool** | FAIL — "Purelane Bundle - Starter/Most Popular/Whole Home" were selectable as individual picks (picker iterated full collection without the `purelane-bundle` tag filter the grid applies) | Added `{% if product.tags contains 'purelane-bundle' %}{% continue %}{% endif %}` to `snippets/purelane-bundle-picker.liquid` pool loop; picker now lists 9 individual products | `7e28c68` |
 | Bundle picker | Empty pool (all products removed) | PASS — grid empty, submit stays disabled, no JS error | — | — |
 | Combos | Product with image vs no image in stack | PASS — image renders / tile fallback | — | — |
 | Combos | Long benefit labels | PASS | — | — |
 | Hero | Long product titles in slides | PASS | — | — |
 
-_commit for the picker fix: `184811b`_
-
 ## Pass 2 — Accessibility
 
 | section | test | result | fix applied (if any) | commit hash |
 | --- | --- | --- | --- | --- |
-| Hero | Keyboard focus enters hidden slides | FAIL — `aria-hidden` alone doesn't remove links from tab order; real Tab landed in `aria-hidden="true"` slides | Added `inert` attribute to inactive slides in `sections/purelane-hero.liquid` + toggled `inert`/`aria-hidden` in `purelane-hero.js` `showSlide` | — |
+| Hero | Keyboard focus enters hidden slides | FAIL — `aria-hidden` alone doesn't remove links from tab order; real Tab landed in `aria-hidden="true"` slides | Added `inert` attribute to inactive slides in `sections/purelane-hero.liquid` + toggled `inert`/`aria-hidden` in `purelane-hero.js` `showSlide` | `fac3715` |
 | Hero | ARIA tabs pattern | PARTIAL — dots `role=tab` but slides had no `role=tabpanel` | Slides now `role=tabpanel` with `aria-label` on active, dots carry `aria-controls` | same |
 | Picker | Focus trap inside dialog | FAIL — Tab could escape the modal | Added `trapFocus()` Tab/Shift+Tab cycle in `purelane-bundle-picker.js` | same |
 | Picker | Focus restore on close | FAIL — focus stayed wherever it was | `open()` stores `lastFocused`, `close()` restores it | same |
@@ -77,17 +75,31 @@ _commit for the picker fix: `184811b`_
 | Marquee | `prefers-reduced-motion: reduce` | PASS — animation disabled at `purelane.css:1869` | — | — |
 | Hero JS | Auto-advance under reduced motion | PASS — `start()` early-returns | — | — |
 
-_commit for accessibility fixes: `e530b83`_
-
 ## Pass 3 — Performance
 
 | section | test | result | fix applied (if any) | commit hash |
 | --- | --- | --- | --- | --- |
-| Hero | LCP image loading | FAIL — hero product images (LCP element, above the fold) were `loading="lazy"`, delaying LCP | First hero slide's product images now `loading="eager"` + `fetchpriority="high"`; remaining slides stay lazy (`sections/purelane-hero.liquid`) | — |
+| Hero | LCP image loading | FAIL — hero product images (LCP element, above the fold) were `loading="lazy"`, delaying LCP | First hero slide's product images now `loading="eager"` + `fetchpriority="high"`; remaining slides stay lazy (`sections/purelane-hero.liquid`) | `2fc5358` |
 | All images | `loading` strategy | PASS — all non-hero images remain lazy | — | — |
 | All images | `fetchpriority` | FAIL — no image prioritized | `high` set on first hero slide only | same |
 | Assets | JS weight | PASS — purelane JS is small (~8KB picker, hero/reveal/scenes minimal) | — | — |
 | Assets | CSS weight | PASS — purelane.css ~79KB, loaded via section stylesheet tags | — | — |
 | Scenes | `requestAnimationFrame`-gated scroll/mousemove | PASS — no unthrottled scroll handlers; `prefers-reduced-motion` disables parallax | — | — |
 | LCP/CLS/TBT | Headless paint metrics | NOT MEASURED — LCP/CLS observers returned no entries in headless; verified loading strategy statically instead | — | — |
-
+
+## Requirement — Nothing hardcoded
+
+Audited all 15 purelane sections: every `section.settings.*` (68 refs) and `block.settings.*` (62 refs) is
+declared in its section schema (zero orphaned refs); nav uses `link_list` menus and URL settings. Remaining
+hardcoded literals are intentional fallbacks (empty-collection placeholder "Example product", zero-block
+review fallback, "Products" qty suffix). The one real magic number — hero autoplay `3800ms` — was exposed
+as a section setting.
+
+| item | test | result | fix applied | commit hash |
+| --- | --- | --- | --- | --- |
+| Hero autoplay | Timing hardcoded in JS | FAIL — `3800` buried in `purelane-hero.js` | Added `autoplay_speed` range setting (0–8000ms, default 3800) + `data-autoplay-speed` attribute; JS reads it, 0 disables autoplay | — |
+| Hero autoplay | Custom speed honored | PASS — probe set 600ms, slide advanced in ~900ms | — | — |
+| Hero autoplay | 0 disables autoplay | PASS — probe confirmed slide did not advance | — | — |
+| Hero autoplay | Reduced motion still respected | PASS — `start()` early-returns before reading speed | — | — |
+| All sections | Settings referenced = settings declared | PASS — 0 orphaned refs across 15 sections | — | — |
+| Nav | Menus/links editor-driven | PASS — `link_list` + URL settings | — | — |

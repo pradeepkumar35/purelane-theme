@@ -40,9 +40,12 @@
 
       clearInterval(timer);
 
+      const speed = parseInt(root.dataset.autoplaySpeed || '3800', 10);
+      if (!Number.isFinite(speed) || speed <= 0) return;
+
       timer = setInterval(() => {
         showSlide((current + 1) % slides.length);
-      }, 3800);
+      }, speed);
     };
 
     const stop = () => {

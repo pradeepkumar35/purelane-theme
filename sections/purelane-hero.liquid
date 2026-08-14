@@ -13,6 +13,7 @@
   data-purelane-hero
   data-scene='1'
   data-section-id='{{ section.id }}'
+  data-autoplay-speed='{{ section.settings.autoplay_speed }}'
 >
   <div class='purelane-hero__inner'>
     <div class='purelane-hero__copy'>
@@ -343,6 +344,17 @@
       "type": "url",
       "id": "secondary_link",
       "label": "Secondary button link"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay speed",
+      "info": "Milliseconds between slide transitions. Set to 0 to disable autoplay.",
+      "min": 0,
+      "max": 8000,
+      "step": 100,
+      "unit": "ms",
+      "default": 3800
     }
   ],
   "blocks": [
