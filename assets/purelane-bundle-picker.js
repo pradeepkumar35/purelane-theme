@@ -122,6 +122,14 @@
         formData.append(`properties[Pick ${i}]`, name);
         i++;
       }
+      const drawer = document.querySelector('cart-drawer');
+      if (drawer) {
+        formData.append(
+          'sections',
+          drawer.getSectionsToRender().map((section) => section.id)
+        );
+        formData.append('sections_url', window.location.pathname);
+      }
       const button = this.submit;
       const original = button.textContent;
       button.disabled = true;
@@ -131,14 +139,15 @@
         body: formData,
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
       })
-        .then((res) => {
-          if (!res.ok) throw new Error('add failed');
-          return res.json();
-        })
-        .then(() => {
+        .then((res) => res.json())
+        .then((response) => {
+          if (response.status) throw new Error(response.description || response.message || 'add failed');
           this.close();
-          if (window.Shopify && Shopify.theme && Shopify.theme.openCartDrawer) {
-            Shopify.theme.openCartDrawer();
+          if (typeof publish === 'function') {
+            publish('cart-update', { source: 'purelane-bundle-picker', cartData: response });
+          }
+          if (drawer) {
+            drawer.renderContents(response);
           } else {
             window.location.href = '/cart';
           }
