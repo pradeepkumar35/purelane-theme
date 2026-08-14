@@ -530,4 +530,68 @@ silently "fixed"), kept in AI_WORKFLOW_NOTES.md with a one-line reason each:
   block add/remove (vs. the current DOM-level tests) would close the last
   gap.
 
+## Task 1 — Add-to-cart via the Dawn cart drawer (done, commits `279d351` + `cccbb13`)
+- **Switch to the drawer**: `config/settings_data.json` cart_type
+  `"notification"` → `"drawer"`. theme.liquid now renders Dawn's
+  `cart-drawer` section + `cart-drawer.js` + `cart.js` on every page, so
+  `product-form.js` finds a `this.cart` to AJAX-render into.
+- **Shop card fix** (`snippets/purelane-product-card.liquid`): the card's
+  `<product-form>` button lacked the `<span>`, `loading-spinner` render, and
+  `.product-form__error-message-wrapper` that Dawn's `product-form.js`
+  constructor expects — it crashed, so the whole card grid broke. All three
+  added; CTA styles (`.purelane-card__cta.loading` spinner, error wrapper)
+  in `purelane.css`.
+- **Header wiring** (`sections/purelane-header.liquid` +
+  `assets/purelane-header.js`): cart icon now `data-purelane-cart` and opens
+  the drawer on click; subscribes to the `cart-update` pubsub event
+  (`assets/pubsub.js`) to bump `.purelane-ico__dot` from cart line count.
+  Drawer's `#cart-icon-bubble` lookup is null on the purelane header and is
+  skipped cleanly (no crash) — count lives in the purelane dot instead.
+- **Picker render** (`assets/purelane-bundle-picker.js`): `addToCart()`
+  appends the drawer's `getSectionsToRender()` ids to the `/cart/add.js`
+  URL, publishes `cart-update`, then calls `drawer.renderContents(response)`
+  which opens the drawer (full-page fallback only if no drawer present).
+  Bundle lines keep `properties[Pick N]` = product title.
+- **Verified (backend + live render)**: bundle tier variants/prices confirmed
+  via Admin API (Starter ₹349 / Most Popular ₹499 / Whole Home ₹799); all
+  tagged `purelane-bundle` so the shop grid still renders 9 real products.
+  Live `/collections/shop` (purelane theme) renders `<cart-drawer>`,
+  `cart-drawer.js`, `cart.js`, `data-purelane-cart` + the header dot.
+- **Deferred / flagged**: the final click-through loop (add → drawer opens →
+  count bumps → checkout) needs a **real browser** — Cloudflare bot
+  protection 429s scripted `/cart/add.js` + `/cart.js`, and `/` still serves
+  a stale Horizon cache that self-heals. Combos→picker pre-fill path
+  re-verified statically (unchanged). See QA_NOTES.md.
+
+## Task 2 — Login / register templates (done, commit `6ca755d`)
+- The theme had **no** `templates/customers/` at all, so `/account/login`
+  and `/account/register` fell through to nothing. Added Dawn-native JSON
+  templates + sections, reskinned to the Purelane visual language:
+  - `templates/customers/login.json` / `register.json` → section-based
+    templates (Dawn v15 pattern).
+  - `sections/main-login.liquid`: `{% form 'customer_login' %}` (email +
+    password, `form.password_needed` guard), inline recover-password form
+    (`{% form 'recover_customer_password' %}` toggled by Dawn's `:target`
+    `#recover`/`#login` anchors), guest login when
+    `shop.checkout.guest_login`. `recover_success` assigned in the recover
+    form *before* the login form reads it (Dawn's order).
+  - `sections/main-register.liquid`: `{% form 'create_customer' %}` with
+    first/last/email/password and Dawn's per-field error markup.
+  - `assets/customer.css`: glass panel (reuses `.glass` from purelane.css),
+    Outfit headings, pill inputs with amber `#b8701c` focus, teal gradient
+    CTA (`.btn-primary`), ghost secondary (`.btn-ghost`), plus the
+    `:target` recover/login toggle rules. Loads `customer.css` +
+    `purelane.css` (for `.glass`/`.btn-*`).
+  - Locale keys used are all present in `en.default.json`
+    (`customer.login_page.*`, `customer.register.*`,
+    `customer.recover_password.*`, `accessibility.error`,
+    `templates.contact.form.error_heading`, `customer.log_in`).
+- **Flagged**: the store has the **new hosted Shopify customer accounts**
+  enabled (`customerAccounts: OPTIONAL`), so `/account/login` currently
+  302-redirects to `shopify.com/…/account` instead of rendering the theme
+  template. The templates are correct and Dawn-native; they will serve once
+  the merchant switches to classic accounts (or for flows that bypass the
+  hosted redirect). Confirm with the merchant whether classic accounts are
+  intended before relying on these templates.
+
 

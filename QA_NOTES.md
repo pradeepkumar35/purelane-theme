@@ -123,3 +123,27 @@ moving content keep the GPU compositing every frame. Fixes below remove the per-
 | Live DOM | Off-screen pause / on-screen resume | PASS — probe: ticker paused at page bottom & resumed at top; marquee/bubbles paused below fold | — | — |
 | Reduced motion | Static shadow still skipped | PASS — static filter only applied when `!reduce` | — | — |
 | Theme check | No new offenses | PASS — 0 errors, 14 pre-existing Dawn warnings | — | — |
+
+## Pass 6 — Add-to-cart → cart drawer (Task 1)
+
+| item | test | result | fix applied (if any) | commit hash |
+| --- | --- | --- | --- | --- |
+| Cart type | Dawn cart drawer enabled | PASS — `cart_type: "drawer"` in `settings_data.json`; live `/collections/shop` renders `<cart-drawer class="drawer is-empty">` + `cart-drawer.js` + `cart.js` | — | `279d351` |
+| Shop card | `product-form` markup matches `product-form.js` constructor (span + loading-spinner + error wrapper) | PASS — static (constructor reqs) + theme check 0 new offenses | — | `279d351` |
+| Header | Cart icon opens drawer (`data-purelane-cart`), count dot subscribes to `cart-update` | PASS (live render: `data-purelane-cart` + `.purelane-ico__dot` present) | — | `279d351` |
+| Picker | `addToCart()` posts `/cart/add.js` with `sections` params + publishes `cart-update` + renders into drawer | PASS — static review + `node --check` clean | — | `cccbb13` |
+| Tiers | Flat prices on real variants | PASS (Admin API) — Starter ₹349 / Most Popular ₹499 / Whole Home ₹799 | — | — |
+| Grid exclusion | Bundles stay out of shop grid | PASS — all bundles tagged `purelane-bundle`; `purelane-shop.liquid` skips by tag | — | — |
+| Combos | `data-count`/`data-preselect` → `picker.open({count, preselect})` → tier variant → drawer add | PASS — static re-verify; path unchanged | — | — |
+| **Full loop** | Click add-to-cart → drawer opens → count bumps → checkout | **NOT VERIFIED — needs real browser.** Cloudflare bot protection 429s scripted `/cart/add.js` + `/cart.js` (JS challenge), and live `/` still serves a stale Horizon cache (self-heals). Run in a browser: `?preview_theme_id=161735213297` (dev theme) with password `aflowr` | — | — |
+
+## Pass 7 — Customer login / register (Task 2)
+
+| item | test | result | fix applied (if any) | commit hash |
+| --- | --- | --- | --- | --- |
+| Templates | `templates/customers/login.json` + `register.json` exist and reference section types `main-login`/`main-register` | PASS | — | `6ca755d` |
+| Login form | Dawn-native `{% form 'customer_login' %}` with email + `form.password_needed` password | PASS — locale keys verified present in `en.default.json` | — | `6ca755d` |
+| Recover | `{% form 'recover_customer_password' %}` inline, toggled by Dawn `:target` `#recover`/`#login`; `recover_success` assigned before login form reads it | PASS — Dawn v15 structure matched | — | `6ca755d` |
+| Register | Dawn-native `{% form 'create_customer' %}` with per-field error markup | PASS | — | `6ca755d` |
+| CSS | `customer.css` reskin: glass panel, Outfit headings, pill inputs, amber focus, teal CTA; loads `customer.css` + `purelane.css` | PASS — theme check 0 new offenses | — | `6ca755d` |
+| **Render** | `/account/login` shows the theme form | **FLAGGED — store has new hosted customer accounts** (`customerAccounts: OPTIONAL`); `/account/login` 302-redirects to `shopify.com/…/account`. Templates are correct and will serve once classic accounts are enabled (or for non-hosted flows). Confirm with merchant | — | — |

@@ -259,3 +259,31 @@ translation" between the static HTML and the live theme.
   slides show the flat bundle prices (₹349/₹598/Save ₹249 and
   ₹499/₹897/Save ₹398) instead of the first product's own price. Falls back
   to product-derived price when blank (slide 1 keeps its product price).
+- 2026-08-14 — Task 1: cart type switched `"notification"` → `"drawer"` so
+  Dawn's cart-drawer section renders globally and `product-form.js` has a
+  `this.cart` to AJAX-render into; the shop card `<product-form>` gained the
+  span/loading-spinner/error-wrapper markup Dawn's constructor requires; the
+  purelane header cart icon opens the drawer and its count dot subscribes to
+  `cart-update`; the bundle picker now posts `sections` params + renders the
+  drawer via `drawer.renderContents()` with a full-page fallback only when no
+  drawer exists. The drawer's `#cart-icon-bubble` is null on the purelane
+  header and is skipped cleanly (count lives in the purelane dot).
+- 2026-08-14 — Task 1 (deferred, browser-only): the full add-to-cart→drawer
+  loop could not be HTTP-verified because Cloudflare bot protection challenges
+  scripted `/cart/add.js` and `/cart.js`, and the live `/` still serves a
+  stale Horizon cache (self-heals). Page GETs, Admin API data checks, live
+  collection-page render of `<cart-drawer>` + `cart-drawer.js` + the header
+  dot, and `node --check` on the JS were the achievable verification surface.
+- 2026-08-14 — Task 2: added `templates/customers/login.json` +
+  `register.json` (Dawn v15 section-based pattern) backed by
+  `sections/main-login.liquid` (`customer_login` + inline recover form
+  toggled by Dawn's `:target` anchors, `recover_success` assigned before the
+  login form reads it) and `sections/main-register.liquid` (`create_customer`),
+  reskinned via a new `assets/customer.css` (glass panel, Outfit headings,
+  pill inputs, amber focus, teal CTA). Loads `customer.css` + `purelane.css`.
+- 2026-08-14 — Task 2 (flagged): the store has the **new hosted Shopify
+  customer accounts** enabled (`customerAccounts: OPTIONAL`), so
+  `/account/login` 302-redirects to `shopify.com/…/account` instead of
+  rendering the theme template. The Dawn-native templates are correct and
+  will serve once the merchant switches to classic accounts; confirm intent
+  before relying on them.
